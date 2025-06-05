@@ -1,5 +1,9 @@
 import net.labymod.labygradle.common.extension.LabyModAnnotationProcessorExtension.ReferenceType
 
+plugins {
+    id("io.freefair.lombok") version "8.13.1"
+}
+
 dependencies {
     labyProcessor()
     api(project(":api"))
