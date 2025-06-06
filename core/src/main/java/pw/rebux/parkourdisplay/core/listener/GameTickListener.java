@@ -49,6 +49,13 @@ public class GameTickListener {
       addon.playerParkourState().jumpPitch(player.getRotationPitch());
     }
 
+    // Player landed in this tick
+    if (player.isOnGround() && !lastTickOnGround) {
+      addon.playerParkourState().hitX(player.position().getX());
+      addon.playerParkourState().hitY(player.position().getY());
+      addon.playerParkourState().hitZ(player.position().getZ());
+    }
+
     // Reset air time
     if (player.isOnGround()) {
       airTime = 0;

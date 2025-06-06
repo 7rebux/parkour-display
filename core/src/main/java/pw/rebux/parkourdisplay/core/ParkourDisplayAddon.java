@@ -24,6 +24,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     this.labyAPI().hudWidgetRegistry().register(new AirTimeWidget(this));
     this.labyAPI().hudWidgetRegistry().register(new JumpCoordinatesWidget(this));
     this.labyAPI().hudWidgetRegistry().register(new JumpRotationWidget(this));
+    this.labyAPI().hudWidgetRegistry().register(new HitCoordinatesWidget(this));
     this.labyAPI().hudWidgetRegistry().register(new LastTimingWidget(this));
   }
 
