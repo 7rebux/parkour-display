@@ -8,8 +8,7 @@
     },
     "hudWidget": {
       "air_time": {
-        "name": "Airtime",
-        "description": "Test TODO if this works"
+        "name": "Airtime"
       },
       "jump_coordinates": {
         "name": "Jump Coordinates",
@@ -22,6 +21,15 @@
       },
       "jump_rotation": {
         "name": "Jump Rotation",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
+      "landing_coordinates": {
+        "name": "Landing Coordinates",
         "singleLine": {
           "name": "Single Line"
         },

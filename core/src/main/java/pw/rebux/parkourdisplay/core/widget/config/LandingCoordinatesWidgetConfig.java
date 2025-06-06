@@ -9,7 +9,7 @@ import net.labymod.api.configuration.loader.property.ConfigProperty;
 
 @Accessors(fluent = true)
 @Getter
-public class JumpRotationWidgetConfig extends TextHudWidgetConfig {
+public class LandingCoordinatesWidgetConfig extends TextHudWidgetConfig {
 
   @SwitchSetting
   private final ConfigProperty<Boolean> singleLine = new ConfigProperty<>(false);

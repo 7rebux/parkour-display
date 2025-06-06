@@ -5,8 +5,8 @@ import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
-import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
+import pw.rebux.parkourdisplay.core.listener.*;
 import pw.rebux.parkourdisplay.core.widget.*;
 
 @AddonMain
@@ -21,17 +21,19 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
 
   @Override
   protected void enable() {
+    var hudWidgetRegistry = this.labyAPI().hudWidgetRegistry();
+
     this.registerSettingCategory();
 
     this.registerListener(new GameTickListener(this));
 
-    this.labyAPI().hudWidgetRegistry().categoryRegistry().register(this.category);
-
-    this.labyAPI().hudWidgetRegistry().register(new AirTimeWidget(this));
-    this.labyAPI().hudWidgetRegistry().register(new JumpCoordinatesWidget(this));
-    this.labyAPI().hudWidgetRegistry().register(new JumpRotationWidget(this));
-    this.labyAPI().hudWidgetRegistry().register(new HitCoordinatesWidget(this));
-    this.labyAPI().hudWidgetRegistry().register(new LastTimingWidget(this));
+    hudWidgetRegistry.categoryRegistry().register(this.category);
+    hudWidgetRegistry.register(new AirTimeWidget(this));
+    hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
+    hudWidgetRegistry.register(new JumpRotationWidget(this));
+    hudWidgetRegistry.register(new LandingCoordinatesWidget(this));
+    hudWidgetRegistry.register(new HitCoordinatesWidget(this));
+    hudWidgetRegistry.register(new LastTimingWidget(this));
   }
 
   @Override

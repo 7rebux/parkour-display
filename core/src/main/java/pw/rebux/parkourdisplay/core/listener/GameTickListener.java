@@ -1,19 +1,25 @@
 package pw.rebux.parkourdisplay.core.listener;
 
-import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.state.TickPosition;
+import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 
-@RequiredArgsConstructor
 public class GameTickListener {
 
   private final ParkourDisplayAddon addon;
+  private final MinecraftInputUtil inputUtil;
 
-  private boolean lastTickOnGround = false;
+  private final TickPosition lastTick = new TickPosition();
   private int airTime = 0;
+
+  public GameTickListener(ParkourDisplayAddon addon) {
+    this.addon = addon;
+    this.inputUtil = new MinecraftInputUtil(addon);
+  }
 
   @Subscribe
   public void onGameTick(GameTickEvent event) {
@@ -32,7 +38,7 @@ public class GameTickListener {
     }
 
     // If the player landed this tick or is still airborne, we increase the air time
-    if (!lastTickOnGround || !player.isOnGround()) {
+    if (!lastTick.onGround() || !player.isOnGround()) {
       airTime++;
     }
 
@@ -50,7 +56,11 @@ public class GameTickListener {
     }
 
     // Player landed in this tick
-    if (player.isOnGround() && !lastTickOnGround) {
+    if (player.isOnGround() && !lastTick.onGround()) {
+      addon.playerParkourState().landingX(lastTick.x());
+      addon.playerParkourState().landingY(lastTick.y());
+      addon.playerParkourState().landingZ(lastTick.z());
+
       addon.playerParkourState().hitX(player.position().getX());
       addon.playerParkourState().hitY(player.position().getY());
       addon.playerParkourState().hitZ(player.position().getZ());
@@ -61,6 +71,9 @@ public class GameTickListener {
       airTime = 0;
     }
 
-    lastTickOnGround = player.isOnGround();
+    lastTick.x(player.position().getX());
+    lastTick.y(player.position().getY());
+    lastTick.z(player.position().getZ());
+    lastTick.onGround(player.isOnGround());
   }
 }

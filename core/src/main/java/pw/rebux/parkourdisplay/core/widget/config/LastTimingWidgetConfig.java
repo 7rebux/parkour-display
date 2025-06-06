@@ -7,9 +7,9 @@ import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.Switc
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 
 @Accessors(fluent = true)
+@Getter
 public class LastTimingWidgetConfig extends TextHudWidgetConfig {
 
-  @Getter
   @SwitchSetting
   private final ConfigProperty<Boolean> showMillis = new ConfigProperty<>(true);
 }

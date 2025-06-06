@@ -8,13 +8,12 @@ import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.Switc
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 
 @Accessors(fluent = true)
+@Getter
 public class JumpCoordinatesWidgetConfig extends TextHudWidgetConfig {
 
-  @Getter
   @SwitchSetting
   private final ConfigProperty<Boolean> singleLine = new ConfigProperty<>(false);
 
-  @Getter
   @SliderSetting(min = 0, max = 10)
   private final ConfigProperty<Integer> decimalPlaces = new ConfigProperty<>(3);
 }
