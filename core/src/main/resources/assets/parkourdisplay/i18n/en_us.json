@@ -1,5 +1,47 @@
 {
   "parkourdisplay": {
+    "hudWidgetCategory": {
+      "parkourdisplay": {
+        "name": "ParkourDisplay",
+        "description": "Shows you information about parkour related game mechanics"
+      }
+    },
+    "hudWidget": {
+      "air_time": {
+        "name": "Airtime",
+        "description": "Test TODO if this works"
+      },
+      "jump_coordinates": {
+        "name": "Jump Coordinates",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
+      "jump_rotation": {
+        "name": "Jump Rotation",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
+      "hit_coordinates": {
+        "name": "Hit Coordinates",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
+      "last_timing": {
+        "name": "Last Timing"
+      }
+    },
     "settings": {
       "enabled": {
         "name": "Enabled"

@@ -13,6 +13,9 @@ public class AirTimeWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   public AirTimeWidget(ParkourDisplayAddon addon) {
     super("air_time");
+
+    this.bindCategory(addon.category());
+
     this.addon = addon;
   }
 

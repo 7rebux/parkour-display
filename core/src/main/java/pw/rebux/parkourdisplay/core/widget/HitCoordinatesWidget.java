@@ -13,6 +13,9 @@ public class HitCoordinatesWidget extends TextHudWidget<HitCoordinatesWidgetConf
 
   public HitCoordinatesWidget(ParkourDisplayAddon addon) {
     super("hit_coordinates", HitCoordinatesWidgetConfig.class);
+
+    this.bindCategory(addon.category());
+
     this.addon = addon;
   }
 

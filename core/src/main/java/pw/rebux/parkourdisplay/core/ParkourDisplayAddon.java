@@ -3,6 +3,7 @@ package pw.rebux.parkourdisplay.core;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
+import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
@@ -13,6 +14,9 @@ import pw.rebux.parkourdisplay.core.widget.*;
 public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> {
 
   @Getter
+  private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");
+
+  @Getter
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
 
   @Override
@@ -20,6 +24,8 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     this.registerSettingCategory();
 
     this.registerListener(new GameTickListener(this));
+
+    this.labyAPI().hudWidgetRegistry().categoryRegistry().register(this.category);
 
     this.labyAPI().hudWidgetRegistry().register(new AirTimeWidget(this));
     this.labyAPI().hudWidgetRegistry().register(new JumpCoordinatesWidget(this));

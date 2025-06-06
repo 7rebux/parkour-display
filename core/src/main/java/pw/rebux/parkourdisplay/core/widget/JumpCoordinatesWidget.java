@@ -13,6 +13,9 @@ public class JumpCoordinatesWidget extends TextHudWidget<JumpCoordinatesWidgetCo
 
   public JumpCoordinatesWidget(ParkourDisplayAddon addon) {
     super("jump_coordinates", JumpCoordinatesWidgetConfig.class);
+
+    this.bindCategory(addon.category());
+
     this.addon = addon;
   }
 

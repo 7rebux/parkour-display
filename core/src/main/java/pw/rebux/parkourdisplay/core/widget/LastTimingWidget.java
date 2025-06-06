@@ -11,6 +11,8 @@ public class LastTimingWidget extends TextHudWidget<LastTimingWidgetConfig> {
   public LastTimingWidget(ParkourDisplayAddon addon) {
     super("last_timing", LastTimingWidgetConfig.class);
 
+    this.bindCategory(addon.category());
+
     this.addon = addon;
   }
 

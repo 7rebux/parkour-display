@@ -13,6 +13,9 @@ public class JumpRotationWidget extends TextHudWidget<JumpRotationWidgetConfig> 
 
   public JumpRotationWidget(ParkourDisplayAddon addon) {
     super("jump_rotation", JumpRotationWidgetConfig.class);
+
+    this.bindCategory(addon.category());
+
     this.addon = addon;
   }
 
