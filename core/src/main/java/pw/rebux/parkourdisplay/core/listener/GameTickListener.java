@@ -1,7 +1,6 @@
 package pw.rebux.parkourdisplay.core.listener;
 
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
@@ -32,12 +31,6 @@ public class GameTickListener {
       return;
     }
 
-    handleAirTime(player);
-
-    lastTickOnGround = player.isOnGround();
-  }
-
-  private void handleAirTime(ClientPlayer player) {
     // If the player landed this tick or is still airborne, we increase the air time
     if (!lastTickOnGround || !player.isOnGround()) {
       airTime++;
@@ -47,9 +40,20 @@ public class GameTickListener {
       addon.playerParkourState().airTime(airTime);
     }
 
+    // Player jumped in this tick
+    if (airTime == 1) {
+      addon.playerParkourState().jumpX(player.position().getX());
+      addon.playerParkourState().jumpY(player.position().getY());
+      addon.playerParkourState().jumpZ(player.position().getZ());
+      addon.playerParkourState().jumpYaw(player.getRotationYaw());
+      addon.playerParkourState().jumpPitch(player.getRotationPitch());
+    }
+
     // Reset air time
     if (player.isOnGround()) {
       airTime = 0;
     }
+
+    lastTickOnGround = player.isOnGround();
   }
 }
