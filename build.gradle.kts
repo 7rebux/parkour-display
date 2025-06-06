@@ -9,7 +9,7 @@ group = "pw.rebux.parkourdisplay"
 version = providers.environmentVariable("VERSION").getOrElse("1.0.0")
 
 labyMod {
-    defaultPackageName = "pw.rebux.parkourdisplay" //change this to your main package name (used by all modules)
+    defaultPackageName = "pw.rebux.parkourdisplay"
 
     minecraft {
         registerVersion(versions.toTypedArray()) {
