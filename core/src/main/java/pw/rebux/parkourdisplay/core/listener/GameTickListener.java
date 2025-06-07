@@ -19,6 +19,7 @@ public class GameTickListener {
   private final MinecraftInputUtil inputUtil;
 
   private final TickPosition lastTick = new TickPosition();
+  private TickPosition secondLastTick = new TickPosition();
   private int airTime = 0;
   private int groundTime = 0;
 
@@ -136,6 +137,11 @@ public class GameTickListener {
       playerParkourState.lastFF(yaw - lastTick.yaw());
     }
 
+    // Player is falling
+    if (vy < 0 && !onGround) {
+      addon.landingBlockManager().checkOffsets(player.position(), lastTick, secondLastTick);
+    }
+
     playerParkourState.lastInput(buildInputString());
 
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
@@ -144,6 +150,8 @@ public class GameTickListener {
       airTime = 0;
     }
 
+    // TODO: Is this a reference?
+    secondLastTick = lastTick;
     lastTick.x(x);
     lastTick.y(y);
     lastTick.z(z);
