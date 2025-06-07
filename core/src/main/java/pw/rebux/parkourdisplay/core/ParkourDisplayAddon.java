@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
+import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.listener.*;
 import pw.rebux.parkourdisplay.core.widget.*;
@@ -17,6 +18,9 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");
 
   @Getter
+  private final LandingBlockManager landingBlockManager = new LandingBlockManager();
+
+  @Getter
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
 
   @Override
@@ -26,6 +30,8 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     this.registerSettingCategory();
 
     this.registerListener(new GameTickListener(this));
+
+    this.registerCommand(new BaseCommand(this));
 
     hudWidgetRegistry.categoryRegistry().register(this.category);
     hudWidgetRegistry.register(new VelocityWidget(this));
@@ -37,6 +43,9 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     hudWidgetRegistry.register(new HitCoordinatesWidget(this));
     hudWidgetRegistry.register(new LastTimingWidget(this));
     hudWidgetRegistry.register(new LastFortyFiveWidget(this));
+
+    // TODO: remove on release
+    hudWidgetRegistry.register(new DebugWidget(this));
   }
 
   @Override

@@ -13,8 +13,9 @@ public class GameTickListener {
   private final ParkourDisplayAddon addon;
   private final MinecraftInputUtil inputUtil;
 
-  private final TickPosition lastTick = new TickPosition();
-  private int airTime = 0;
+  private TickPosition lastTick = new TickPosition();
+  private TickPosition secondLastTick = new TickPosition();
+  private int airtime = 0;
 
   public GameTickListener(ParkourDisplayAddon addon) {
     this.addon = addon;
@@ -38,6 +39,7 @@ public class GameTickListener {
     final var x = player.position().getX();
     final var y = player.position().getY();
     final var z = player.position().getZ();
+    final var velocityY = y - lastTick.y();
     final var yaw = player.getRotationYaw();
     final var pitch = player.getRotationPitch();
     final var onGround = player.isOnGround();
@@ -45,20 +47,20 @@ public class GameTickListener {
     final var movingSideways = false; // player.getStrafeMovingSpeed() != 0;
 
     playerParkourState.velocityX(x - lastTick.x());
-    playerParkourState.velocityY(y - lastTick.y());
+    playerParkourState.velocityY(velocityY);
     playerParkourState.velocityZ(z - lastTick.z());
 
     // If the player landed this tick or is still airborne, we increase the air time
     if (!lastTick.onGround() || !onGround) {
-      airTime++;
+      airtime++;
     }
 
-    if (airTime > 0) {
-      playerParkourState.lastDuration(airTime);
+    if (airtime > 0) {
+      playerParkourState.lastDuration(airtime);
     }
 
     // Player jumped in this tick
-    if (airTime == 1) {
+    if (airtime == 1) {
       playerParkourState.jumpX(x);
       playerParkourState.jumpY(y);
       playerParkourState.jumpZ(z);
@@ -82,12 +84,19 @@ public class GameTickListener {
       playerParkourState.lastFF(yaw - lastTick.yaw());
     }
 
-    /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
-
-    if (onGround && airTime > 0) {
-      airTime = 0;
+    // Player is falling
+    if (velocityY < 0 && !onGround) {
+      addon.landingBlockManager().checkOffsets(player.position(), lastTick, secondLastTick);
     }
 
+    /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
+
+    if (onGround && airtime > 0) {
+      airtime = 0;
+    }
+
+    // TODO: Is this a reference?
+    secondLastTick = lastTick;
     lastTick.x(x);
     lastTick.y(y);
     lastTick.z(z);
