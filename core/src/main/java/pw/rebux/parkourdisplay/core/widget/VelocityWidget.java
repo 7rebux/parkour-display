@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -24,11 +25,11 @@ public class VelocityWidget extends TextHudWidget<VelocityWidgetConfig> {
     super.load(config);
 
     if (config.singleLine().get()) {
-      textLines[0] = createLine("Velocity XYZ", "");
+      textLines[0] = createLine(Component.translatable("parkourdisplay.labels.velocity.single"), "");
     } else {
-      textLines[0] = createLine("Velocity X", "");
-      textLines[1] = createLine("Velocity Y", "");
-      textLines[2] = createLine("Velocity Z", "");
+      textLines[0] = createLine(Component.translatable("parkourdisplay.labels.velocity.x"), "");
+      textLines[1] = createLine(Component.translatable("parkourdisplay.labels.velocity.y"), "");
+      textLines[2] = createLine(Component.translatable("parkourdisplay.labels.velocity.z"), "");
     }
   }
 

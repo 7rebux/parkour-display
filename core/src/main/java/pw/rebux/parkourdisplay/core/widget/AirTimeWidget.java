@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -22,7 +23,8 @@ public class AirTimeWidget extends TextHudWidget<TextHudWidgetConfig> {
   @Override
   public void load(TextHudWidgetConfig config) {
     super.load(config);
-    this.textLine = createLine("Airtime", "");
+
+    this.textLine = createLine(Component.translatable("parkourdisplay.labels.air_time"), "");
   }
 
   @Override

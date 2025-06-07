@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -23,7 +24,7 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
   public void load(LastFortyFiveWidgetConfig config) {
     super.load(config);
 
-    this.textLine = createLine("Last 45", "");
+    this.textLine = createLine(Component.translatable("parkourdisplay.labels.last_forty_five"), "");
   }
 
   @Override

@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -24,7 +25,7 @@ public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
   public void load(JumpAngleWidgetConfig config) {
     super.load(config);
 
-    textLine = createLine("Jump Angle", "");
+    textLine = createLine(Component.translatable("parkourdisplay.labels.jump_angle"), "");
   }
 
   @Override

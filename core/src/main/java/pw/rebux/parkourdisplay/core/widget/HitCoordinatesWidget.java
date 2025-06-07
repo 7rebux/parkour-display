@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -24,11 +25,11 @@ public class HitCoordinatesWidget extends TextHudWidget<HitCoordinatesWidgetConf
     super.load(config);
 
     if (config.singleLine().get()) {
-      textLines[0] = createLine("Hit XYZ", "");
+      textLines[0] = createLine(Component.translatable("parkourdisplay.labels.hit_coordinates.single"), "");
     } else {
-      textLines[0] = createLine("Hit X", "");
-      textLines[1] = createLine("Hit Y", "");
-      textLines[2] = createLine("Hit Z", "");
+      textLines[0] = createLine(Component.translatable("parkourdisplay.labels.hit_coordinates.x"), "");
+      textLines[1] = createLine(Component.translatable("parkourdisplay.labels.hit_coordinates.y"), "");
+      textLines[2] = createLine(Component.translatable("parkourdisplay.labels.hit_coordinates.z"), "");
     }
   }
 

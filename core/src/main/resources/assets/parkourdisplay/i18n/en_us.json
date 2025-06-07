@@ -75,6 +75,38 @@
       "showGroundDurations": {
         "name": "Show Ground Durations In Chat"
       }
+    },
+    "labels": {
+      "air_time": "Airtime",
+      "ground_time": "Ground Time",
+      "hit_coordinates": {
+        "single": "Hit XYZ",
+        "x": "Hit X",
+        "y": "Hit Y",
+        "z": "Hit z"
+      },
+      "jump_angle": "Jump Angle",
+      "jump_coordinates": {
+        "single": "Jump XYZ",
+        "x": "Jump X",
+        "y": "Jump Y",
+        "z": "Jump Z"
+      },
+      "landing_coordinates": {
+        "single": "Landing XYZ",
+        "x": "Landing X",
+        "y": "Landing Y",
+        "z": "Landing Z"
+      },
+      "last_forty_five": "Last 45",
+      "last_timing": "Last Timing",
+      "tier": "Tier",
+      "velocity": {
+        "single": "Velocity XYZ",
+        "x": "Velocity X",
+        "y": "Velocity Y",
+        "z": "Velocity Z"
+      }
     }
   }
 }

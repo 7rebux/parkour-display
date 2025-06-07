@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import net.labymod.api.client.component.Component;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -24,11 +25,11 @@ public class LandingCoordinatesWidget extends TextHudWidget<LandingCoordinatesWi
     super.load(config);
 
     if (config.singleLine().get()) {
-      textLines[0] = createLine("Landing XYZ", "");
+      textLines[0] = createLine(Component.translatable("parkourdisplay.labels.landing_coordinates.single"), "");
     } else {
-      textLines[0] = createLine("Landing X", "");
-      textLines[1] = createLine("Landing Y", "");
-      textLines[2] = createLine("Landing Z", "");
+      textLines[0] = createLine(Component.translatable("parkourdisplay.labels.landing_coordinates.x"), "");
+      textLines[1] = createLine(Component.translatable("parkourdisplay.labels.landing_coordinates.y"), "");
+      textLines[2] = createLine(Component.translatable("parkourdisplay.labels.landing_coordinates.z"), "");
     }
   }
 
