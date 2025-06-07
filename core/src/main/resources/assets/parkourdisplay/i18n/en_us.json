@@ -19,6 +19,9 @@
       "air_time": {
         "name": "Airtime"
       },
+      "ground_time": {
+        "name": "Ground Time"
+      },
       "tier": {
         "name": "Tier"
       },
@@ -71,6 +74,9 @@
     "settings": {
       "enabled": {
         "name": "Enabled"
+      },
+      "showGroundDurations": {
+        "name": "Show Ground Durations In Chat"
       }
     }
   }

@@ -9,6 +9,7 @@ public class PlayerParkourState {
 
   private double velocityX = 0, velocityY = 0, velocityZ = 0;
   private int lastDuration = 0;
+  private int lastGroundDuration = 0;
   private double jumpX = 0, jumpY = 0, jumpZ = 0;
   private double jumpYaw = 0, jumpPitch = 0;
   private double landingX = 0, landingY = 0, landingZ = 0;

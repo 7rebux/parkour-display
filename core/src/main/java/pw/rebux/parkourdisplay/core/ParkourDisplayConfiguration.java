@@ -14,4 +14,8 @@ public class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   @Getter
   private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);
+
+  @SwitchSetting
+  @Getter
+  private final ConfigProperty<Boolean> showGroundDurations = new ConfigProperty<>(false);
 }

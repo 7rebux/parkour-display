@@ -1,5 +1,7 @@
 package pw.rebux.parkourdisplay.core.listener;
 
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
@@ -15,6 +17,7 @@ public class GameTickListener {
 
   private final TickPosition lastTick = new TickPosition();
   private int airTime = 0;
+  private int groundTime = 0;
 
   public GameTickListener(ParkourDisplayAddon addon) {
     this.addon = addon;
@@ -48,6 +51,10 @@ public class GameTickListener {
     playerParkourState.velocityY(y - lastTick.y());
     playerParkourState.velocityZ(z - lastTick.z());
 
+    if (lastTick.onGround() && onGround) {
+      groundTime = Math.min(groundTime + 1, 999);
+    }
+
     // If the player landed this tick or is still airborne, we increase the air time
     if (!lastTick.onGround() || !onGround) {
       airTime++;
@@ -59,6 +66,17 @@ public class GameTickListener {
 
     // Player jumped in this tick
     if (airTime == 1) {
+      playerParkourState.lastGroundDuration(groundTime);
+
+      if (addon.configuration().showGroundDurations().get()) {
+        addon.displayMessage(
+            Component.text(
+                groundTime,
+                groundTime > 0 ? NamedTextColor.RED : NamedTextColor.GREEN));
+      }
+
+      groundTime = 0;
+
       playerParkourState.jumpX(x);
       playerParkourState.jumpY(y);
       playerParkourState.jumpZ(z);
