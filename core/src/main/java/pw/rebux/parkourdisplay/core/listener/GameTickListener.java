@@ -81,7 +81,6 @@ public class GameTickListener {
       playerParkourState.jumpY(y);
       playerParkourState.jumpZ(z);
       playerParkourState.jumpYaw(yaw);
-      playerParkourState.jumpPitch(pitch);
     }
 
     // Player landed in this tick

@@ -34,11 +34,8 @@
           "name": "Digits after comma"
         }
       },
-      "jump_rotation": {
-        "name": "Jump Rotation",
-        "singleLine": {
-          "name": "Single Line"
-        },
+      "jump_angle": {
+        "name": "Jump Angle",
         "decimalPlaces": {
           "name": "Digits after comma"
         }
