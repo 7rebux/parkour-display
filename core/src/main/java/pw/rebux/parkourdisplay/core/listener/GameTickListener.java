@@ -27,53 +27,74 @@ public class GameTickListener {
       return;
     }
 
-    var player = addon.labyAPI().minecraft().getClientPlayer();
+    var minecraft = addon.labyAPI().minecraft();
+    var player = minecraft.getClientPlayer();
+    var playerParkourState = addon.playerParkourState();
 
-    if (player == null) {
+    if (player == null || player.isAbilitiesFlying() || player.gameMode() == GameMode.SPECTATOR || minecraft.isPaused()) {
       return;
     }
 
-    if (player.isAbilitiesFlying() || player.gameMode() == GameMode.SPECTATOR) {
-      return;
-    }
+    final var x = player.position().getX();
+    final var y = player.position().getY();
+    final var z = player.position().getZ();
+    final var yaw = player.getRotationYaw();
+    final var pitch = player.getRotationPitch();
+    final var onGround = player.isOnGround();
+    final var movingForward = player.getForwardMovingSpeed() != 0;
+    final var movingSideways = false; // player.getStrafeMovingSpeed() != 0;
+
+    playerParkourState.velocityX(x - lastTick.x());
+    playerParkourState.velocityY(y - lastTick.y());
+    playerParkourState.velocityZ(z - lastTick.z());
 
     // If the player landed this tick or is still airborne, we increase the air time
-    if (!lastTick.onGround() || !player.isOnGround()) {
+    if (!lastTick.onGround() || !onGround) {
       airTime++;
     }
 
     if (airTime > 0) {
-      addon.playerParkourState().airTime(airTime);
+      playerParkourState.airTime(airTime);
     }
 
     // Player jumped in this tick
     if (airTime == 1) {
-      addon.playerParkourState().jumpX(player.position().getX());
-      addon.playerParkourState().jumpY(player.position().getY());
-      addon.playerParkourState().jumpZ(player.position().getZ());
-      addon.playerParkourState().jumpYaw(player.getRotationYaw());
-      addon.playerParkourState().jumpPitch(player.getRotationPitch());
+      playerParkourState.jumpX(x);
+      playerParkourState.jumpY(y);
+      playerParkourState.jumpZ(z);
+      playerParkourState.jumpYaw(yaw);
+      playerParkourState.jumpPitch(pitch);
     }
 
     // Player landed in this tick
-    if (player.isOnGround() && !lastTick.onGround()) {
-      addon.playerParkourState().landingX(lastTick.x());
-      addon.playerParkourState().landingY(lastTick.y());
-      addon.playerParkourState().landingZ(lastTick.z());
-
-      addon.playerParkourState().hitX(player.position().getX());
-      addon.playerParkourState().hitY(player.position().getY());
-      addon.playerParkourState().hitZ(player.position().getZ());
+    if (onGround && !lastTick.onGround()) {
+      playerParkourState.landingX(lastTick.x());
+      playerParkourState.landingY(lastTick.y());
+      playerParkourState.landingZ(lastTick.z());
+      playerParkourState.hitX(x);
+      playerParkourState.hitY(y);
+      playerParkourState.hitZ(z);
     }
 
-    // Reset air time
-    if (player.isOnGround()) {
+    // Player attempted 45 degree strafe
+    if (lastTick.movingForward() && !lastTick.movingSideways()
+        && movingForward && movingSideways && !onGround) {
+      playerParkourState.lastFF(yaw - lastTick.yaw());
+    }
+
+    /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
+
+    if (onGround && airTime > 0) {
       airTime = 0;
     }
 
-    lastTick.x(player.position().getX());
-    lastTick.y(player.position().getY());
-    lastTick.z(player.position().getZ());
-    lastTick.onGround(player.isOnGround());
+    lastTick.x(x);
+    lastTick.y(y);
+    lastTick.z(z);
+    lastTick.yaw(yaw);
+    lastTick.pitch(pitch);
+    lastTick.onGround(onGround);
+    lastTick.movingForward(movingForward);
+    lastTick.movingSideways(movingSideways);
   }
 }

@@ -7,6 +7,15 @@
       }
     },
     "hudWidget": {
+      "velocity": {
+        "name": "Velocity",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
       "air_time": {
         "name": "Airtime"
       },
@@ -48,6 +57,12 @@
       },
       "last_timing": {
         "name": "Last Timing"
+      },
+      "last_forty_five": {
+        "name": "Last 45",
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
       }
     },
     "settings": {
