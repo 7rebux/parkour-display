@@ -19,6 +19,9 @@
       "air_time": {
         "name": "Airtime"
       },
+      "tier": {
+        "name": "Tier"
+      },
       "jump_coordinates": {
         "name": "Jump Coordinates",
         "singleLine": {

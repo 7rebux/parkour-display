@@ -5,14 +5,14 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class AirTimeWidget extends TextHudWidget<TextHudWidgetConfig> {
+public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
 
   private TextLine textLine;
 
-  public AirTimeWidget(ParkourDisplayAddon addon) {
-    super("air_time");
+  public TierWidget(ParkourDisplayAddon addon) {
+    super("tier");
 
     this.bindCategory(addon.category());
 
@@ -22,11 +22,14 @@ public class AirTimeWidget extends TextHudWidget<TextHudWidgetConfig> {
   @Override
   public void load(TextHudWidgetConfig config) {
     super.load(config);
-    this.textLine = createLine("Airtime", "");
+    this.textLine = createLine("Tier", "");
   }
 
   @Override
   public void onTick(boolean isEditorContext) {
-    this.textLine.updateAndFlush(this.addon.playerParkourState().lastDuration());
+    // https://www.mcpk.wiki/wiki/Tiers
+    var tier = 12 - this.addon.playerParkourState().lastDuration();
+
+    this.textLine.updateAndFlush(tier);
   }
 }

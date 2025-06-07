@@ -30,6 +30,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     hudWidgetRegistry.categoryRegistry().register(this.category);
     hudWidgetRegistry.register(new VelocityWidget(this));
     hudWidgetRegistry.register(new AirTimeWidget(this));
+    hudWidgetRegistry.register(new TierWidget(this));
     hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
     hudWidgetRegistry.register(new JumpRotationWidget(this));
     hudWidgetRegistry.register(new LandingCoordinatesWidget(this));

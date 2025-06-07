@@ -54,7 +54,7 @@ public class GameTickListener {
     }
 
     if (airTime > 0) {
-      playerParkourState.airTime(airTime);
+      playerParkourState.lastDuration(airTime);
     }
 
     // Player jumped in this tick
