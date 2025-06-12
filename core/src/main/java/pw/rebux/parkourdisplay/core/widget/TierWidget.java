@@ -1,6 +1,7 @@
 package pw.rebux.parkourdisplay.core.widget;
 
-import net.labymod.api.client.component.Component;
+import static net.labymod.api.client.component.Component.translatable;
+
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -14,22 +15,21 @@ public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   public TierWidget(ParkourDisplayAddon addon) {
     super("tier");
-
     this.bindCategory(addon.category());
-
     this.addon = addon;
   }
 
   @Override
   public void load(TextHudWidgetConfig config) {
     super.load(config);
-    this.textLine = createLine(Component.translatable("parkourdisplay.labels.tier"), "");
+
+    this.textLine = createLine(translatable("parkourdisplay.labels.tier"), "");
   }
 
   @Override
   public void onTick(boolean isEditorContext) {
     // https://www.mcpk.wiki/wiki/Tiers
-    var tier = 12 - this.addon.playerParkourState().lastDuration();
+    var tier = 12 - this.addon.playerParkourState().jumpDuration();
 
     this.textLine.updateAndFlush(tier);
   }

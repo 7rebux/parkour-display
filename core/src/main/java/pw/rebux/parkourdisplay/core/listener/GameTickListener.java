@@ -61,12 +61,12 @@ public class GameTickListener {
     }
 
     if (airTime > 0) {
-      playerParkourState.lastDuration(airTime);
+      playerParkourState.jumpDuration(airTime);
     }
 
     // Player jumped in this tick
     if (airTime == 1) {
-      playerParkourState.lastGroundDuration(groundTime);
+      playerParkourState.groundDuration(groundTime);
 
       if (addon.configuration().showGroundDurations().get()) {
         addon.displayMessage(
