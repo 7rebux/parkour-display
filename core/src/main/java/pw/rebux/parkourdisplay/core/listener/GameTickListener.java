@@ -60,14 +60,16 @@ public class GameTickListener {
       airTime++;
     }
 
+    if (groundTime > 0) {
+      playerParkourState.groundDuration(groundTime);
+    }
+
     if (airTime > 0) {
       playerParkourState.jumpDuration(airTime);
     }
 
     // Player jumped in this tick
     if (airTime == 1) {
-      playerParkourState.groundDuration(groundTime);
-
       if (addon.configuration().showGroundDurations().get()) {
         addon.displayMessage(
             Component.text(
@@ -88,9 +90,12 @@ public class GameTickListener {
       playerParkourState.landingX(lastTick.x());
       playerParkourState.landingY(lastTick.y());
       playerParkourState.landingZ(lastTick.z());
+
       playerParkourState.hitX(x);
       playerParkourState.hitY(y);
       playerParkourState.hitZ(z);
+
+      playerParkourState.groundDuration(0);
     }
 
     // Player attempted 45 degree strafe
