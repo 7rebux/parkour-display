@@ -14,5 +14,6 @@ public class PlayerParkourState {
   private float jumpYaw = 0;
   private double landingX = 0, landingY = 0, landingZ = 0;
   private double hitX = 0, hitY = 0, hitZ = 0;
+  private float hitYaw = 0;
   private float lastFF = 0;
 }

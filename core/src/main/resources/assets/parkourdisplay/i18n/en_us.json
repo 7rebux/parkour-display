@@ -58,6 +58,12 @@
           "name": "Digits after comma"
         }
       },
+      "hit_angle": {
+        "name": "Hit Angle",
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
       "last_timing": {
         "name": "Last Timing"
       },
@@ -85,6 +91,7 @@
         "y": "Hit Y",
         "z": "Hit z"
       },
+      "hit_angle": "Hit Angle",
       "jump_angle": "Jump Angle",
       "jump_coordinates": {
         "single": "Jump XYZ",

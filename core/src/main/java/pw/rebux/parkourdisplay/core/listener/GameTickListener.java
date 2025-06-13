@@ -104,6 +104,7 @@ public class GameTickListener {
       playerParkourState.hitX(x);
       playerParkourState.hitY(y);
       playerParkourState.hitZ(z);
+      playerParkourState.hitYaw(yaw);
 
       playerParkourState.groundDuration(0);
     }
