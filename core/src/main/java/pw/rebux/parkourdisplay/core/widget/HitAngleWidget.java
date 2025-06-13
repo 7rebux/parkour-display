@@ -21,7 +21,7 @@ public class HitAngleWidget extends TextHudWidget<HitAngleWidgetConfig> {
   private String stringFormat;
 
   public HitAngleWidget(ParkourDisplayAddon addon) {
-    super("hit_angle");
+    super("hit_angle", HitAngleWidgetConfig.class);
     this.bindCategory(addon.category());
     this.addon = addon;
   }

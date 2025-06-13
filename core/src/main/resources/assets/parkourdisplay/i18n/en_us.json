@@ -16,6 +16,15 @@
           "name": "Digits after comma"
         }
       },
+      "speed_vector": {
+        "name": "Speed Vector",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
       "air_time": {
         "name": "Airtime"
       },
@@ -58,6 +67,15 @@
           "name": "Digits after comma"
         }
       },
+      "hit_velocity": {
+        "name": "Hit Velocity",
+        "singleLine": {
+          "name": "Single Line"
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
       "hit_angle": {
         "name": "Hit Angle",
         "decimalPlaces": {
@@ -91,6 +109,11 @@
         "y": "Hit Y",
         "z": "Hit z"
       },
+      "hit_velocity": {
+        "single": "Hit Velocity",
+        "x": "Hit Velocity X",
+        "z": "Hit Velocity Z"
+      },
       "hit_angle": "Hit Angle",
       "jump_angle": "Jump Angle",
       "jump_coordinates": {
@@ -113,6 +136,11 @@
         "x": "Velocity X",
         "y": "Velocity Y",
         "z": "Velocity Z"
+      },
+      "speed_vector": {
+        "single": "Speed Vector",
+        "speed": "Speed XZ",
+        "angle": "Speed Angle"
       }
     }
   }
