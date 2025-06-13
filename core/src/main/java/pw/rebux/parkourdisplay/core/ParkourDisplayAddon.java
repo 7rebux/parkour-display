@@ -11,6 +11,7 @@ import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
+import pw.rebux.parkourdisplay.core.widget.HitVelocityWidget;
 import pw.rebux.parkourdisplay.core.widget.JumpAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.JumpCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LandingCoordinatesWidget;
@@ -46,6 +47,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     hudWidgetRegistry.register(new LandingCoordinatesWidget(this));
     hudWidgetRegistry.register(new HitCoordinatesWidget(this));
     hudWidgetRegistry.register(new HitAngleWidget(this));
+    hudWidgetRegistry.register(new HitVelocityWidget(this));
     // hudWidgetRegistry.register(new LastTimingWidget(this));
     hudWidgetRegistry.register(new LastFortyFiveWidget(this));
   }

@@ -45,13 +45,16 @@ public class GameTickListener {
     final var z = player.position().getZ();
     final var yaw = player.getRotationYaw();
     final var pitch = player.getRotationPitch();
+    final var vx = x - lastTick.x();
+    final var vy = y - lastTick.y();
+    final var vz = z - lastTick.z();
     final var onGround = player.isOnGround();
     final var movingForward = player.getForwardMovingSpeed() != 0;
     final var movingSideways = false; // player.getStrafeMovingSpeed() != 0;
 
-    playerParkourState.velocityX(x - lastTick.x());
-    playerParkourState.velocityY(y - lastTick.y());
-    playerParkourState.velocityZ(z - lastTick.z());
+    playerParkourState.velocityX(vx);
+    playerParkourState.velocityY(vy);
+    playerParkourState.velocityZ(vz);
 
     if (lastTick.onGround() && onGround) {
       groundTime = Math.min(groundTime + 1, 999);
@@ -105,6 +108,8 @@ public class GameTickListener {
       playerParkourState.hitY(y);
       playerParkourState.hitZ(z);
       playerParkourState.hitYaw(yaw);
+      playerParkourState.hitVelocityX(vx);
+      playerParkourState.hitVelocityZ(vz);
 
       playerParkourState.groundDuration(0);
     }
