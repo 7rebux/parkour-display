@@ -1,6 +1,8 @@
 package pw.rebux.parkourdisplay.core.listener;
 
-import net.labymod.api.client.component.Component;
+import static net.labymod.api.client.component.Component.text;
+import static net.labymod.api.client.component.Component.translatable;
+
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
@@ -71,10 +73,11 @@ public class GameTickListener {
     // Player jumped in this tick
     if (airTime == 1) {
       if (addon.configuration().showGroundDurations().get()) {
+        var color = groundTime > 0 ? NamedTextColor.RED : NamedTextColor.GREEN;
         addon.displayMessage(
-            Component.text(
-                groundTime,
-                groundTime > 0 ? NamedTextColor.RED : NamedTextColor.GREEN));
+            text("%dt".formatted(groundTime), color)
+                .append(text(" "))
+                .append(translatable("parkourdisplay.labels.ground_time", NamedTextColor.GRAY)));
       }
 
       groundTime = 0;
@@ -87,6 +90,13 @@ public class GameTickListener {
 
     // Player landed in this tick
     if (onGround && !lastTick.onGround()) {
+      if (addon.configuration().showJumpDurations().get()) {
+        addon.displayMessage(
+            text("%dt".formatted(airTime), NamedTextColor.GOLD)
+                .append(text(" "))
+                .append(translatable("parkourdisplay.labels.air_time", NamedTextColor.GRAY)));
+      }
+
       playerParkourState.landingX(lastTick.x());
       playerParkourState.landingY(lastTick.y());
       playerParkourState.landingZ(lastTick.z());
