@@ -90,6 +90,12 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
+      },
+      "last_turn": {
+        "name": "Last Turn",
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
       }
     },
     "settings": {
@@ -129,6 +135,7 @@
         "z": "Landing Z"
       },
       "last_forty_five": "Last 45",
+      "last_turn": "Last Turn",
       "last_timing": "Last Timing",
       "tier": "Tier",
       "velocity": {

@@ -73,6 +73,10 @@ public class GameTickListener {
       playerParkourState.jumpDuration(airTime);
     }
 
+    if (yaw != lastTick.yaw()) {
+      playerParkourState.lastTurn(yaw - lastTick.yaw());
+    }
+
     // Player jumped in this tick
     if (airTime == 1) {
       if (addon.configuration().showGroundDurations().get()) {
