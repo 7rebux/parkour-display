@@ -104,6 +104,9 @@
       },
       "showGroundDurations": {
         "name": "Show Ground Durations In Chat"
+      },
+      "showJumpDurations": {
+        "name": "Show Jump Durations in Chat"
       }
     },
     "labels": {
