@@ -124,6 +124,16 @@ public class GameTickListener {
       playerParkourState.lastFF(yaw - lastTick.yaw());
     }
 
+    StringBuilder input = new StringBuilder();
+    if (inputUtil.forwardKey().isDown()) input.append("W");
+    if (inputUtil.leftKey().isDown())    input.append("A");
+    if (inputUtil.backKey().isDown())    input.append("S");
+    if (inputUtil.rightKey().isDown())   input.append("D");
+    if (inputUtil.jumpKey().isDown())    input.append(" + Jump");
+    if (inputUtil.sneakKey().isDown())   input.append(" + Sneak");
+
+    playerParkourState.lastInput(input.toString());
+
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
 
     if (onGround && airTime > 0) {

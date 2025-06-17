@@ -96,6 +96,9 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
+      },
+      "last_input": {
+        "name": "Last Input"
       }
     },
     "settings": {
@@ -151,7 +154,8 @@
         "single": "Speed Vector",
         "speed": "Speed XZ",
         "angle": "Speed Angle"
-      }
+      },
+      "last_input": "Last Input"
     }
   }
 }
