@@ -124,15 +124,7 @@ public class GameTickListener {
       playerParkourState.lastFF(yaw - lastTick.yaw());
     }
 
-    StringBuilder input = new StringBuilder();
-    if (inputUtil.forwardKey().isDown()) input.append("W");
-    if (inputUtil.leftKey().isDown())    input.append("A");
-    if (inputUtil.backKey().isDown())    input.append("S");
-    if (inputUtil.rightKey().isDown())   input.append("D");
-    if (inputUtil.jumpKey().isDown())    input.append(" + Jump");
-    if (inputUtil.sneakKey().isDown())   input.append(" + Sneak");
-
-    playerParkourState.lastInput(input.toString());
+    playerParkourState.lastInput(buildInputString());
 
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
 
@@ -148,5 +140,27 @@ public class GameTickListener {
     lastTick.onGround(onGround);
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
+  }
+
+  private String buildInputString() {
+    var input = new StringBuilder();
+    var hasMovement = false;
+
+    if (inputUtil.forwardKey().isDown()) { input.append("W"); hasMovement = true; }
+    if (inputUtil.leftKey().isDown())    { input.append("A"); hasMovement = true; }
+    if (inputUtil.backKey().isDown())    { input.append("S"); hasMovement = true; }
+    if (inputUtil.rightKey().isDown())   { input.append("D"); hasMovement = true; }
+
+    if (inputUtil.jumpKey().isDown()) {
+      if (hasMovement) input.append(" ");
+      input.append("Jump");
+    }
+
+    if (inputUtil.sneakKey().isDown()) {
+      if (hasMovement || !input.isEmpty()) input.append(" ");
+      input.append("Sneak");
+    }
+
+    return input.toString();
   }
 }
