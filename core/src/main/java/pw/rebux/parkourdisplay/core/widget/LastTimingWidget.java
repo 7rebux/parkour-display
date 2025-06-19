@@ -28,13 +28,21 @@ public class LastTimingWidget extends TextHudWidget<LastTimingWidgetConfig> {
   public void load(LastTimingWidgetConfig config) {
     super.load(config);
 
-    this.textLine = createLine(translatable("parkourdisplay.labels.last_timing"), "");
+    this.textLine = createLine(translatable("parkourdisplay.labels.last_timing"), "-");
+  }
+
+  @Override
+  public void onTick(boolean isEditorContext) {
+    var lastTiming = this.addon.playerParkourState().lastTiming();
+
+    this.textLine.updateAndFlush(lastTiming);
   }
 
   @Accessors(fluent = true)
   @Getter
   public static class LastTimingWidgetConfig extends TextHudWidgetConfig {
 
+    // TODO: Implement
     @SwitchSetting
     private final ConfigProperty<Boolean> showMillis = new ConfigProperty<>(true);
   }
