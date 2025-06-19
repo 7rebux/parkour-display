@@ -138,8 +138,6 @@ public class GameTickListener {
 
     playerParkourState.lastInput(buildInputString());
 
-    updateLastTiming(playerParkourState);
-
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
 
     if (onGround && airTime > 0) {
@@ -156,13 +154,21 @@ public class GameTickListener {
     lastTick.movingSideways(movingSideways);
   }
 
-  // TODO: Pessi
   // https://www.mcpk.wiki/wiki/Timings
   private void updateLastTiming(PlayerParkourState playerParkourState) {
     // Movement
     if (inputUtil.isMoving()) {
       moveTime++;
       groundMovedTime++;
+
+      if (jumpTime > -1 && moveTime == 0 && airTime != 0 && (playerParkourState.lastTiming().contains("Pessi") || !locked)) {
+        if (jumpTime == 0) {
+          playerParkourState.lastTiming("Max Pessi");
+        } else {
+          playerParkourState.lastTiming("Pessi %d ticks".formatted(jumpTime + 1));
+        }
+        locked = true;
+      }
     } else {
       moveTime = -1;
       groundMovedTime = -1;
