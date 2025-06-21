@@ -19,4 +19,5 @@ public class PlayerParkourState {
   private float lastFF = 0;
   private float lastTurn = 0;
   private String lastInput = "-";
+  private String lastTiming = "-";
 }

@@ -9,6 +9,7 @@ import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 
@@ -20,6 +21,13 @@ public class GameTickListener {
   private final TickPosition lastTick = new TickPosition();
   private int airTime = 0;
   private int groundTime = 0;
+
+  // For last timing determination
+  private int moveTime = -1;
+  private int groundMovedTime = -1;
+  private int jumpTime = -1;
+  private int sneakTime = -2;
+  private boolean locked = false;
 
   public GameTickListener(ParkourDisplayAddon addon) {
     this.addon = addon;
@@ -39,6 +47,8 @@ public class GameTickListener {
     if (player == null || player.isAbilitiesFlying() || player.gameMode() == GameMode.SPECTATOR || minecraft.isPaused()) {
       return;
     }
+
+    updateLastTiming(playerParkourState);
 
     final var x = player.position().getX();
     final var y = player.position().getY();
@@ -97,6 +107,8 @@ public class GameTickListener {
 
     // Player landed in this tick
     if (onGround && !lastTick.onGround()) {
+      groundMovedTime = 0;
+
       if (addon.configuration().showJumpDurations().get()) {
         addon.displayMessage(
             text("%dt".formatted(airTime), NamedTextColor.GOLD)
@@ -140,6 +152,63 @@ public class GameTickListener {
     lastTick.onGround(onGround);
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
+  }
+
+  // https://www.mcpk.wiki/wiki/Timings
+  private void updateLastTiming(PlayerParkourState playerParkourState) {
+    // Movement
+    if (inputUtil.isMoving()) {
+      moveTime++;
+      groundMovedTime++;
+
+      if (jumpTime > -1 && moveTime == 0 && airTime != 0 && (playerParkourState.lastTiming().contains("Pessi") || !locked)) {
+        if (jumpTime == 0) {
+          playerParkourState.lastTiming("Max Pessi");
+        } else {
+          playerParkourState.lastTiming("Pessi %d ticks".formatted(jumpTime + 1));
+        }
+        locked = true;
+      }
+    } else {
+      moveTime = -1;
+      groundMovedTime = -1;
+    }
+
+    // Jumping
+    if (inputUtil.jumpKey().isDown() && airTime == 0) { // Initiated jump
+      jumpTime = 0;
+
+      if (moveTime == 0) {
+        playerParkourState.lastTiming("Jam");
+        locked = true;
+      } else if (moveTime > 0 && !locked) {
+        if (sneakTime > -1) {
+          playerParkourState.lastTiming("Burstjam %d ticks".formatted(groundMovedTime));
+        } else if (sneakTime == -1) {
+          playerParkourState.lastTiming("Burst %d ticks".formatted(groundMovedTime));
+        } else {
+          playerParkourState.lastTiming("HH %d ticks".formatted(groundMovedTime));
+        }
+        locked = true;
+      }
+    } else if (!lastTick.onGround() && jumpTime > -1) { // Midair
+      jumpTime++;
+    } else {
+      jumpTime = -1;
+    }
+
+    // Sneaking
+    if (inputUtil.sneakKey().isDown()) {
+      sneakTime = sneakTime == -2 ? 0 : sneakTime + 1;
+    }
+    else {
+      sneakTime = sneakTime < 0 ? -2 : -1;
+    }
+
+    // Unlock
+    if (!inputUtil.isMoving() && airTime == 0) {
+      locked = false;
+    }
   }
 
   private String buildInputString() {
