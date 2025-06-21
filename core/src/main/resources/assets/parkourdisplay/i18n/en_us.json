@@ -119,7 +119,7 @@
         "single": "Hit XYZ",
         "x": "Hit X",
         "y": "Hit Y",
-        "z": "Hit z"
+        "z": "Hit Z"
       },
       "hit_velocity": {
         "single": "Hit Velocity",
