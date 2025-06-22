@@ -5,10 +5,12 @@ import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
-import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
+import pw.rebux.parkourdisplay.core.listener.GameTickListener;
+import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
+import pw.rebux.parkourdisplay.core.widget.DebugWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -43,6 +45,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     this.registerSettingCategory();
 
     this.registerListener(new GameTickListener(this));
+    this.registerListener(new RenderWorldListener(this));
 
     this.registerCommand(new BaseCommand(this));
 

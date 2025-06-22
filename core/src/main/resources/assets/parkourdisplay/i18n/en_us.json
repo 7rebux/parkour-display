@@ -102,6 +102,11 @@
       }
     },
     "settings": {
+      "header": {
+        "landingBlock": {
+          "name": "Landing Block"
+        }
+      },
       "enabled": {
         "name": "Enabled"
       },
@@ -110,6 +115,18 @@
       },
       "showJumpDurations": {
         "name": "Show Jump Durations in Chat"
+      },
+      "highlightLandingBlocks": {
+        "name": "Highlight Landing Blocks"
+      },
+      "landingBlockFillColor": {
+        "name": "Block Fill Color"
+      },
+      "landingBlockOutlineColor": {
+        "name": "Block Outline Color"
+      },
+      "landingBlockOutlineThickness": {
+        "name": "Block Outline Thickness"
       }
     },
     "labels": {
@@ -156,6 +173,11 @@
         "angle": "Speed Angle"
       },
       "last_input": "Last Input"
+    },
+    "commands": {
+      "setlb": {
+        "description": "Sets the landing block."
+      }
     }
   }
 }
