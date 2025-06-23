@@ -17,6 +17,7 @@ public class LandingBlockManager {
 
     this.landingBlocks.add(
         new LandingBlock(
+            blockState.block(),
             new IntVector3(pos.getX(), pos.getY(), pos.getZ()),
             blockState.bounds()));
   }

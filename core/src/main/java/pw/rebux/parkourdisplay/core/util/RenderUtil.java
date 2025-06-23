@@ -12,6 +12,7 @@ public final class RenderUtil {
 
   private static final RectangleRenderer rectangleRenderer = Laby.references().renderPipeline().rectangleRenderer();
 
+  // TODO: Faces not rendering in v1.8.9
   public static void renderBoundingBox(
       IntVector3 objectPosition,
       DoubleVector3 renderPosition,

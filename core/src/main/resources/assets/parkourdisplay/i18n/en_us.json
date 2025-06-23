@@ -175,8 +175,26 @@
       "last_input": "Last Input"
     },
     "commands": {
-      "setlb": {
-        "description": "Sets the landing block."
+      "addlb": {
+        "description": "Adds a new landing block",
+        "messages": {
+          "invalidBlock": "Please stand on a valid block.",
+          "success": "Successfully added landing block."
+        }
+      },
+      "listlb": {
+        "description": "Lists all registered landing blocks",
+        "messages": {
+          "empty": "No landing blocks registered."
+        }
+      },
+      "removelb": {
+        "description": "Remove all or a single landing block",
+        "messages": {
+          "invalidIndex": "Please provide a valid index.",
+          "successSingle": "Successfully removed landing block.",
+          "successAll": "Successfully removed all landing blocks."
+        }
       }
     }
   }

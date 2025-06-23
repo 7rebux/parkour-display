@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.labymod.api.Laby;
+import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.position.Position;
 import net.labymod.api.util.math.vector.IntVector3;
@@ -14,6 +15,7 @@ import pw.rebux.parkourdisplay.core.state.TickPosition;
 @RequiredArgsConstructor
 public class LandingBlock {
 
+  private final Block block;
   private final IntVector3 blockPosition;
   private final AxisAlignedBoundingBox boundingBox;
   private final LandingBlockOffsets offsets = new LandingBlockOffsets();
