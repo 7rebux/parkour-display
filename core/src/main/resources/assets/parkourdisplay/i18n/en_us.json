@@ -99,9 +99,20 @@
       },
       "last_input": {
         "name": "Last Input"
+      },
+      "last_landing_block_offsets": {
+        "name": "Last Landing Block Offsets",
+        "singleLine": {
+          "name": "Single Line"
+        }
       }
     },
     "settings": {
+      "header": {
+        "landingBlock": {
+          "name": "Landing Blocks"
+        }
+      },
       "enabled": {
         "name": "Enabled"
       },
@@ -109,7 +120,25 @@
         "name": "Show Ground Durations In Chat"
       },
       "showJumpDurations": {
-        "name": "Show Jump Durations in Chat"
+        "name": "Show Jump Durations In Chat"
+      },
+      "landingBlockOffsetDecimalPlaces": {
+        "name": "Landing Block Offset Digits After Comma"
+      },
+      "showLandingBlockOffsets": {
+        "name": "Show Landing Block Offsets In Chat"
+      },
+      "highlightLandingBlocks": {
+        "name": "Highlight Landing Blocks"
+      },
+      "landingBlockFillColor": {
+        "name": "Block Fill Color"
+      },
+      "landingBlockOutlineColor": {
+        "name": "Block Outline Color"
+      },
+      "landingBlockOutlineThickness": {
+        "name": "Block Outline Thickness"
       }
     },
     "labels": {
@@ -155,7 +184,44 @@
         "speed": "Speed XZ",
         "angle": "Speed Angle"
       },
-      "last_input": "Last Input"
+      "last_input": "Last Input",
+      "last_landing_block_offsets": {
+        "single": "Last LB Offsets",
+        "total": "LB Offset Total",
+        "x": "LB Offset X",
+        "z": "LB Offset Z"
+      }
+    },
+    "commands": {
+      "addlb": {
+        "description": "Adds a new landing block",
+        "messages": {
+          "invalidBlock": "Please stand on a valid block.",
+          "success": "Successfully added landing block."
+        }
+      },
+      "listlb": {
+        "description": "Lists all registered landing blocks",
+        "messages": {
+          "empty": "No landing blocks registered."
+        }
+      },
+      "removelb": {
+        "description": "Remove all or a single landing block",
+        "messages": {
+          "invalidIndex": "Please provide a valid index.",
+          "successSingle": "Successfully removed landing block.",
+          "successAll": "Successfully removed all landing blocks."
+        }
+      },
+      "resetlb": {
+        "description": "Reset the personal best offsets for all or a single landing block.",
+        "messages": {
+          "invalidIndex": "Please provide a valid index.",
+          "successSingle": "Successfully reset landing block offsets.",
+          "successAll": "Successfully reset offsets of all landing blocks."
+        }
+      }
     }
   }
 }

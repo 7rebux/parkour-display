@@ -60,6 +60,7 @@ public class GameTickListener {
     final var vz = z - lastTick.z();
     final var onGround = player.isOnGround();
     final var movingForward = player.getForwardMovingSpeed() != 0;
+    // TODO: Temporary fix for older versions with try catch helper function
     final var movingSideways = false; // player.getStrafeMovingSpeed() != 0;
 
     playerParkourState.velocityX(vx);
@@ -136,6 +137,11 @@ public class GameTickListener {
       playerParkourState.lastFF(yaw - lastTick.yaw());
     }
 
+    // Player is falling
+    if (vy < 0 && airTime > 1) {
+      addon.landingBlockManager().checkOffsets(player, lastTick);
+    }
+
     playerParkourState.lastInput(buildInputString());
 
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
@@ -161,7 +167,9 @@ public class GameTickListener {
       moveTime++;
       groundMovedTime++;
 
-      if (jumpTime > -1 && moveTime == 0 && airTime != 0 && (playerParkourState.lastTiming().contains("Pessi") || !locked)) {
+      if (jumpTime > -1 && moveTime == 0 && airTime != 0
+          && (playerParkourState.lastTiming().contains("Pessi") || !locked)
+      ) {
         if (jumpTime == 0) {
           playerParkourState.lastTiming("Max Pessi");
         } else {
@@ -228,6 +236,10 @@ public class GameTickListener {
     if (inputUtil.sneakKey().isDown()) {
       if (hasMovement || !input.isEmpty()) input.append(" ");
       input.append("Sneak");
+    }
+
+    if (input.isEmpty()) {
+      input.append("-");
     }
 
     return input.toString();
