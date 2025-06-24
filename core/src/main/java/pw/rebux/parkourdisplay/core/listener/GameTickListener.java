@@ -139,7 +139,7 @@ public class GameTickListener {
     }
 
     // Player is falling
-    if (vy < 0 && !onGround) {
+    if (vy < 0 && airTime > 1) {
       addon.landingBlockManager().checkOffsets(player, lastTick, secondLastTick);
     }
 

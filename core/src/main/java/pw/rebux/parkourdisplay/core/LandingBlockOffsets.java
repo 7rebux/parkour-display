@@ -11,8 +11,11 @@ public class LandingBlockOffsets {
 
   private Double bestOffset;
 
-  public void update(
-      ParkourDisplayAddon addon,
+  private Double tempTotalOffset;
+  private Double tempXOffset;
+  private Double tempZOffset;
+
+  public void compute(
       ClientPlayer player,
       AxisAlignedBoundingBox box,
       double x,
@@ -26,31 +29,46 @@ public class LandingBlockOffsets {
     var zOffset = checkZ(player, box, z);
     var totalOffset = calculateTotalOffset(xOffset, zOffset);
 
-    var format = "%%.%df"
-        .formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
+    if (tempTotalOffset == null || totalOffset > tempTotalOffset) {
+      tempTotalOffset = totalOffset;
+      tempXOffset = xOffset;
+      tempZOffset = zOffset;
+    }
+  }
 
-    addon.playerParkourState().lastTotalLandingBlockOffset(totalOffset);
-    addon.playerParkourState().lastLandingBlockOffsetX(xOffset);
-    addon.playerParkourState().lastLandingBlockOffsetZ(zOffset);
+  public void update(ParkourDisplayAddon addon) {
+    if (tempTotalOffset == null || tempXOffset == null || tempZOffset == null) {
+      return;
+    }
 
-    if (bestOffset == null || totalOffset > bestOffset) {
-      bestOffset = totalOffset;
+    var format = "%%.%df".formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
+
+    addon.playerParkourState().lastTotalLandingBlockOffset(tempTotalOffset);
+    addon.playerParkourState().lastLandingBlockOffsetX(tempXOffset);
+    addon.playerParkourState().lastLandingBlockOffsetZ(tempZOffset);
+
+    if (bestOffset == null || tempTotalOffset > bestOffset) {
+      bestOffset = tempTotalOffset;
 
       // Always show new pb in chat
       addon.displayMessage(
           text("New PB:")
               .append(space())
-              .append(text(String.format(format, bestOffset))));
+              .append(text(String.format(format, tempTotalOffset))));
     } else if (addon.configuration().showLandingBlockOffsets().get()) {
       addon.displayMessage(
           text("X Offset:")
               .append(space())
-              .append(text(String.format(format, xOffset))));
+              .append(text(String.format(format, tempXOffset))));
       addon.displayMessage(
           text("Z Offset:")
               .append(space())
-              .append(text(String.format(format, zOffset))));
+              .append(text(String.format(format, tempZOffset))));
     }
+
+    tempTotalOffset = null;
+    tempXOffset = null;
+    tempZOffset = null;
   }
 
   private double checkX(ClientPlayer player, AxisAlignedBoundingBox box, double x) {
@@ -58,7 +76,7 @@ public class LandingBlockOffsets {
     var left = box.getMaxX() - x + halfPlayerWidth;
     var right = x - box.getMinX() + halfPlayerWidth;
 
-    return Math.max(left, right);
+    return Math.min(left, right);
   }
 
   private double checkZ(ClientPlayer player, AxisAlignedBoundingBox box, double z) {
@@ -66,7 +84,7 @@ public class LandingBlockOffsets {
     var front = box.getMaxZ() - z + halfPlayerWidth;
     var back = z - box.getMinZ() + halfPlayerWidth;
 
-    return Math.max(front, back);
+    return Math.min(front, back);
   }
 
   private double calculateTotalOffset(double xOffset, double zOffset) {

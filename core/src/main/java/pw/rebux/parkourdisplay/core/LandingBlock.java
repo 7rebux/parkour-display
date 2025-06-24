@@ -42,14 +42,17 @@ public class LandingBlock {
         Objects.requireNonNull(blockState.bounds()).move(blockPosition));
 
     for (var box : collisions) {
-      // TODO: Check more precisely for a landing zone which can be extended by 1 block in each direction
-      if (!(position.getY() >= box.getMaxY()) || !(lastTick.y() > box.getMaxY())) {
+      // Check for landing tick
+      if (!(position.getY() <= box.getMaxY() && lastTick.y() > box.getMaxY())) {
         continue;
       }
 
-      // Landing mode
-      offsets.update(
-          addon,
+      // Check if the landing block is close enough
+      if (box.getCenter().distanceSquared(position.toDoubleVector3()) > 2) {
+        continue;
+      }
+
+      offsets.compute(
           player,
           box,
           lastTick.x(),
@@ -59,5 +62,7 @@ public class LandingBlock {
           secondLastTick.y(),
           secondLastTick.z());
     }
+
+    offsets.update(addon);
   }
 }
