@@ -17,7 +17,7 @@ A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhan
 - Hit Vector
 - Last Input
 - Last Timing
-- ~~Last 45~~ (currently broken due to LabyMod API)
+- Last 45 (Not working in 1.21.4)
 - Velocities X, Y, Z
 - Speed Vector
 - Tier

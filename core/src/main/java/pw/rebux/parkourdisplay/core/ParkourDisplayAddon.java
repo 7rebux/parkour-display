@@ -17,6 +17,7 @@ import pw.rebux.parkourdisplay.core.widget.HitVelocityWidget;
 import pw.rebux.parkourdisplay.core.widget.JumpAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.JumpCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LandingCoordinatesWidget;
+import pw.rebux.parkourdisplay.core.widget.LastFortyFiveWidget;
 import pw.rebux.parkourdisplay.core.widget.LastInputWidget;
 import pw.rebux.parkourdisplay.core.widget.LastLandingBlockOffsetsWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTimingWidget;
@@ -63,8 +64,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     hudWidgetRegistry.register(new HitVelocityWidget(this));
     hudWidgetRegistry.register(new LastTimingWidget(this));
     hudWidgetRegistry.register(new LastTurnWidget(this));
-    // TODO: API is broken in 1.21.4
-    // hudWidgetRegistry.register(new LastFortyFiveWidget(this));
+    hudWidgetRegistry.register(new LastFortyFiveWidget(this));
     hudWidgetRegistry.register(new LastInputWidget(this));
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
   }

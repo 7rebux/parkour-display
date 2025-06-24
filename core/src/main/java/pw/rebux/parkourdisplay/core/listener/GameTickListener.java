@@ -4,6 +4,7 @@ import static net.labymod.api.client.component.Component.text;
 import static net.labymod.api.client.component.Component.translatable;
 
 import net.labymod.api.client.component.format.NamedTextColor;
+import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
@@ -34,6 +35,14 @@ public class GameTickListener {
     this.inputUtil = new MinecraftInputUtil(addon);
   }
 
+  private boolean tryGetMovingSideways(ClientPlayer player) {
+    try {
+      return player.getStrafeMovingSpeed() != 0;
+    } catch (Throwable throwable) {
+      return false;
+    }
+  }
+
   @Subscribe
   public void onGameTick(GameTickEvent event) {
     if (event.phase() != Phase.POST) {
@@ -60,8 +69,7 @@ public class GameTickListener {
     final var vz = z - lastTick.z();
     final var onGround = player.isOnGround();
     final var movingForward = player.getForwardMovingSpeed() != 0;
-    // TODO: Temporary fix for older versions with try catch helper function
-    final var movingSideways = false; // player.getStrafeMovingSpeed() != 0;
+    final var movingSideways = tryGetMovingSideways(player);
 
     playerParkourState.velocityX(vx);
     playerParkourState.velocityY(vy);
