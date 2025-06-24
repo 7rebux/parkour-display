@@ -19,7 +19,7 @@ public class GameTickListener {
   private final MinecraftInputUtil inputUtil;
 
   private final TickPosition lastTick = new TickPosition();
-  private TickPosition secondLastTick = new TickPosition();
+  private final TickPosition secondLastTick = new TickPosition();
   private int airTime = 0;
   private int groundTime = 0;
 
@@ -61,6 +61,7 @@ public class GameTickListener {
     final var vz = z - lastTick.z();
     final var onGround = player.isOnGround();
     final var movingForward = player.getForwardMovingSpeed() != 0;
+    // TODO: Temporary fix for older versions with try catch helper function
     final var movingSideways = false; // player.getStrafeMovingSpeed() != 0;
 
     playerParkourState.velocityX(vx);
@@ -139,7 +140,7 @@ public class GameTickListener {
 
     // Player is falling
     if (vy < 0 && !onGround) {
-      addon.landingBlockManager().checkOffsets(player.position(), lastTick, secondLastTick);
+      addon.landingBlockManager().checkOffsets(player, lastTick, secondLastTick);
     }
 
     playerParkourState.lastInput(buildInputString());
@@ -150,8 +151,14 @@ public class GameTickListener {
       airTime = 0;
     }
 
-    // TODO: Is this a reference?
-    secondLastTick = lastTick;
+    secondLastTick.x(lastTick.x());
+    secondLastTick.y(lastTick.y());
+    secondLastTick.z(lastTick.z());
+    secondLastTick.yaw(lastTick.yaw());
+    secondLastTick.pitch(lastTick.pitch());
+    secondLastTick.onGround(lastTick.onGround());
+    secondLastTick.movingForward(lastTick.movingForward());
+    secondLastTick.movingSideways(lastTick.movingSideways());
     lastTick.x(x);
     lastTick.y(y);
     lastTick.z(z);
@@ -169,7 +176,9 @@ public class GameTickListener {
       moveTime++;
       groundMovedTime++;
 
-      if (jumpTime > -1 && moveTime == 0 && airTime != 0 && (playerParkourState.lastTiming().contains("Pessi") || !locked)) {
+      if (jumpTime > -1 && moveTime == 0 && airTime != 0
+          && (playerParkourState.lastTiming().contains("Pessi") || !locked)
+      ) {
         if (jumpTime == 0) {
           playerParkourState.lastTiming("Max Pessi");
         } else {
@@ -236,6 +245,10 @@ public class GameTickListener {
     if (inputUtil.sneakKey().isDown()) {
       if (hasMovement || !input.isEmpty()) input.append(" ");
       input.append("Sneak");
+    }
+
+    if (input.isEmpty()) {
+      input.append("-");
     }
 
     return input.toString();

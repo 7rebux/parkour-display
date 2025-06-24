@@ -26,8 +26,17 @@ public class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> showJumpDurations = new ConfigProperty<>(true);
 
   @SettingSection("landingBlock")
+  @SliderSetting(min = 0, max = 10)
+  private final ConfigProperty<Integer> landingBlockOffsetDecimalPlaces =
+      new ConfigProperty<>(3);
+
   @SwitchSetting
-  private final ConfigProperty<Boolean> highlightLandingBlocks = new ConfigProperty<>(true);
+  private final ConfigProperty<Boolean> showLandingBlockOffsets =
+      new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> highlightLandingBlocks =
+      new ConfigProperty<>(true);
 
   @ColorPickerSetting(alpha = true, chroma = true)
   private final ConfigProperty<Color> landingBlockFillColor =

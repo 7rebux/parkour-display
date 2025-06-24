@@ -1,12 +1,14 @@
 package pw.rebux.parkourdisplay.core;
 
+import java.util.Objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.labymod.api.Laby;
+import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
-import net.labymod.api.util.math.position.Position;
 import net.labymod.api.util.math.vector.IntVector3;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 
@@ -18,10 +20,17 @@ public class LandingBlock {
   private final Block block;
   private final IntVector3 blockPosition;
   private final AxisAlignedBoundingBox boundingBox;
-  private final LandingBlockOffsets offsets = new LandingBlockOffsets();
 
-  public void checkOffsets(Position position, TickPosition lastTick, TickPosition secondLastTick) {
-    // TODO: calculateBounds probably needed
+  @Setter
+  private LandingBlockOffsets offsets = new LandingBlockOffsets();
+
+  public void checkOffsets(
+      ParkourDisplayAddon addon,
+      ClientPlayer player,
+      TickPosition lastTick,
+      TickPosition secondLastTick
+  ) {
+    var position = player.position();
     var minecraft = Laby.labyAPI().minecraft();
     var blockState = minecraft.clientWorld().getBlockState(blockPosition);
 
@@ -29,15 +38,26 @@ public class LandingBlock {
       return;
     }
 
-    var collisions = minecraft.clientWorld().getBlockCollisions(blockState.bounds());
+    var collisions = minecraft.clientWorld().getBlockCollisions(
+        Objects.requireNonNull(blockState.bounds()).move(blockPosition));
 
     for (var box : collisions) {
-      if (!(position.getY() <= box.getMaxY()) || !(lastTick.y() > box.getMaxY())) {
+      // TODO: Check more precisely for a landing zone which can be extended by 1 block in each direction
+      if (!(position.getY() >= box.getMaxY()) || !(lastTick.y() > box.getMaxY())) {
         continue;
       }
 
       // Landing mode
-      offsets.update(box, lastTick.x(), lastTick.y(), lastTick.z(), secondLastTick.x(), secondLastTick.y(), secondLastTick.z());
+      offsets.update(
+          addon,
+          player,
+          box,
+          lastTick.x(),
+          lastTick.y(),
+          lastTick.z(),
+          secondLastTick.x(),
+          secondLastTick.y(),
+          secondLastTick.z());
     }
   }
 }

@@ -10,7 +10,6 @@ import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
-import pw.rebux.parkourdisplay.core.widget.DebugWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -19,6 +18,7 @@ import pw.rebux.parkourdisplay.core.widget.JumpAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.JumpCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LandingCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LastInputWidget;
+import pw.rebux.parkourdisplay.core.widget.LastLandingBlockOffsetsWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTimingWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTurnWidget;
 import pw.rebux.parkourdisplay.core.widget.SpeedVectorWidget;
@@ -33,7 +33,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");
 
   @Getter
-  private final LandingBlockManager landingBlockManager = new LandingBlockManager();
+  private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
 
   @Getter
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
@@ -66,9 +66,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     // TODO: API is broken in 1.21.4
     // hudWidgetRegistry.register(new LastFortyFiveWidget(this));
     hudWidgetRegistry.register(new LastInputWidget(this));
-
-    // TODO: remove on release
-    hudWidgetRegistry.register(new DebugWidget(this));
+    hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
   }
 
   @Override

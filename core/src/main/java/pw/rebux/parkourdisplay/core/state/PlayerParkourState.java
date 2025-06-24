@@ -20,4 +20,7 @@ public class PlayerParkourState {
   private float lastTurn = 0;
   private String lastInput = "-";
   private String lastTiming = "-";
+
+  private Double lastTotalLandingBlockOffset;
+  private Double lastLandingBlockOffsetX, lastLandingBlockOffsetZ;
 }

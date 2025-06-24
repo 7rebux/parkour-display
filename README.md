@@ -2,6 +2,11 @@
 
 A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhance gameplay with parkour-related features.
 
+## Features
+
+- Set multiple landing blocks and calculate their landing offsets
+- Command system (`/parkourdisplay`, `/pd`)
+
 ## Labels / Widgets
 
 - Jump Coordinates X, Y, Z
@@ -18,3 +23,4 @@ A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhan
 - Tier
 - Airtime
 - Ground Time
+- Landing Block Offsets

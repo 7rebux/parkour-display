@@ -23,6 +23,7 @@ public class BaseCommand extends Command {
     this.withSubCommand(new AddLandingBlockCommand(addon));
     this.withSubCommand(new ListLandingBlocksCommand(addon));
     this.withSubCommand(new RemoveLandingBlockCommand(addon));
+    this.withSubCommand(new ResetLandingBlockCommand(addon));
   }
 
   @Override

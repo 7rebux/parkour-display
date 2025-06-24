@@ -5,14 +5,15 @@ import static net.labymod.api.client.component.Component.translatable;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import org.spongepowered.include.com.google.common.primitives.Ints;
+import pw.rebux.parkourdisplay.core.LandingBlockOffsets;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class RemoveLandingBlockCommand extends SubCommand {
+public class ResetLandingBlockCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
-  public RemoveLandingBlockCommand(ParkourDisplayAddon addon) {
-    super("removelb", "rmlb", "clearlb");
+  public ResetLandingBlockCommand(ParkourDisplayAddon addon) {
+    super("resetlb");
     this.addon = addon;
   }
 
@@ -21,10 +22,11 @@ public class RemoveLandingBlockCommand extends SubCommand {
     var landingBlockManager = this.addon.landingBlockManager();
 
     if (arguments.length == 0) {
-      landingBlockManager.getLandingBlocks().clear();
+      landingBlockManager.getLandingBlocks().forEach(landingBlock ->
+          landingBlock.offsets(new LandingBlockOffsets()));
       this.displayMessage(
           translatable(
-              "parkourdisplay.commands.removelb.messages.successAll",
+              "parkourdisplay.commands.resetlb.messages.successAll",
               NamedTextColor.GREEN));
     } else {
       var index = Ints.tryParse(arguments[0]);
@@ -32,15 +34,17 @@ public class RemoveLandingBlockCommand extends SubCommand {
       if (index == null || landingBlockManager.getLandingBlocks().size() <= index) {
         this.displayMessage(
             translatable(
-                "parkourdisplay.commands.removelb.messages.invalidIndex",
+                "parkourdisplay.commands.resetlb.messages.invalidIndex",
                 NamedTextColor.RED));
         return true;
       }
 
-      landingBlockManager.getLandingBlocks().remove(index.intValue());
+      var landingBlock = landingBlockManager.getLandingBlocks().get(index);
+
+      landingBlock.offsets(new LandingBlockOffsets());
       this.displayMessage(
           translatable(
-              "parkourdisplay.commands.removelb.messages.successSingle",
+              "parkourdisplay.commands.resetlb.messages.successSingle",
               NamedTextColor.GREEN));
     }
 
