@@ -19,7 +19,6 @@ public class GameTickListener {
   private final MinecraftInputUtil inputUtil;
 
   private final TickPosition lastTick = new TickPosition();
-  private final TickPosition secondLastTick = new TickPosition();
   private int airTime = 0;
   private int groundTime = 0;
 
@@ -140,7 +139,7 @@ public class GameTickListener {
 
     // Player is falling
     if (vy < 0 && airTime > 1) {
-      addon.landingBlockManager().checkOffsets(player, lastTick, secondLastTick);
+      addon.landingBlockManager().checkOffsets(player, lastTick);
     }
 
     playerParkourState.lastInput(buildInputString());
@@ -151,14 +150,6 @@ public class GameTickListener {
       airTime = 0;
     }
 
-    secondLastTick.x(lastTick.x());
-    secondLastTick.y(lastTick.y());
-    secondLastTick.z(lastTick.z());
-    secondLastTick.yaw(lastTick.yaw());
-    secondLastTick.pitch(lastTick.pitch());
-    secondLastTick.onGround(lastTick.onGround());
-    secondLastTick.movingForward(lastTick.movingForward());
-    secondLastTick.movingSideways(lastTick.movingSideways());
     lastTick.x(x);
     lastTick.y(y);
     lastTick.z(z);

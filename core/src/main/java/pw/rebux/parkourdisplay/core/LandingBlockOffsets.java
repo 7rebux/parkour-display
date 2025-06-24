@@ -3,10 +3,10 @@ package pw.rebux.parkourdisplay.core;
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
 
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 
-// TODO: Landing and Hit mode
 public class LandingBlockOffsets {
 
   private Double bestOffset;
@@ -15,16 +15,7 @@ public class LandingBlockOffsets {
   private Double tempXOffset;
   private Double tempZOffset;
 
-  public void compute(
-      ClientPlayer player,
-      AxisAlignedBoundingBox box,
-      double x,
-      double y,
-      double z,
-      double lastX,
-      double lastY,
-      double lastZ
-  ) {
+  public void compute(ClientPlayer player, AxisAlignedBoundingBox box, double x, double z) {
     var xOffset = checkX(player, box, x);
     var zOffset = checkZ(player, box, z);
     var totalOffset = calculateTotalOffset(xOffset, zOffset);
@@ -52,18 +43,18 @@ public class LandingBlockOffsets {
 
       // Always show new pb in chat
       addon.displayMessage(
-          text("New PB:")
+          text("New PB:", NamedTextColor.GREEN)
               .append(space())
-              .append(text(String.format(format, tempTotalOffset))));
+              .append(text(String.format(format, tempTotalOffset), NamedTextColor.DARK_GREEN)));
     } else if (addon.configuration().showLandingBlockOffsets().get()) {
       addon.displayMessage(
-          text("X Offset:")
+          text("X Offset:", NamedTextColor.RED)
               .append(space())
-              .append(text(String.format(format, tempXOffset))));
+              .append(text(String.format(format, tempXOffset), NamedTextColor.DARK_RED)));
       addon.displayMessage(
-          text("Z Offset:")
+          text("Z Offset:", NamedTextColor.RED)
               .append(space())
-              .append(text(String.format(format, tempZOffset))));
+              .append(text(String.format(format, tempZOffset), NamedTextColor.DARK_RED)));
     }
 
     tempTotalOffset = null;

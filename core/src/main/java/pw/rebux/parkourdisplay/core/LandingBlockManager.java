@@ -25,12 +25,8 @@ public class LandingBlockManager {
             blockState.bounds()));
   }
 
-  public void checkOffsets(
-      ClientPlayer player,
-      TickPosition lastTick,
-      TickPosition secondLastTick
-  ) {
+  public void checkOffsets(ClientPlayer player, TickPosition lastTick) {
     this.landingBlocks.forEach(landingBlock ->
-        landingBlock.checkOffsets(addon, player, lastTick, secondLastTick));
+        landingBlock.checkOffsets(addon, player, lastTick));
   }
 }
