@@ -6,6 +6,7 @@ import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
+import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
 import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;

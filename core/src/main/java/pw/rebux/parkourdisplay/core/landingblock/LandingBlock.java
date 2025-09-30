@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core;
+package pw.rebux.parkourdisplay.core.landingblock;
 
 import java.util.Objects;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.IntVector3;
+import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 
 @Getter

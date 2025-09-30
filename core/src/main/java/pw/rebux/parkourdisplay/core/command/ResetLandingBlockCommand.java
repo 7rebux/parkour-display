@@ -5,8 +5,8 @@ import static net.labymod.api.client.component.Component.translatable;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import org.spongepowered.include.com.google.common.primitives.Ints;
-import pw.rebux.parkourdisplay.core.LandingBlockOffsets;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.landingblock.LandingBlockOffsets;
 
 public class ResetLandingBlockCommand extends SubCommand {
 

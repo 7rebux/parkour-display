@@ -1,11 +1,13 @@
-package pw.rebux.parkourdisplay.core;
+package pw.rebux.parkourdisplay.core.landingblock;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
 
 import net.labymod.api.client.component.format.NamedTextColor;
+import net.labymod.api.client.component.format.TextColor;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
+import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 public class LandingBlockOffsets {
 
@@ -33,6 +35,9 @@ public class LandingBlockOffsets {
     }
 
     var format = "%%.%df".formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
+    var formattedX = String.format(format, tempXOffset);
+    var formattedZ = String.format(format, tempZOffset);
+    var formattedTotal = String.format(format, tempTotalOffset);
 
     addon.playerParkourState().lastTotalLandingBlockOffset(tempTotalOffset);
     addon.playerParkourState().lastLandingBlockOffsetX(tempXOffset);
@@ -45,16 +50,20 @@ public class LandingBlockOffsets {
       addon.displayMessage(
           text("New PB:", NamedTextColor.GREEN)
               .append(space())
-              .append(text(String.format(format, tempTotalOffset), NamedTextColor.DARK_GREEN)));
+              .append(text(formattedTotal, NamedTextColor.DARK_GREEN))
+              .append(space())
+              .append(text("(X: %s, Z: %s)".formatted(formattedX, formattedZ), NamedTextColor.GRAY)));
     } else if (addon.configuration().showLandingBlockOffsets().get()) {
-      addon.displayMessage(
-          text("X Offset:", NamedTextColor.RED)
+      TextColor primary = tempTotalOffset < 0 ? NamedTextColor.RED : NamedTextColor.AQUA;
+      TextColor secondary = tempTotalOffset < 0 ? NamedTextColor.DARK_RED : NamedTextColor.DARK_AQUA;
+
+        addon.displayMessage(
+          text("Offset X:", primary)
               .append(space())
-              .append(text(String.format(format, tempXOffset), NamedTextColor.DARK_RED)));
-      addon.displayMessage(
-          text("Z Offset:", NamedTextColor.RED)
+              .append(text(formattedX, secondary))
+              .append(text(", Z:", primary))
               .append(space())
-              .append(text(String.format(format, tempZOffset), NamedTextColor.DARK_RED)));
+              .append(text(formattedZ, secondary)));
     }
 
     tempTotalOffset = null;
