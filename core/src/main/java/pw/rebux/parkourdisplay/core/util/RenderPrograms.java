@@ -8,11 +8,12 @@ import net.labymod.laby3d.api.pipeline.RenderState;
 import net.labymod.laby3d.api.pipeline.blend.DefaultBlendFunctions;
 import net.labymod.laby3d.api.pipeline.shader.ShaderProgramDescription;
 import net.labymod.laby3d.api.resource.AssetId;
+import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 public final class RenderPrograms {
 
   public static final RenderState DEBUG_BOUNDING_BOX = RenderState.builder()
-      .setId(buildStateId("quads"))
+      .setId(buildStateId("debug_bounding_box"))
       .setVertexDescription(VertexDescriptions.POSITION_UV_COLOR)
       .setDrawingMode(DrawingMode.QUADS)
       .setBlendFunction(DefaultBlendFunctions.TRANSLUCENT)
@@ -29,10 +30,10 @@ public final class RenderPrograms {
       .build();
 
   private static AssetId buildStateId(String name) {
-    return AssetId.of("parkourdisplay", "renderstate/" + name);
+    return AssetId.of(ParkourDisplayAddon.NAMESPACE, "renderstate/" + name);
   }
 
   private static AssetId buildProgramId(String name) {
-    return AssetId.of("parkourdisplay", "shaderprogram/" + name);
+    return AssetId.of(ParkourDisplayAddon.NAMESPACE, "shaderprogram/" + name);
   }
 }

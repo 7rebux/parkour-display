@@ -30,6 +30,8 @@ import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
 @Accessors(fluent = true)
 public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> {
 
+  public static final String NAMESPACE = "parkourdisplay";
+
   @Getter
   private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");
 
