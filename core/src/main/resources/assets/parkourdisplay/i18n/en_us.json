@@ -221,6 +221,21 @@
           "successSingle": "Successfully reset landing block offsets.",
           "successAll": "Successfully reset offsets of all landing blocks."
         }
+      },
+      "reloadmacros": {
+        "description": "Reloads all macros",
+        "messages": {
+          "success": "Successfully reloaded all macros."
+        }
+      },
+      "runmacro": {
+        "description": "Executes a specific macro"
+      },
+      "listmacros": {
+        "description": "Lists all loaded macros",
+        "messages": {
+          "empty": "No macros found."
+        }
       }
     }
   }
