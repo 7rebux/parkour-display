@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
@@ -9,6 +10,7 @@ import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
 import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
+import pw.rebux.parkourdisplay.core.macro.MacroManager;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
@@ -34,10 +36,16 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   public static final String NAMESPACE = "parkourdisplay";
 
   @Getter
+  private final Gson gson = new Gson();
+
+  @Getter
   private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");
 
   @Getter
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
+
+  @Getter
+  private final MacroManager macroManager = new MacroManager(this);
 
   @Getter
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
