@@ -36,25 +36,18 @@ public class GameTickListener {
     this.inputUtil = new MinecraftInputUtil(addon);
   }
 
-  private boolean tryGetMovingSideways(ClientPlayer player) {
-    try {
-      return player.getStrafeMovingSpeed() != 0;
-    } catch (Throwable throwable) {
-      return false;
-    }
-  }
-
   @Subscribe
   public void onGameTick(GameTickEvent event) {
-    if (event.phase() != Phase.POST) {
-      return;
-    }
-
     var minecraft = addon.labyAPI().minecraft();
     var player = minecraft.getClientPlayer();
     var playerParkourState = addon.playerParkourState();
 
     if (player == null || player.isAbilitiesFlying() || player.gameMode() == GameMode.SPECTATOR || minecraft.isPaused()) {
+      return;
+    }
+
+    if (event.phase() == Phase.PRE) {
+      processMacros(player);
       return;
     }
 
@@ -183,6 +176,14 @@ public class GameTickListener {
     );
   }
 
+  private boolean tryGetMovingSideways(ClientPlayer player) {
+    try {
+      return player.getStrafeMovingSpeed() != 0;
+    } catch (Throwable throwable) {
+      return false;
+    }
+  }
+
   // https://www.mcpk.wiki/wiki/Timings
   private void updateLastTiming(PlayerParkourState playerParkourState) {
     // Movement
@@ -266,5 +267,26 @@ public class GameTickListener {
     }
 
     return input.toString();
+  }
+
+  private void processMacros(ClientPlayer player) {
+    var activeMacro = this.addon.macroManager().activeMacro();
+
+    if (activeMacro.isEmpty()) {
+      return;
+    }
+
+    var tickInput = activeMacro.pop();
+
+    this.inputUtil.setPressed(this.inputUtil.forwardKey(), tickInput.w());
+    this.inputUtil.setPressed(this.inputUtil.leftKey(), tickInput.a());
+    this.inputUtil.setPressed(this.inputUtil.backKey(), tickInput.s());
+    this.inputUtil.setPressed(this.inputUtil.rightKey(), tickInput.d());
+    this.inputUtil.setPressed(this.inputUtil.jumpKey(), tickInput.jump());
+    this.inputUtil.setPressed(this.inputUtil.sprintKey(), tickInput.sprint());
+    this.inputUtil.setPressed(this.inputUtil.sneakKey(), tickInput.sneak());
+
+    player.setRotationYaw(tickInput.yaw());
+    player.setRotationPitch(tickInput.pitch());
   }
 }

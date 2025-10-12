@@ -6,14 +6,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.TickInput;
 
+@Accessors(fluent = true)
 public class MacroManager {
 
   private final ParkourDisplayAddon addon;
@@ -21,6 +24,9 @@ public class MacroManager {
 
   @Getter
   private final Map<String, List<TickInput>> macros = new HashMap<>();
+
+  @Getter
+  private final ArrayDeque<TickInput> activeMacro = new ArrayDeque<>();
 
   public MacroManager(ParkourDisplayAddon addon) {
     this.addon = addon;
@@ -62,5 +68,10 @@ public class MacroManager {
     var writer = new BufferedWriter(new FileWriter(new File(this.macrosDirectory, name + ".json")));
     writer.write(this.addon.gson().toJson(tickStates));
     writer.close();
+  }
+
+  public void runMacro(List<TickInput> macro) {
+    this.activeMacro.clear();
+    this.activeMacro.addAll(macro);
   }
 }

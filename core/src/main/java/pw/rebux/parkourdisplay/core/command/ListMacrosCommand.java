@@ -19,7 +19,7 @@ public class ListMacrosCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var macros = this.addon.macroManager().getMacros();
+    var macros = this.addon.macroManager().macros();
 
     if (macros.isEmpty()) {
       this.displayMessage(
