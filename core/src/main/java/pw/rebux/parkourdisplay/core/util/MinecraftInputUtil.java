@@ -29,6 +29,14 @@ public class MinecraftInputUtil {
     this.jumpKey = options.getInputMapping("key.jump");
   }
 
+  public void setPressed(MinecraftInputMapping input, boolean pressed) {
+    if (pressed) {
+      input.press();
+    } else {
+      input.unpress();
+    }
+  }
+
   public boolean isMoving() {
     return forwardKey.isDown() || backKey.isDown() || leftKey.isDown() || rightKey.isDown();
   }

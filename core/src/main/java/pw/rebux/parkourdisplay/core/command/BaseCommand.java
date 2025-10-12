@@ -20,10 +20,17 @@ public class BaseCommand extends Command {
 
     this.addon = addon;
 
+    // Landing block commands
     this.withSubCommand(new AddLandingBlockCommand(addon));
     this.withSubCommand(new ListLandingBlocksCommand(addon));
     this.withSubCommand(new RemoveLandingBlockCommand(addon));
     this.withSubCommand(new ResetLandingBlockCommand(addon));
+
+    // Macro commands
+    this.withSubCommand(new ReloadMacrosCommand(addon));
+    this.withSubCommand(new ListMacrosCommand(addon));
+    this.withSubCommand(new RunMacroCommand(addon));
+    this.withSubCommand(new SaveMacroCommand(addon));
   }
 
   @Override
@@ -56,6 +63,4 @@ public class BaseCommand extends Command {
 
     return true;
   }
-
-
 }
