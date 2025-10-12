@@ -30,6 +30,7 @@ public class BaseCommand extends Command {
     this.withSubCommand(new ReloadMacrosCommand(addon));
     this.withSubCommand(new ListMacrosCommand(addon));
     this.withSubCommand(new RunMacroCommand(addon));
+    this.withSubCommand(new SaveMacroCommand(addon));
   }
 
   @Override

@@ -1,13 +1,18 @@
 package pw.rebux.parkourdisplay.core.macro;
 
 import com.google.gson.stream.JsonReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.state.TickInput;
 
 public class MacroManager {
 
@@ -15,11 +20,11 @@ public class MacroManager {
   private final File macrosDirectory;
 
   @Getter
-  private final Map<String, Macro> macros = new HashMap<>();
+  private final Map<String, List<TickInput>> macros = new HashMap<>();
 
   public MacroManager(ParkourDisplayAddon addon) {
     this.addon = addon;
-    this.macrosDirectory = new File(addon.addonInfo().getDirectoryPath().toFile(), "macros");
+    this.macrosDirectory = new File("temp_todo", "macros");
 
     loadMacros();
   }
@@ -40,14 +45,22 @@ public class MacroManager {
 
       for (File file : files) {
         JsonReader reader = new JsonReader(new FileReader(file));
-        Macro macro = this.addon.gson().fromJson(reader, ArrayList.class);
+        ArrayList<TickInput> macro = this.addon.gson().fromJson(reader, ArrayList.class);
 
-        this.macros.put(file.getName().replace("json", ""), macro);
+        this.macros.put(file.getName().replace(".json", ""), macro);
       }
 
       this.addon.logger().info("Loaded %d macros.".formatted(this.macros.size()));
     } catch (Exception e) {
       this.addon.logger().error("Failed to load macros.", e);
     }
+  }
+
+  public void saveMacro(List<TickInput> tickStates, String name) throws IOException {
+    this.macros.put(name, tickStates);
+
+    var writer = new BufferedWriter(new FileWriter(new File(this.macrosDirectory, name + ".json")));
+    writer.write(this.addon.gson().toJson(tickStates));
+    writer.close();
   }
 }

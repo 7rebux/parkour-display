@@ -1,6 +1,7 @@
 package pw.rebux.parkourdisplay.core;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
@@ -12,6 +13,8 @@ import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
 import pw.rebux.parkourdisplay.core.macro.MacroManager;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
+import pw.rebux.parkourdisplay.core.state.TickInput;
+import pw.rebux.parkourdisplay.core.util.adapter.TickInputAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
@@ -36,7 +39,9 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   public static final String NAMESPACE = "parkourdisplay";
 
   @Getter
-  private final Gson gson = new Gson();
+  private final Gson gson = new GsonBuilder()
+      .registerTypeAdapter(TickInput.class, new TickInputAdapter())
+      .create();
 
   @Getter
   private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");

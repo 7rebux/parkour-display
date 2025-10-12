@@ -11,6 +11,7 @@ import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
+import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 
@@ -166,6 +167,20 @@ public class GameTickListener {
     lastTick.onGround(onGround);
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
+
+    playerParkourState.previousTicks().add(
+        new TickInput(
+            inputUtil.forwardKey().isDown(),
+            inputUtil.leftKey().isDown(),
+            inputUtil.backKey().isDown(),
+            inputUtil.rightKey().isDown(),
+            inputUtil.jumpKey().isDown(),
+            inputUtil.sprintKey().isDown(),
+            inputUtil.sneakKey().isDown(),
+            yaw,
+            pitch
+        )
+    );
   }
 
   // https://www.mcpk.wiki/wiki/Timings

@@ -2,6 +2,7 @@ package pw.rebux.parkourdisplay.core.state;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import net.labymod.api.util.collection.EvictingQueue;
 
 @Data
 @Accessors(fluent = true)
@@ -23,4 +24,8 @@ public class PlayerParkourState {
 
   private double lastTotalLandingBlockOffset = 0;
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
+
+  // Persisting the last one minute of ticks
+  private final EvictingQueue<TickInput> previousTicks =
+      new EvictingQueue<>(60 * 20);
 }

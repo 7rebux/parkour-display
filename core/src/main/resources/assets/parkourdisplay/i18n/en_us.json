@@ -236,6 +236,13 @@
         "messages": {
           "empty": "No macros found."
         }
+      },
+      "savemacro": {
+        "description": "Saves a macro with a given name",
+        "messages": {
+          "success": "Successfully saved macro.",
+          "error": "Could not save macro. Check console for more information."
+        }
       }
     }
   }
