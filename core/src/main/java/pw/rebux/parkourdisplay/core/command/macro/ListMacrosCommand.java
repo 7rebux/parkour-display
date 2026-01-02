@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.macro;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
@@ -8,11 +8,11 @@ import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class ListMacrosCommand extends SubCommand {
+public final class ListMacrosCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
-  protected ListMacrosCommand(ParkourDisplayAddon addon) {
+  public ListMacrosCommand(ParkourDisplayAddon addon) {
     super("listmacros", "listmacro", "lsmacros", "lsmacro");
     this.addon = addon;
   }

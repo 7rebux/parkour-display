@@ -229,7 +229,10 @@
         }
       },
       "runmacro": {
-        "description": "Executes a specific macro"
+        "description": "Executes a specific or the last run macro",
+        "messages": {
+          "notFound": "No macro found. Please provide a valid name or complete a run."
+        }
       },
       "listmacros": {
         "description": "Lists all loaded macros",
@@ -242,6 +245,18 @@
         "messages": {
           "success": "Successfully saved macro.",
           "error": "Could not save macro. Check console for more information."
+        }
+      },
+      "setstart": {
+        "description": "Sets the run start position",
+        "messages": {
+          "success": "Successfully set run start position."
+        }
+      },
+      "setend": {
+        "description": "Sets the run end position",
+        "messages": {
+          "success": "Successfully set run end position."
         }
       }
     }

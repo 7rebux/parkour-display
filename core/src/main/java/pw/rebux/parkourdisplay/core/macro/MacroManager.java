@@ -30,7 +30,7 @@ public class MacroManager {
 
   public MacroManager(ParkourDisplayAddon addon) {
     this.addon = addon;
-    this.macrosDirectory = new File("temp_todo", "macros");
+    this.macrosDirectory = new File(ParkourDisplayAddon.DATA_DIR, "macros");
 
     loadMacros();
   }

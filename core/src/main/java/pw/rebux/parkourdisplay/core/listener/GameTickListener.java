@@ -15,7 +15,7 @@ import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 
-public class GameTickListener {
+public final class GameTickListener {
 
   private final ParkourDisplayAddon addon;
   private final MinecraftInputUtil inputUtil;
@@ -146,6 +146,54 @@ public class GameTickListener {
 
     playerParkourState.lastInput(buildInputString());
 
+    // TODO: This should happen after storing ticks, otherwise its +1 in the replay, or?
+    if (playerParkourState.isRunSetUp()) {
+      var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - x);
+      var startOffsetZ = Math.abs(playerParkourState.runStartPosition().posZ() - z);
+      var endOffsetX = Math.abs(playerParkourState.runEndPosition().posX() - x);
+      var endOffsetZ = Math.abs(playerParkourState.runEndPosition().posZ() - z);
+
+      // Start
+      if (startOffsetX <= playerParkourState.runStartPosition().offsetX()
+          && startOffsetZ <= playerParkourState.runStartPosition().offsetZ()
+          && playerParkourState.runStartPosition().posY() == y
+      ) {
+        playerParkourState.runStarted(true);
+        playerParkourState.runSplits().forEach(split -> split.passed(false));
+        playerParkourState.runTickInputs().clear();
+      }
+
+      // Splits
+      if (playerParkourState.runStarted()) {
+        for (var split : playerParkourState.runSplits()) {
+          var splitOffsetX = Math.abs(split.positionOffset().posX() - x);
+          var splitOffsetZ = Math.abs(split.positionOffset().posZ() - z);
+
+          if (!split.passed()
+              && splitOffsetX <= split.positionOffset().offsetX()
+              && splitOffsetZ <= split.positionOffset().offsetZ()
+              && split.positionOffset().posY() == y
+          ) {
+            split.updatePB(addon, playerParkourState.runTickInputs().size());
+            split.passed(true);
+          }
+        }
+      }
+
+      // TODO: Global ground tick count per run
+      // TODO: we could also treat this as a split
+      // TODO: pressure plate mode, show offset from finishing based on last tick
+      // End
+      if (playerParkourState.runStarted()
+          && endOffsetX <= playerParkourState.runEndPosition().offsetX()
+          && endOffsetZ <= playerParkourState.runEndPosition().offsetZ()
+          && playerParkourState.runEndPosition().posY() == y
+      ) {
+        playerParkourState.runStarted(false);
+        addon.displayMessage(text("Run ended (%dt)!".formatted(playerParkourState.runTickInputs().size()), NamedTextColor.RED));
+      }
+    }
+
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
 
     if (onGround && airTime > 0) {
@@ -161,19 +209,24 @@ public class GameTickListener {
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
 
-    playerParkourState.previousTicks().add(
-        new TickInput(
-            inputUtil.forwardKey().isDown(),
-            inputUtil.leftKey().isDown(),
-            inputUtil.backKey().isDown(),
-            inputUtil.rightKey().isDown(),
-            inputUtil.jumpKey().isDown(),
-            inputUtil.sprintKey().isDown(),
-            inputUtil.sneakKey().isDown(),
-            yaw,
-            pitch
-        )
+    var tickInput = new TickInput(
+        inputUtil.forwardKey().isDown(),
+        inputUtil.leftKey().isDown(),
+        inputUtil.backKey().isDown(),
+        inputUtil.rightKey().isDown(),
+        inputUtil.jumpKey().isDown(),
+        inputUtil.sprintKey().isDown(),
+        inputUtil.sneakKey().isDown(),
+        yaw,
+        pitch
     );
+
+    // TODO: Remove this?
+    playerParkourState.previousTicks().add(tickInput);
+
+    if (playerParkourState.runStarted()) {
+      playerParkourState.runTickInputs().add(tickInput);
+    }
   }
 
   private boolean tryGetMovingSideways(ClientPlayer player) {

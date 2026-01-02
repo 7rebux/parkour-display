@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.macro;
 
 import static net.labymod.api.client.component.Component.translatable;
 
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import net.labymod.api.client.chat.command.SubCommand;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class SaveMacroCommand extends SubCommand {
+public final class SaveMacroCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
-  protected SaveMacroCommand(ParkourDisplayAddon addon) {
+  public SaveMacroCommand(ParkourDisplayAddon addon) {
     super("savemacro");
     this.addon = addon;
   }
@@ -19,19 +19,19 @@ public class SaveMacroCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-      return false;
+      // TODO: Print info
+      return true;
     }
 
-    var previousTicks = new ArrayList<>(this.addon.playerParkourState().previousTicks());
+    var tickInputs = new ArrayList<>(this.addon.playerParkourState().runTickInputs());
     var name = arguments[0];
 
     try {
-      this.addon.macroManager().saveMacro(previousTicks, name);
+      this.addon.macroManager().saveMacro(tickInputs, name);
       this.displayMessage(translatable("parkourdisplay.commands.savemacro.messages.success"));
     } catch (IOException e) {
       this.addon.logger().error("Could not save macro with name '%s'".formatted(name), e);
       this.displayMessage(translatable("parkourdisplay.commands.savemacro.messages.error"));
-      return false;
     }
 
     return true;

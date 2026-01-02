@@ -1,15 +1,15 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.macro;
 
 import static net.labymod.api.client.component.Component.translatable;
 
 import net.labymod.api.client.chat.command.SubCommand;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class ReloadMacrosCommand extends SubCommand {
+public final class ReloadMacrosCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
-  protected ReloadMacrosCommand(ParkourDisplayAddon addon) {
+  public ReloadMacrosCommand(ParkourDisplayAddon addon) {
     super("reloadmacros", "rlmacros");
     this.addon = addon;
   }

@@ -5,6 +5,8 @@ A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhan
 ## Features
 
 - Set multiple landing blocks and calculate their landing offsets
+- Cyv compatible macro recorder & runner
+- Splits system
 - Command system (`/parkourdisplay`, `/pd`)
 
 ## Labels / Widgets

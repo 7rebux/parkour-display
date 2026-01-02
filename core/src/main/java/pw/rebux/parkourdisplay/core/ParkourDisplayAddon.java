@@ -2,6 +2,7 @@ package pw.rebux.parkourdisplay.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.File;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
@@ -37,6 +38,7 @@ import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
 public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> {
 
   public static final String NAMESPACE = "parkourdisplay";
+  public static final File DATA_DIR = new File("parkour-display");
 
   @Getter
   private final Gson gson = new GsonBuilder()
@@ -44,7 +46,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
       .create();
 
   @Getter
-  private final HudWidgetCategory category = new HudWidgetCategory(this, "parkourdisplay");
+  private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
 
   @Getter
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);

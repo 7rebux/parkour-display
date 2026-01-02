@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.lb;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
@@ -12,7 +12,7 @@ import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.vector.IntVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class ListLandingBlocksCommand extends SubCommand {
+public final class ListLandingBlocksCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 

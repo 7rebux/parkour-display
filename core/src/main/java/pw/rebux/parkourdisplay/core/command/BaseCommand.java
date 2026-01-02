@@ -4,10 +4,24 @@ import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
 import static net.labymod.api.client.component.Component.translatable;
 
+import java.util.List;
 import net.labymod.api.client.chat.command.Command;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.component.format.TextDecoration;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.command.lb.AddLandingBlockCommand;
+import pw.rebux.parkourdisplay.core.command.lb.ListLandingBlocksCommand;
+import pw.rebux.parkourdisplay.core.command.lb.RemoveLandingBlockCommand;
+import pw.rebux.parkourdisplay.core.command.lb.ResetLandingBlockCommand;
+import pw.rebux.parkourdisplay.core.command.macro.ListMacrosCommand;
+import pw.rebux.parkourdisplay.core.command.macro.ReloadMacrosCommand;
+import pw.rebux.parkourdisplay.core.command.macro.RunMacroCommand;
+import pw.rebux.parkourdisplay.core.command.macro.SaveMacroCommand;
+import pw.rebux.parkourdisplay.core.command.run.AddRunSplitCommand;
+import pw.rebux.parkourdisplay.core.command.run.RemoveRunSplitCommand;
+import pw.rebux.parkourdisplay.core.command.run.ResetRunSplitsCommand;
+import pw.rebux.parkourdisplay.core.command.run.SetRunEndCommand;
+import pw.rebux.parkourdisplay.core.command.run.SetRunStartCommand;
 
 public class BaseCommand extends Command {
 
@@ -31,6 +45,13 @@ public class BaseCommand extends Command {
     this.withSubCommand(new ListMacrosCommand(addon));
     this.withSubCommand(new RunMacroCommand(addon));
     this.withSubCommand(new SaveMacroCommand(addon));
+
+    // Run commands
+    this.withSubCommand(new SetRunStartCommand(addon));
+    this.withSubCommand(new SetRunEndCommand(addon));
+    this.withSubCommand(new AddRunSplitCommand(addon));
+    this.withSubCommand(new RemoveRunSplitCommand(addon));
+    this.withSubCommand(new ResetRunSplitsCommand(addon));
   }
 
   @Override
@@ -62,5 +83,15 @@ public class BaseCommand extends Command {
     });
 
     return true;
+  }
+
+  // TODO: Not working yet (https://dev.labymod.net/pages/addon/features/commands/)
+  @Override
+  public List<String> complete(String[] arguments) {
+    if (arguments.length == 1) {
+      return this.getSubCommands().stream().map(Command::getPrefix).toList();
+    }
+
+    return super.complete(arguments);
   }
 }

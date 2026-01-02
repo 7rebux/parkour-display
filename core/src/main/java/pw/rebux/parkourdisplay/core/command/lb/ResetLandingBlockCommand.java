@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.lb;
 
 import static net.labymod.api.client.component.Component.translatable;
 
@@ -8,7 +8,7 @@ import org.spongepowered.include.com.google.common.primitives.Ints;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockOffsets;
 
-public class ResetLandingBlockCommand extends SubCommand {
+public final class ResetLandingBlockCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 

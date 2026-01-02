@@ -1,12 +1,14 @@
 package pw.rebux.parkourdisplay.core.state;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.labymod.api.util.collection.EvictingQueue;
 
 @Data
 @Accessors(fluent = true)
-public class PlayerParkourState {
+public final class PlayerParkourState {
 
   private double velocityX = 0, velocityY = 0, velocityZ = 0;
   private int jumpDuration = 0;
@@ -25,7 +27,19 @@ public class PlayerParkourState {
   private double lastTotalLandingBlockOffset = 0;
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
+  private PositionOffset runStartPosition = null;
+  private PositionOffset runEndPosition = null;
+  private List<RunSplit> runSplits = new ArrayList<>();
+  // TODO: Prevent overflow
+  private List<TickInput> runTickInputs = new ArrayList<>();
+  private boolean runStarted = false;
+
   // Persisting the last one minute of ticks
+  // TODO: Not used right now
   private final EvictingQueue<TickInput> previousTicks =
       new EvictingQueue<>(60 * 20);
+
+  public boolean isRunSetUp() {
+    return runStartPosition != null && runEndPosition != null;
+  }
 }

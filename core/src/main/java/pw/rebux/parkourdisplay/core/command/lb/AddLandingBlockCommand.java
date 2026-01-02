@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.lb;
 
 import static net.labymod.api.client.component.Component.translatable;
 
@@ -9,7 +9,7 @@ import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.world.block.BlockState;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class AddLandingBlockCommand extends SubCommand {
+public final class AddLandingBlockCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 

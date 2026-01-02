@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.lb;
 
 import static net.labymod.api.client.component.Component.translatable;
 
@@ -7,7 +7,7 @@ import net.labymod.api.client.component.format.NamedTextColor;
 import org.spongepowered.include.com.google.common.primitives.Ints;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class RemoveLandingBlockCommand extends SubCommand {
+public final class RemoveLandingBlockCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
