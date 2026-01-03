@@ -1,15 +1,13 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import static net.labymod.api.client.component.Component.translatable;
+
 import java.io.IOException;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 public final class SaveRunSplitsCommand extends SubCommand {
-
-  private static final File RUN_SPLITS_DIR = new File(ParkourDisplayAddon.DATA_DIR, "splits");
 
   private final ParkourDisplayAddon addon;
 
@@ -21,18 +19,22 @@ public final class SaveRunSplitsCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-
-      return false;
+      this.displayMessage(
+          translatable(
+            "parkourdisplay.commands.savesplits.messages.nameRequired",
+            NamedTextColor.RED));
+      return true;
     }
 
-    var name = arguments[0];
-
     try {
-      var writer = new BufferedWriter(new FileWriter(new File(RUN_SPLITS_DIR, name + ".json")));
-
-      writer.close();
+      this.addon.splitsManager().saveCurrentSplits(arguments[0]);
+      this.displayMessage(
+          translatable(
+              "parkourdisplay.commands.savesplits.messages.success",
+              NamedTextColor.GREEN));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      addon.logger().error("Failed to save splits.", e);
+      this.displayMessage("Failed to save splits. Check console for more info.");
     }
 
     return true;

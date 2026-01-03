@@ -1,12 +1,13 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import java.io.File;
+import static net.labymod.api.client.component.Component.translatable;
+
+import java.io.FileNotFoundException;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 public final class LoadRunSplitsCommand extends SubCommand {
-
-  private static final File ZORTMOD_DATA_DIR = new File("zmdata");
 
   private final ParkourDisplayAddon addon;
 
@@ -18,11 +19,25 @@ public final class LoadRunSplitsCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-
-      return false;
+      this.displayMessage(
+          translatable(
+              "parkourdisplay.commands.loadsplits.messages.nameRequired",
+              NamedTextColor.RED));
+      return true;
     }
 
-    var name = arguments[0];
+    try {
+      this.addon.splitsManager().loadSplits(arguments[0]);
+      this.displayMessage(
+          translatable(
+              "parkourdisplay.commands.loadsplits.messages.success",
+              NamedTextColor.GREEN));
+    } catch (FileNotFoundException e) {
+      this.displayMessage(
+          translatable(
+              "parkourdisplay.commands.loadsplits.messages.notFound",
+              NamedTextColor.RED));
+    }
 
     return true;
   }

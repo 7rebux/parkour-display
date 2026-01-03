@@ -45,6 +45,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   @Getter
   private final Gson gson = new GsonBuilder()
       .registerTypeAdapter(TickInput.class, new TickInputAdapter())
+      .setPrettyPrinting()
       .create();
 
   @Getter
@@ -55,6 +56,9 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
 
   @Getter
   private final MacroManager macroManager = new MacroManager(this);
+
+  @Getter
+  private final SplitsManager splitsManager = new SplitsManager(this);
 
   @Getter
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
