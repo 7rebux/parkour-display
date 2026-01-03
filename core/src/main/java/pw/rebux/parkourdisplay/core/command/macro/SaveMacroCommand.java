@@ -5,6 +5,7 @@ import static net.labymod.api.client.component.Component.translatable;
 import java.io.IOException;
 import java.util.ArrayList;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 public final class SaveMacroCommand extends SubCommand {
@@ -19,7 +20,10 @@ public final class SaveMacroCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-      // TODO: Print info
+      this.displayMessage(
+          translatable(
+              "parkourdisplay.commands.savemacro.messages.nameRequired",
+              NamedTextColor.RED));
       return true;
     }
 

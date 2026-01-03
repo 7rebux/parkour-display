@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
-import pw.rebux.parkourdisplay.core.state.RunSplit;
 
 @RequiredArgsConstructor
 public final class SplitsManager {
@@ -67,8 +66,9 @@ public final class SplitsManager {
     var splitsArrayObj = new JsonArray();
     var splitDxArrayObj = new JsonArray();
     var splitDzArrayObj = new JsonArray();
+    // In zortmod these are only updated if the run was finished
     var pbSplitsArrayObj = new JsonArray();
-    // TODO: Ok this is what we have right now, best split times. Instead pb splits is best split time with finish
+    // These are always updated
     var bestSplitsArrayObj = new JsonArray();
     // This is unused in zortmod, persisting an empty array to remain compatibility
     var goldSplitsArrayObj = new JsonArray();
@@ -129,7 +129,7 @@ public final class SplitsManager {
     var splitsArrayObj = rootObj.getAsJsonArray("splits");
     var splitDxArrayObj = rootObj.getAsJsonArray("splitDx");
     var splitDzArrayObj = rootObj.getAsJsonArray("splitDz");
-    var pbSplitsArrayObj = rootObj.getAsJsonArray("pbSplits");
+    var bestSplitsArrayObj = rootObj.getAsJsonArray("bestSplits");
 
     this.addon.playerParkourState().runSplits().clear();
 
@@ -143,7 +143,7 @@ public final class SplitsManager {
               .offsetX(splitDxArrayObj.get(i).getAsDouble())
               .offsetZ(splitDzArrayObj.get(i).getAsDouble())
               .build());
-      split.personalBest(pbSplitsArrayObj.get(i).getAsInt());
+      split.personalBest(bestSplitsArrayObj.get(i).getAsInt());
 
       this.addon.playerParkourState().runSplits().add(split);
     }
@@ -151,9 +151,12 @@ public final class SplitsManager {
 
   private Stream<SplitFile> listJsonFiles(File dir, String source) {
     var files = dir.listFiles(f -> f.getName().endsWith(".json"));
-
     return files == null
         ? Stream.empty()
-        : Arrays.stream(files).map(f -> new SplitFile(f.getName().split(".json")[0], source, f.lastModified()));
+        : Arrays.stream(files).map(f ->
+            new SplitFile(
+                f.getName().split(".json")[0],
+                source,
+                f.lastModified()));
   }
 }

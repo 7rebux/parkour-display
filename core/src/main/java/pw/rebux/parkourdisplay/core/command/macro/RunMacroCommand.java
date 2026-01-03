@@ -20,7 +20,7 @@ public final class RunMacroCommand extends SubCommand {
   public boolean execute(String prefix, String[] arguments) {
     var macroOptional = arguments.length == 1
         ? Optional.ofNullable(this.addon.macroManager().macros().get(arguments[0]))
-        : Optional.ofNullable(this.addon.playerParkourState().runTickInputs());
+        : Optional.of(this.addon.playerParkourState().runTickInputs().stream().toList());
 
     if (macroOptional.isEmpty()) {
       this.displayMessage(

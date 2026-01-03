@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.state;
+package pw.rebux.parkourdisplay.core.splits;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.state.PositionOffset;
 
 @Data
 @RequiredArgsConstructor

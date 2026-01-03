@@ -6,8 +6,8 @@ import java.util.Objects;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.splits.RunSplit;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
-import pw.rebux.parkourdisplay.core.state.RunSplit;
 
 public final class AddRunSplitCommand extends SubCommand {
 

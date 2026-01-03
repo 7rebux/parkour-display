@@ -91,7 +91,8 @@ public class BaseCommand extends Command {
     return true;
   }
 
-  // TODO: Not working yet (https://dev.labymod.net/pages/addon/features/commands/)
+  // Not working yet as stated on https://dev.labymod.net/pages/addon/features/commands/
+  // Sad :(
   @Override
   public List<String> complete(String[] arguments) {
     if (arguments.length == 1) {

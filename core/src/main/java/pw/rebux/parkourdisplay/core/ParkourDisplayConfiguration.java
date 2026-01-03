@@ -49,4 +49,20 @@ public class ParkourDisplayConfiguration extends AddonConfig {
   @SliderSetting(min = 0.01F, max = 1.0F, steps = 0.01F)
   private final ConfigProperty<Float> landingBlockOutlineThickness =
       new ConfigProperty<>(0.01F);
+
+  @SettingSection("runSplit")
+  @SwitchSetting
+  private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(true);
+
+  @ColorPickerSetting(alpha = true, chroma = true)
+  private final ConfigProperty<Color> runSplitFillColor =
+      new ConfigProperty<>(Color.ofRGB(0, 192, 255, 25));
+
+  @ColorPickerSetting(alpha = true, chroma = true)
+  private final ConfigProperty<Color> runSplitOutlineColor =
+      new ConfigProperty<>(Color.ofRGB(0, 192, 255, 75));
+
+  @SliderSetting(min = 0.01F, max = 1.0F, steps = 0.01F)
+  private final ConfigProperty<Float> runSplitOutlineThickness =
+      new ConfigProperty<>(0.01F);
 }

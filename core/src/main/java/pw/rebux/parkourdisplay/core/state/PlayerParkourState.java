@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import net.labymod.api.util.collection.EvictingQueue;
+import pw.rebux.parkourdisplay.core.splits.RunSplit;
 
 @Data
 @Accessors(fluent = true)
@@ -30,15 +31,10 @@ public final class PlayerParkourState {
   private PositionOffset runStartPosition = null;
   private RunSplit runEndSplit = null;
   private List<RunSplit> runSplits = new ArrayList<>();
-  // TODO: Prevent overflow
-  private List<TickInput> runTickInputs = new ArrayList<>();
+  // Persisting a maximum of 6.000 ticks (5 minutes)
+  private EvictingQueue<TickInput> runTickInputs = new EvictingQueue<>(5 * 60 * 20);
   private int runGroundTime = 0;
   private boolean runStarted = false;
-
-  // Persisting the last one minute of ticks
-  // TODO: Not used right now
-  private final EvictingQueue<TickInput> previousTicks =
-      new EvictingQueue<>(60 * 20);
 
   public boolean isRunSetUp() {
     return runStartPosition != null && runEndSplit != null;

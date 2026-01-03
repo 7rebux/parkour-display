@@ -6,7 +6,7 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.RunSplit;
+import pw.rebux.parkourdisplay.core.splits.RunSplit;
 
 public final class RunSplitsWidget extends TextHudWidget<TextHudWidgetConfig> {
 

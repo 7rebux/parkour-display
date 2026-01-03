@@ -14,15 +14,16 @@ public class RenderWorldListener {
 
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
+    renderLandingBlocks(event);
+    renderSplitBoxes(event);
+  }
+
+  private void renderLandingBlocks(RenderWorldEvent event) {
     if (!addon.configuration().highlightLandingBlocks().get()) {
       return;
     }
 
     var landingBlocks = this.addon.landingBlockManager().getLandingBlocks();
-
-    if (landingBlocks.isEmpty()) {
-      return;
-    }
 
     for (var landingBlock : landingBlocks) {
       RenderUtil.renderBoundingBox(
@@ -33,6 +34,37 @@ public class RenderWorldListener {
           event.stack(),
           this.addon.configuration().landingBlockFillColor().get().get(),
           this.addon.configuration().landingBlockOutlineColor().get().get());
+    }
+  }
+
+  private void renderSplitBoxes(RenderWorldEvent event) {
+    if (!addon.configuration().highlightRunSplits().get()) {
+      return;
+    }
+
+    var splits = this.addon.playerParkourState().runSplits();
+    var runEndSplit = this.addon.playerParkourState().runEndSplit();
+
+    for (var split : splits) {
+      RenderUtil.renderBoundingBox(
+          split.positionOffset().positionVector(),
+          event.camera().renderPosition(),
+          split.positionOffset().boundingBox(),
+          this.addon.configuration().runSplitOutlineThickness().get(),
+          event.stack(),
+          this.addon.configuration().runSplitFillColor().get().get(),
+          this.addon.configuration().runSplitOutlineColor().get().get());
+    }
+
+    if (runEndSplit != null) {
+      RenderUtil.renderBoundingBox(
+          runEndSplit.positionOffset().positionVector(),
+          event.camera().renderPosition(),
+          runEndSplit.positionOffset().boundingBox(),
+          this.addon.configuration().runSplitOutlineThickness().get(),
+          event.stack(),
+          this.addon.configuration().runSplitFillColor().get().get(),
+          this.addon.configuration().runSplitOutlineColor().get().get());
     }
   }
 }

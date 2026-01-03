@@ -174,8 +174,8 @@ public final class GameTickListener {
           var splitOffsetZ = Math.abs(split.positionOffset().posZ() - z);
 
           if (!split.passed()
-              && splitOffsetX <= split.positionOffset().offsetX()
-              && splitOffsetZ <= split.positionOffset().offsetZ()
+              && splitOffsetX <= split.positionOffset().offsetX() / 2
+              && splitOffsetZ <= split.positionOffset().offsetZ() / 2
               && split.positionOffset().posY() == y
           ) {
             split.updatePB(addon, playerParkourState.runTickInputs().size());
@@ -187,8 +187,8 @@ public final class GameTickListener {
       // TODO: pressure plate mode, show offset from finishing based on last tick (maybe do this in lb?)
       // End
       if (playerParkourState.runStarted()
-          && endOffsetX <= playerParkourState.runEndSplit().positionOffset().offsetX()
-          && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ()
+          && endOffsetX <= playerParkourState.runEndSplit().positionOffset().offsetX() / 2
+          && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ() / 2
           && playerParkourState.runEndSplit().positionOffset().posY() == y
       ) {
         playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTickInputs().size());
@@ -222,9 +222,6 @@ public final class GameTickListener {
         yaw,
         pitch
     );
-
-    // TODO: Remove this?
-    playerParkourState.previousTicks().add(tickInput);
 
     if (playerParkourState.runStarted()) {
       playerParkourState.runTickInputs().add(tickInput);

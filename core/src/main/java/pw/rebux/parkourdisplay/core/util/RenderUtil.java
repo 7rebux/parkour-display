@@ -21,6 +21,26 @@ public final class RenderUtil {
       Integer fillColor,
       Integer outlineColor
   ) {
+    renderBoundingBox(
+        new DoubleVector3(objectPosition.getX(), objectPosition.getY(), objectPosition.getZ()),
+        renderPosition,
+        boundingBox,
+        outlineThickness,
+        stack,
+        fillColor,
+        outlineColor
+    );
+  }
+
+  public static void renderBoundingBox(
+      DoubleVector3 objectPosition,
+      DoubleVector3 renderPosition,
+      AxisAlignedBoundingBox boundingBox,
+      float outlineThickness,
+      Stack stack,
+      Integer fillColor,
+      Integer outlineColor
+  ) {
     var absBB = boundingBox.move(objectPosition);
     var minX = (float) (absBB.getMinX() - renderPosition.getX());
     var minY = (float) (absBB.getMinY() - renderPosition.getY());
