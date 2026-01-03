@@ -8,6 +8,7 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.splits.RunSplit;
 
+// TODO: Show delta and colored split times
 public final class RunSplitsWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   private final ParkourDisplayAddon addon;

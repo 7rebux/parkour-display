@@ -27,15 +27,20 @@ public final class SaveMacroCommand extends SubCommand {
       return true;
     }
 
-    var tickInputs = new ArrayList<>(this.addon.playerParkourState().runTickInputs());
-    var name = arguments[0];
+    var tickStates = new ArrayList<>(this.addon.playerParkourState().runTickInputs());
 
     try {
-      this.addon.macroManager().saveMacro(tickInputs, name);
-      this.displayMessage(translatable("parkourdisplay.commands.savemacro.messages.success"));
+      this.addon.macroManager().saveMacro(tickStates, arguments[0]);
+      this.displayMessage(
+          translatable(
+              "parkourdisplay.commands.savemacro.messages.success",
+              NamedTextColor.GREEN));
     } catch (IOException e) {
-      this.addon.logger().error("Could not save macro with name '%s'".formatted(name), e);
-      this.displayMessage(translatable("parkourdisplay.commands.savemacro.messages.error"));
+      this.addon.logger().error("Could not save macro", e);
+      this.displayMessage(
+          translatable(
+            "parkourdisplay.commands.savemacro.messages.error",
+              NamedTextColor.RED));
     }
 
     return true;

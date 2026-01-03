@@ -10,7 +10,7 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SliderWidget.SliderSetting;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.util.MathsUtil;
+import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget.HitAngleWidgetConfig;
 
 public class HitAngleWidget extends TextHudWidget<HitAngleWidgetConfig> {
@@ -37,7 +37,7 @@ public class HitAngleWidget extends TextHudWidget<HitAngleWidgetConfig> {
   @Override
   public void onTick(boolean isEditorContext) {
     var hitYaw = this.addon.playerParkourState().hitYaw();
-    var hitFacing = String.format(this.stringFormat, MathsUtil.formatYaw(hitYaw));
+    var hitFacing = String.format(this.stringFormat, MathHelper.formatYaw(hitYaw));
 
     this.textLine.updateAndFlush(hitFacing);
   }

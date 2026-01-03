@@ -32,6 +32,7 @@ public final class PlayerParkourState {
   private RunSplit runEndSplit = null;
   private List<RunSplit> runSplits = new ArrayList<>();
   // Persisting a maximum of 6.000 ticks (5 minutes)
+  // TODO: Doesnt make too much sense as this is only used to save macros right now and the macro would then be completely useless
   private EvictingQueue<TickInput> runTickInputs = new EvictingQueue<>(5 * 60 * 20);
   private int runGroundTime = 0;
   private boolean runStarted = false;

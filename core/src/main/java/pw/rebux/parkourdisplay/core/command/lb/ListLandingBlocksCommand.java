@@ -27,7 +27,9 @@ public final class ListLandingBlocksCommand extends SubCommand {
 
     if (landingBlocks.isEmpty()) {
       this.displayMessage(
-          translatable("parkourdisplay.commands.listlb.messages.empty", NamedTextColor.RED));
+          translatable(
+              "parkourdisplay.commands.listlb.messages.empty",
+              NamedTextColor.RED));
       return true;
     }
 
@@ -55,6 +57,7 @@ public final class ListLandingBlocksCommand extends SubCommand {
         .append(text(position.getZ()));
   }
 
+  // TODO: This is not working
   private TranslatableComponent blockDisplayName(Block block) {
     return translatable("block.minecraft.%s".formatted(block.id().getPath()));
   }

@@ -37,6 +37,7 @@ public class RenderWorldListener {
     }
   }
 
+  // TODO: These are actually planes not boxes, so we can improve the render logic here
   private void renderSplitBoxes(RenderWorldEvent event) {
     if (!addon.configuration().highlightRunSplits().get()) {
       return;

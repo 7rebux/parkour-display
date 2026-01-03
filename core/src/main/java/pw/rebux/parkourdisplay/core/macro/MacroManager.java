@@ -1,77 +1,72 @@
 package pw.rebux.parkourdisplay.core.macro;
 
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.TickInput;
 
 @Accessors(fluent = true)
+@RequiredArgsConstructor
 public class MacroManager {
 
-  private final ParkourDisplayAddon addon;
-  private final File macrosDirectory;
+  private static final File MACROS_DIR = new File(ParkourDisplayAddon.DATA_DIR, "macros");
+  private static final Type GSON_DATA_TYPE = new TypeToken<ArrayList<TickInput>>() {}.getType();
 
-  @Getter
-  private final Map<String, List<TickInput>> macros = new HashMap<>();
+  private final ParkourDisplayAddon addon;
+
+  static {
+    if (!MACROS_DIR.exists() && !MACROS_DIR.mkdir()) {
+      throw new RuntimeException("Failed to create macros directory: " + MACROS_DIR.getAbsolutePath());
+    }
+  }
 
   @Getter
   private final ArrayDeque<TickInput> activeMacro = new ArrayDeque<>();
 
-  public MacroManager(ParkourDisplayAddon addon) {
-    this.addon = addon;
-    this.macrosDirectory = new File(ParkourDisplayAddon.DATA_DIR, "macros");
-
-    loadMacros();
+  public List<MacroFile> listAvailableFiles() {
+    var files = MACROS_DIR.listFiles(f -> f.getName().endsWith(".json"));
+    return files == null
+        ? List.of()
+        : Arrays.stream(files)
+            .map(f ->
+                new MacroFile(
+                    f.getName().replace(".json", ""),
+                    f.lastModified()))
+            .sorted(Comparator.comparing(MacroFile::lastModified))
+            .toList();
   }
 
-  public void loadMacros() {
-    this.macros.clear();
+  public List<TickInput> loadMacro(String name) throws FileNotFoundException {
+    var file = new File(MACROS_DIR, name + ".json");
+    var reader = new JsonReader(new FileReader(file));
 
-    try {
-      if (!macrosDirectory.exists() && !macrosDirectory.mkdir()) {
-        throw new RuntimeException("Failed to create data directory: " + macrosDirectory.getAbsolutePath());
-      }
-
-      File[] files = this.macrosDirectory.listFiles(file -> file.getName().endsWith(".json"));
-
-      if (files == null) {
-        return;
-      }
-
-      for (File file : files) {
-        JsonReader reader = new JsonReader(new FileReader(file));
-        ArrayList<TickInput> macro = this.addon.gson().fromJson(reader, ArrayList.class);
-
-        this.macros.put(file.getName().replace(".json", ""), macro);
-      }
-
-      this.addon.logger().info("Loaded %d macros.".formatted(this.macros.size()));
-    } catch (Exception e) {
-      this.addon.logger().error("Failed to load macros.", e);
-    }
+    return this.addon.gson().fromJson(reader, GSON_DATA_TYPE);
   }
 
   public void saveMacro(List<TickInput> tickStates, String name) throws IOException {
-    this.macros.put(name, tickStates);
+    var file = new File(MACROS_DIR, name + ".json");
 
-    var writer = new BufferedWriter(new FileWriter(new File(this.macrosDirectory, name + ".json")));
-    writer.write(this.addon.gson().toJson(tickStates));
-    writer.close();
+    try (FileWriter writer = new FileWriter(file)) {
+      this.addon.gson().toJson(tickStates, writer);
+    }
   }
 
-  public void runMacro(List<TickInput> macro) {
+  public void runMacro(List<TickInput> tickStates) {
     this.activeMacro.clear();
-    this.activeMacro.addAll(macro);
+    this.activeMacro.addAll(tickStates);
   }
 }

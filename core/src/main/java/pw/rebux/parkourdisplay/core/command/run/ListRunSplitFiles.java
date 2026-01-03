@@ -23,7 +23,7 @@ public final class ListRunSplitFiles extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-      var files = addon.splitsManager().listAvailableFiles();
+      var files = this.addon.splitsManager().listAvailableFiles();
 
       if (files.isEmpty()) {
         this.displayMessage(
@@ -38,7 +38,7 @@ public final class ListRunSplitFiles extends SubCommand {
         this.displayMessage(
             text("-", NamedTextColor.GRAY)
                 .append(space())
-                .append(text(file.fileName(), NamedTextColor.YELLOW))
+                .append(text(file.name(), NamedTextColor.YELLOW))
                 .append(space())
                 .append(text("(%s)".formatted(file.type()), NamedTextColor.LIGHT_PURPLE))
                 .append(space())

@@ -45,8 +45,8 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
 
   @Getter
   private final Gson gson = new GsonBuilder()
-      .registerTypeAdapter(TickInput.class, new TickInputAdapter())
       .setPrettyPrinting()
+      .registerTypeAdapter(TickInput.class, new TickInputAdapter())
       .create();
 
   @Getter

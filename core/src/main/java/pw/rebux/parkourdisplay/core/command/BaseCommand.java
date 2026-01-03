@@ -14,7 +14,6 @@ import pw.rebux.parkourdisplay.core.command.lb.ListLandingBlocksCommand;
 import pw.rebux.parkourdisplay.core.command.lb.RemoveLandingBlockCommand;
 import pw.rebux.parkourdisplay.core.command.lb.ResetLandingBlockCommand;
 import pw.rebux.parkourdisplay.core.command.macro.ListMacrosCommand;
-import pw.rebux.parkourdisplay.core.command.macro.ReloadMacrosCommand;
 import pw.rebux.parkourdisplay.core.command.macro.RunMacroCommand;
 import pw.rebux.parkourdisplay.core.command.macro.SaveMacroCommand;
 import pw.rebux.parkourdisplay.core.command.run.AddRunSplitCommand;
@@ -44,7 +43,6 @@ public class BaseCommand extends Command {
     this.withSubCommand(new ResetLandingBlockCommand(addon));
 
     // Macro commands
-    this.withSubCommand(new ReloadMacrosCommand(addon));
     this.withSubCommand(new ListMacrosCommand(addon));
     this.withSubCommand(new RunMacroCommand(addon));
     this.withSubCommand(new SaveMacroCommand(addon));

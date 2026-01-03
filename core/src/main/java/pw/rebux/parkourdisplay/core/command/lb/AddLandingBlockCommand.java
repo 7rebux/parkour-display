@@ -14,7 +14,7 @@ public final class AddLandingBlockCommand extends SubCommand {
   private final ParkourDisplayAddon addon;
 
   public AddLandingBlockCommand(ParkourDisplayAddon addon) {
-    super("addlb", "setlb");
+    super("addlb", "setlb", "alb", "slb");
     this.addon = addon;
   }
 
@@ -22,7 +22,7 @@ public final class AddLandingBlockCommand extends SubCommand {
   public boolean execute(String prefix, String[] arguments) {
     var blockState = this.getBlockStandingOn();
 
-    if (blockState.isEmpty() || !blockState.get().hasCollision()) {
+    if (blockState.isEmpty()) {
       this.displayMessage(
           translatable(
               "parkourdisplay.commands.addlb.messages.invalidBlock",
@@ -39,18 +39,19 @@ public final class AddLandingBlockCommand extends SubCommand {
     return true;
   }
 
+  /**
+   * Finds block with collision at or below player
+   */
   private Optional<BlockState> getBlockStandingOn() {
-    var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
     var world = this.addon.labyAPI().minecraft().clientWorld();
+    var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
+    var position = player.position().toDoubleVector3();
 
-    var blockState = world.getBlockState(player.position().toDoubleVector3());
+    var inside = Optional.of(world.getBlockState(position))
+        .filter(BlockState::hasCollision);
+    var below = Optional.of(world.getBlockState(position.sub(0, 1 , 0)))
+        .filter(BlockState::hasCollision);
 
-    if (blockState.hasCollision()) {
-      return Optional.of(blockState);
-    }
-
-    blockState = world.getBlockState(player.position().toDoubleVector3().sub(0, 1, 0));
-
-    return blockState.hasCollision() ? Optional.of(blockState) : Optional.empty();
+    return inside.or(() -> below);
   }
 }

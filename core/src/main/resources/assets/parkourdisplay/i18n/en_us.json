@@ -117,6 +117,9 @@
       "header": {
         "landingBlock": {
           "name": "Landing Blocks"
+        },
+        "runSplit": {
+          "name": "Run Splits"
         }
       },
       "enabled": {
@@ -145,6 +148,18 @@
       },
       "landingBlockOutlineThickness": {
         "name": "Block Outline Thickness"
+      },
+      "highlightRunSplits": {
+        "name": "Highlight Run Splits"
+      },
+      "runSplitFillColor": {
+        "name": "Run Split Fill Color"
+      },
+      "runSplitOutlineColor": {
+        "name": "Run Split Outline Color"
+      },
+      "runSplitOutlineThickness": {
+        "name": "Run Split Outline Thickness"
       }
     },
     "labels": {
@@ -223,23 +238,18 @@
         }
       },
       "resetlb": {
-        "description": "Reset the personal best offsets for all or a single landing block.",
+        "description": "Reset the personal best offsets for all or a single landing block",
         "messages": {
           "invalidIndex": "Please provide a valid index.",
           "successSingle": "Successfully reset landing block offsets.",
           "successAll": "Successfully reset offsets of all landing blocks."
         }
       },
-      "reloadmacros": {
-        "description": "Reloads all macros",
-        "messages": {
-          "success": "Successfully reloaded all macros."
-        }
-      },
       "runmacro": {
         "description": "Executes a specific or the last run macro",
         "messages": {
-          "notFound": "No macro found. Please provide a valid name or complete a run."
+          "success": "Executing macro...",
+          "notFound": "Macro not found."
         }
       },
       "listmacros": {
@@ -251,6 +261,7 @@
       "savemacro": {
         "description": "Saves a macro with a given name",
         "messages": {
+          "nameRequired": "Please provide a name for the macro.",
           "success": "Successfully saved macro.",
           "error": "Could not save macro. Check console for more information."
         }
@@ -265,6 +276,42 @@
         "description": "Sets the run end position",
         "messages": {
           "success": "Successfully set run end position."
+        }
+      },
+      "addsplit": {
+        "description": "Adds a new run split",
+        "messages": {
+          "success": "Successfully added split."
+        }
+      },
+      "listsplitfiles": {
+        "description": "Lists all available run split files"
+      },
+      "loadsplits": {
+        "description": "Loads a run split file",
+        "messages": {
+          "notFound": "File not found.",
+          "nameRequired": "Please provide a name for the file.",
+          "success": "Successfully loaded splits."
+        }
+      },
+      "removesplit": {
+        "description": "Removes the latest run split",
+        "messages": {
+          "success": "Successfully removed split."
+        }
+      },
+      "resetsplits": {
+        "description": "Resets the personal bests for all run splits",
+        "messages": {
+          "success": "Successfully reset splits."
+        }
+      },
+      "savesplits": {
+        "description": "Saves the current run splits to a file",
+        "messages": {
+          "nameRequired": "Please provide a name for the file.",
+          "success": "Successfully saved splits."
         }
       }
     }

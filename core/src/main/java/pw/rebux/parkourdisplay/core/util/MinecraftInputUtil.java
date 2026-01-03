@@ -40,4 +40,14 @@ public class MinecraftInputUtil {
   public boolean isMoving() {
     return forwardKey.isDown() || backKey.isDown() || leftKey.isDown() || rightKey.isDown();
   }
+
+  public void unpressAll() {
+    setPressed(forwardKey, false);
+    setPressed(backKey, false);
+    setPressed(leftKey, false);
+    setPressed(rightKey, false);
+    setPressed(sprintKey, false);
+    setPressed(sneakKey, false);
+    setPressed(jumpKey, false);
+  }
 }

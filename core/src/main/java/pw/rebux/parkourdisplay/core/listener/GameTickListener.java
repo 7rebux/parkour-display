@@ -151,49 +151,7 @@ public final class GameTickListener {
     playerParkourState.lastInput(buildInputString());
 
     if (playerParkourState.isRunSetUp()) {
-      var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - x);
-      var startOffsetZ = Math.abs(playerParkourState.runStartPosition().posZ() - z);
-      var endOffsetX = Math.abs(playerParkourState.runEndSplit().positionOffset().posX() - x);
-      var endOffsetZ = Math.abs(playerParkourState.runEndSplit().positionOffset().posZ() - z);
-
-      // Start
-      if (startOffsetX <= playerParkourState.runStartPosition().offsetX()
-          && startOffsetZ <= playerParkourState.runStartPosition().offsetZ()
-          && playerParkourState.runStartPosition().posY() == y
-      ) {
-        playerParkourState.runStarted(true);
-        playerParkourState.runSplits().forEach(split -> split.passed(false));
-        playerParkourState.runGroundTime(0);
-        playerParkourState.runTickInputs().clear();
-      }
-
-      // Splits
-      if (playerParkourState.runStarted()) {
-        for (var split : playerParkourState.runSplits()) {
-          var splitOffsetX = Math.abs(split.positionOffset().posX() - x);
-          var splitOffsetZ = Math.abs(split.positionOffset().posZ() - z);
-
-          if (!split.passed()
-              && splitOffsetX <= split.positionOffset().offsetX() / 2
-              && splitOffsetZ <= split.positionOffset().offsetZ() / 2
-              && split.positionOffset().posY() == y
-          ) {
-            split.updatePB(addon, playerParkourState.runTickInputs().size());
-            split.passed(true);
-          }
-        }
-      }
-
-      // TODO: pressure plate mode, show offset from finishing based on last tick (maybe do this in lb?)
-      // End
-      if (playerParkourState.runStarted()
-          && endOffsetX <= playerParkourState.runEndSplit().positionOffset().offsetX() / 2
-          && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ() / 2
-          && playerParkourState.runEndSplit().positionOffset().posY() == y
-      ) {
-        playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTickInputs().size());
-        playerParkourState.runStarted(false);
-      }
+      handleActiveRun(player);
     }
 
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
@@ -211,20 +169,65 @@ public final class GameTickListener {
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
 
-    var tickInput = new TickInput(
-        inputUtil.forwardKey().isDown(),
-        inputUtil.leftKey().isDown(),
-        inputUtil.backKey().isDown(),
-        inputUtil.rightKey().isDown(),
-        inputUtil.jumpKey().isDown(),
-        inputUtil.sprintKey().isDown(),
-        inputUtil.sneakKey().isDown(),
-        yaw,
-        pitch
-    );
-
     if (playerParkourState.runStarted()) {
-      playerParkourState.runTickInputs().add(tickInput);
+      playerParkourState.runTickInputs().add(
+          new TickInput(
+              inputUtil.forwardKey().isDown(),
+              inputUtil.leftKey().isDown(),
+              inputUtil.backKey().isDown(),
+              inputUtil.rightKey().isDown(),
+              inputUtil.jumpKey().isDown(),
+              inputUtil.sprintKey().isDown(),
+              inputUtil.sneakKey().isDown(),
+              yaw,
+              pitch));
+    }
+  }
+
+  private void handleActiveRun(ClientPlayer player) {
+    var playerParkourState = this.addon.playerParkourState();
+
+    var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - player.position().getX());
+    var startOffsetZ = Math.abs(playerParkourState.runStartPosition().posZ() - player.position().getZ());
+    var endOffsetX = Math.abs(playerParkourState.runEndSplit().positionOffset().posX() - player.position().getX());
+    var endOffsetZ = Math.abs(playerParkourState.runEndSplit().positionOffset().posZ() - player.position().getZ());
+
+    // Start
+    if (startOffsetX <= playerParkourState.runStartPosition().offsetX()
+        && startOffsetZ <= playerParkourState.runStartPosition().offsetZ()
+        && playerParkourState.runStartPosition().posY() == player.position().getY()
+    ) {
+      playerParkourState.runStarted(true);
+      playerParkourState.runSplits().forEach(split -> split.passed(false));
+      playerParkourState.runGroundTime(0);
+      playerParkourState.runTickInputs().clear();
+    }
+
+    // Splits
+    if (playerParkourState.runStarted()) {
+      for (var split : playerParkourState.runSplits()) {
+        var splitOffsetX = Math.abs(split.positionOffset().posX() - player.position().getX());
+        var splitOffsetZ = Math.abs(split.positionOffset().posZ() - player.position().getZ());
+
+        if (!split.passed()
+            && splitOffsetX <= split.positionOffset().offsetX() / 2
+            && splitOffsetZ <= split.positionOffset().offsetZ() / 2
+            && split.positionOffset().posY() == player.position().getY()
+        ) {
+          split.updatePB(this.addon, playerParkourState.runTickInputs().size());
+          split.passed(true);
+        }
+      }
+    }
+
+    // End
+    if (playerParkourState.runStarted()
+        && endOffsetX <= playerParkourState.runEndSplit().positionOffset().offsetX() / 2
+        && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ() / 2
+        && playerParkourState.runEndSplit().positionOffset().posY() == player.position().getY()
+    ) {
+      playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTickInputs().size());
+      playerParkourState.runStarted(false);
     }
   }
 
@@ -321,6 +324,7 @@ public final class GameTickListener {
     return input.toString();
   }
 
+  // TODO: Unpress all the tick after the macro is finished
   private void processMacros(ClientPlayer player) {
     var activeMacro = this.addon.macroManager().activeMacro();
 
