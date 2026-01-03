@@ -8,7 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
 import pw.rebux.parkourdisplay.core.state.RunSplit;
@@ -25,6 +29,15 @@ public final class SplitsManager {
     if (!SPLITS_DIR.exists() && !SPLITS_DIR.mkdir()) {
       throw new RuntimeException("Failed to create splits directory: " + SPLITS_DIR.getAbsolutePath());
     }
+  }
+
+  public List<SplitFile> listAvailableFiles() {
+    return Stream
+        .concat(
+            listJsonFiles(SPLITS_DIR, "pd"),
+            listJsonFiles(ZORTMOD_DATA_DIR, "zm"))
+        .sorted(Comparator.comparing(SplitFile::lastModified))
+        .toList();
   }
 
   public void saveCurrentSplits(String fileName) throws IOException {
@@ -55,8 +68,10 @@ public final class SplitsManager {
     var splitDxArrayObj = new JsonArray();
     var splitDzArrayObj = new JsonArray();
     var pbSplitsArrayObj = new JsonArray();
-    var bestSplitsArrayObj = new JsonArray(); // TODO: What is this
-    var goldSplitsArrayObj = new JsonArray(); // TODO: What is this
+    // TODO: Ok this is what we have right now, best split times. Instead pb splits is best split time with finish
+    var bestSplitsArrayObj = new JsonArray();
+    // This is unused in zortmod, persisting an empty array to remain compatibility
+    var goldSplitsArrayObj = new JsonArray();
     for (var split : splits) {
       var splitObj = new JsonObject();
       splitObj.addProperty("x", split.positionOffset().posX());
@@ -132,4 +147,15 @@ public final class SplitsManager {
       this.addon.playerParkourState().runSplits().add(split);
     }
   }
+
+  private Stream<SplitFile> listJsonFiles(File dir, String source) {
+    var files = dir.listFiles(f -> f.getName().endsWith(".json"));
+
+    return files == null
+        ? Stream.empty()
+        : Arrays.stream(files).map(f -> new SplitFile(f.getName().split(".json")[0], source, f.lastModified()));
+  }
+
+  public record SplitFile(String fileName, String type, long lastModified) { }
+
 }
