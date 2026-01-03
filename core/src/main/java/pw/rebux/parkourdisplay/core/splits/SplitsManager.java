@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core;
+package pw.rebux.parkourdisplay.core.splits;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
 import pw.rebux.parkourdisplay.core.state.RunSplit;
 
@@ -52,7 +53,7 @@ public final class SplitsManager {
     rootObj.add("startDx", new JsonPrimitive(startPos.offsetX()));
     rootObj.add("startDz", new JsonPrimitive(startPos.offsetZ()));
 
-    var endPos = this.addon.playerParkourState().runEndPosition();
+    var endPos = this.addon.playerParkourState().runEndSplit().positionOffset();
     var endPosObj = new JsonObject();
     endPosObj.addProperty("x", endPos.posX());
     endPosObj.addProperty("y", endPos.posY());
@@ -60,8 +61,7 @@ public final class SplitsManager {
     rootObj.add("endPos", endPosObj);
     rootObj.add("endDx", new JsonPrimitive(endPos.offsetX()));
     rootObj.add("endDz", new JsonPrimitive(endPos.offsetZ()));
-
-    // TODO: pb: totalTicks
+    rootObj.add("pb", new JsonPrimitive(this.addon.playerParkourState().runEndSplit().personalBest()));
 
     var splits = this.addon.playerParkourState().runSplits();
     var splitsArrayObj = new JsonArray();
@@ -98,7 +98,6 @@ public final class SplitsManager {
     }
   }
 
-  // TODO: Handle pb
   public void loadSplits(String fileName) throws FileNotFoundException {
     var file = Optional.of(new File(SPLITS_DIR, fileName + ".json"))
         .filter(File::exists)
@@ -116,7 +115,7 @@ public final class SplitsManager {
             .build());
 
     var endPosObj = rootObj.getAsJsonObject("endPos");
-    this.addon.playerParkourState().runEndPosition(
+    var runEndSplit = new RunSplit(
         PositionOffset.builder()
             .posX(endPosObj.get("x").getAsDouble())
             .posY(endPosObj.get("y").getAsDouble())
@@ -124,6 +123,8 @@ public final class SplitsManager {
             .offsetX(rootObj.get("endDx").getAsDouble())
             .offsetZ(rootObj.get("endDz").getAsDouble())
             .build());
+    runEndSplit.personalBest(rootObj.get("pb").getAsInt());
+    this.addon.playerParkourState().runEndSplit(runEndSplit);
 
     var splitsArrayObj = rootObj.getAsJsonArray("splits");
     var splitDxArrayObj = rootObj.getAsJsonArray("splitDx");
@@ -155,7 +156,4 @@ public final class SplitsManager {
         ? Stream.empty()
         : Arrays.stream(files).map(f -> new SplitFile(f.getName().split(".json")[0], source, f.lastModified()));
   }
-
-  public record SplitFile(String fileName, String type, long lastModified) { }
-
 }

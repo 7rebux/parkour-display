@@ -28,7 +28,7 @@ public final class PlayerParkourState {
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
   private PositionOffset runStartPosition = null;
-  private PositionOffset runEndPosition = null;
+  private RunSplit runEndSplit = null;
   private List<RunSplit> runSplits = new ArrayList<>();
   // TODO: Prevent overflow
   private List<TickInput> runTickInputs = new ArrayList<>();
@@ -41,6 +41,6 @@ public final class PlayerParkourState {
       new EvictingQueue<>(60 * 20);
 
   public boolean isRunSetUp() {
-    return runStartPosition != null && runEndPosition != null;
+    return runStartPosition != null && runEndSplit != null;
   }
 }

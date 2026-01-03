@@ -153,8 +153,8 @@ public final class GameTickListener {
     if (playerParkourState.isRunSetUp()) {
       var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - x);
       var startOffsetZ = Math.abs(playerParkourState.runStartPosition().posZ() - z);
-      var endOffsetX = Math.abs(playerParkourState.runEndPosition().posX() - x);
-      var endOffsetZ = Math.abs(playerParkourState.runEndPosition().posZ() - z);
+      var endOffsetX = Math.abs(playerParkourState.runEndSplit().positionOffset().posX() - x);
+      var endOffsetZ = Math.abs(playerParkourState.runEndSplit().positionOffset().posZ() - z);
 
       // Start
       if (startOffsetX <= playerParkourState.runStartPosition().offsetX()
@@ -184,16 +184,15 @@ public final class GameTickListener {
         }
       }
 
-      // TODO: we could also treat this as a split
-      // TODO: pressure plate mode, show offset from finishing based on last tick
+      // TODO: pressure plate mode, show offset from finishing based on last tick (maybe do this in lb?)
       // End
       if (playerParkourState.runStarted()
-          && endOffsetX <= playerParkourState.runEndPosition().offsetX()
-          && endOffsetZ <= playerParkourState.runEndPosition().offsetZ()
-          && playerParkourState.runEndPosition().posY() == y
+          && endOffsetX <= playerParkourState.runEndSplit().positionOffset().offsetX()
+          && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ()
+          && playerParkourState.runEndSplit().positionOffset().posY() == y
       ) {
+        playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTickInputs().size());
         playerParkourState.runStarted(false);
-        addon.displayMessage(text("Run ended (%dt)!".formatted(playerParkourState.runTickInputs().size()), NamedTextColor.RED));
       }
     }
 
