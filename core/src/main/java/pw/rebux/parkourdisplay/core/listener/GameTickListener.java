@@ -70,7 +70,11 @@ public final class GameTickListener {
     playerParkourState.velocityZ(vz);
 
     if (lastTick.onGround() && onGround) {
-      groundTime = Math.min(groundTime + 1, 999);
+      groundTime = Math.min(groundTime + 1, Integer.MAX_VALUE);
+
+      if (playerParkourState.runStarted()) {
+        playerParkourState.runGroundTime(Math.min(playerParkourState.runGroundTime() + 1, Integer.MAX_VALUE));
+      }
     }
 
     // If the player landed this tick or is still airborne, we increase the air time
@@ -146,7 +150,6 @@ public final class GameTickListener {
 
     playerParkourState.lastInput(buildInputString());
 
-    // TODO: This should happen after storing ticks, otherwise its +1 in the replay, or?
     if (playerParkourState.isRunSetUp()) {
       var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - x);
       var startOffsetZ = Math.abs(playerParkourState.runStartPosition().posZ() - z);
@@ -160,6 +163,7 @@ public final class GameTickListener {
       ) {
         playerParkourState.runStarted(true);
         playerParkourState.runSplits().forEach(split -> split.passed(false));
+        playerParkourState.runGroundTime(0);
         playerParkourState.runTickInputs().clear();
       }
 
@@ -180,7 +184,6 @@ public final class GameTickListener {
         }
       }
 
-      // TODO: Global ground tick count per run
       // TODO: we could also treat this as a split
       // TODO: pressure plate mode, show offset from finishing based on last tick
       // End

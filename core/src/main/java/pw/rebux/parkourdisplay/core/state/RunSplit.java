@@ -16,6 +16,7 @@ public final class RunSplit {
 
   private boolean passed;
   private Integer personalBest;
+  private Integer lastTicks;
 
   // TODO: Logic should not be in here
   public void updatePB(ParkourDisplayAddon addon, int ticks) {
@@ -35,6 +36,7 @@ public final class RunSplit {
       }
     }
 
+    this.lastTicks = ticks;
     addon.displayMessage(Component.text("Split: %d (%d)".formatted(ticks, delta), color));
   }
 }

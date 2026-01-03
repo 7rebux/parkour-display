@@ -105,6 +105,12 @@
         "singleLine": {
           "name": "Single Line"
         }
+      },
+      "run_ground_time": {
+        "name": "Run Ground Time"
+      },
+      "run_splits": {
+        "name": "Run Splits"
       }
     },
     "settings": {
@@ -190,7 +196,9 @@
         "total": "LB Offset Total",
         "x": "LB Offset X",
         "z": "LB Offset Z"
-      }
+      },
+      "run_ground_time": "Run Ground Time",
+      "run_splits": "Run Splits"
     },
     "commands": {
       "addlb": {

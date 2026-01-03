@@ -39,8 +39,8 @@ public class MacroManager {
     this.macros.clear();
 
     try {
-      if (!this.macrosDirectory.exists()) {
-        this.macrosDirectory.mkdir();
+      if (!macrosDirectory.exists() && !macrosDirectory.mkdir()) {
+        throw new RuntimeException("Failed to create data directory: " + macrosDirectory.getAbsolutePath());
       }
 
       File[] files = this.macrosDirectory.listFiles(file -> file.getName().endsWith(".json"));

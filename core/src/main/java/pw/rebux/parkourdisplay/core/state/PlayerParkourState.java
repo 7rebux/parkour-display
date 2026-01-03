@@ -32,6 +32,7 @@ public final class PlayerParkourState {
   private List<RunSplit> runSplits = new ArrayList<>();
   // TODO: Prevent overflow
   private List<TickInput> runTickInputs = new ArrayList<>();
+  private int runGroundTime = 0;
   private boolean runStarted = false;
 
   // Persisting the last one minute of ticks
