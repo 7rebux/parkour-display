@@ -123,7 +123,7 @@ public final class SplitsManager {
             .offsetX(rootObj.get("endDx").getAsDouble())
             .offsetZ(rootObj.get("endDz").getAsDouble())
             .build());
-    runEndSplit.personalBest(rootObj.get("pb").getAsInt());
+    runEndSplit.personalBest(rootObj.get("pb").getAsLong());
     this.addon.playerParkourState().runEndSplit(runEndSplit);
 
     var splitsArrayObj = rootObj.getAsJsonArray("splits");
@@ -143,7 +143,7 @@ public final class SplitsManager {
               .offsetX(splitDxArrayObj.get(i).getAsDouble())
               .offsetZ(splitDzArrayObj.get(i).getAsDouble())
               .build());
-      split.personalBest(bestSplitsArrayObj.get(i).getAsInt());
+      split.personalBest(bestSplitsArrayObj.get(i).getAsLong());
 
       this.addon.playerParkourState().runSplits().add(split);
     }

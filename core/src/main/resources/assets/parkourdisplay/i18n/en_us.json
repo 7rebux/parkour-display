@@ -110,7 +110,13 @@
         "name": "Run Ground Time"
       },
       "run_splits": {
-        "name": "Run Splits"
+        "name": "Run Splits",
+        "formatTicks": {
+          "name": "Format Ticks"
+        },
+        "backgroundColor": {
+          "name": "Background Color"
+        }
       }
     },
     "settings": {
@@ -160,6 +166,12 @@
       },
       "runSplitOutlineThickness": {
         "name": "Run Split Outline Thickness"
+      },
+      "showRunSplitsInChat": {
+        "name": "Show Run Splits In Chat"
+      },
+      "formatRunSplits": {
+        "name": "Format Run Splits"
       }
     },
     "labels": {

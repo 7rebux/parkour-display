@@ -52,6 +52,12 @@ public class ParkourDisplayConfiguration extends AddonConfig {
 
   @SettingSection("runSplit")
   @SwitchSetting
+  private final ConfigProperty<Boolean> showRunSplitsInChat = new ConfigProperty<>(true);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> formatRunSplits = new ConfigProperty<>(true);
+
+  @SwitchSetting
   private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(true);
 
   @ColorPickerSetting(alpha = true, chroma = true)

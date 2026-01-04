@@ -31,11 +31,19 @@ public final class PlayerParkourState {
   private PositionOffset runStartPosition = null;
   private RunSplit runEndSplit = null;
   private List<RunSplit> runSplits = new ArrayList<>();
-  // Persisting a maximum of 6.000 ticks (5 minutes)
-  // TODO: Doesnt make too much sense as this is only used to save macros right now and the macro would then be completely useless
-  private EvictingQueue<TickInput> runTickInputs = new EvictingQueue<>(5 * 60 * 20);
-  private int runGroundTime = 0;
   private boolean runStarted = false;
+  private long runTimer = 0;
+  private long runGroundTime = 0;
+
+  // Persisting a maximum of 6.000 ticks (5 minutes)
+  private EvictingQueue<TickInput> runTickInputs = new EvictingQueue<>(5 * 60 * 20);
+
+  public void resetRun() {
+    this.runSplits.forEach(split -> split.passed(false));
+    this.runTimer = 0;
+    this.runGroundTime = 0;
+    this.runTickInputs.clear();
+  }
 
   public boolean isRunSetUp() {
     return runStartPosition != null && runEndSplit != null;

@@ -1,7 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.labymod.api.client.component.Component;
@@ -18,6 +17,7 @@ import net.labymod.api.configuration.loader.property.ConfigProperty;
 import net.labymod.api.util.Color;
 import net.labymod.api.util.bounds.Rectangle;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.TickFormatter;
 import pw.rebux.parkourdisplay.core.widget.RunSplitsWidget.RunSplitsWidgetConfig;
 
 public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig> {
@@ -86,7 +86,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
         .toList();
 
     // Timer component
-    var timerTicks = this.addon.playerParkourState().runTickInputs().size();
+    var timerTicks = this.addon.playerParkourState().runTimer();
     var timerColor = timerTicks <= endSplit.personalBest()
         ? NamedTextColor.GREEN
         : NamedTextColor.RED;
@@ -153,20 +153,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
     if (!this.config.formatTicks().get()) {
       return String.valueOf(ticks);
     }
-
-    var negative = ticks < 0;
-    var total = Math.abs(ticks * 1000 / 20);
-    var minutes = total / 60000;
-    var seconds = (total / 1000) % 60;
-    var millis = total % 1000;
-    var unit = minutes > 0 ? TimeUnit.MINUTES : TimeUnit.SECONDS;
-
-    var builder = new StringBuilder();
-    if (negative) builder.append("-");
-    if (unit == TimeUnit.MINUTES) builder.append(String.format("%02d.", minutes));
-    builder.append(String.format("%02d.", seconds));
-    builder.append(String.format("%03d", millis));
-    return builder.toString();
+    return TickFormatter.formatTicks(ticks);
   }
 
   @Getter

@@ -6,7 +6,7 @@ A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhan
 
 - Set multiple landing blocks and calculate their landing offsets
 - Cyv compatible macro recorder & runner
-- Splits system
+- Splits system (zortmod compatible)
 - Command system (`/parkourdisplay`, `/pd`)
 
 ## Labels / Widgets
@@ -26,3 +26,5 @@ A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhan
 - Airtime
 - Ground Time
 - Landing Block Offsets
+- Run Ground Time
+- Run Splits

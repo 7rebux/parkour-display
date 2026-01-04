@@ -73,7 +73,7 @@ public final class GameTickListener {
       groundTime = Math.min(groundTime + 1, Integer.MAX_VALUE);
 
       if (playerParkourState.runStarted()) {
-        playerParkourState.runGroundTime(Math.min(playerParkourState.runGroundTime() + 1, Integer.MAX_VALUE));
+        playerParkourState.runGroundTime(playerParkourState.runGroundTime() + 1);
       }
     }
 
@@ -170,6 +170,8 @@ public final class GameTickListener {
     lastTick.movingSideways(movingSideways);
 
     if (playerParkourState.runStarted()) {
+      playerParkourState.runTimer(playerParkourState.runTimer() + 1);
+
       playerParkourState.runTickInputs().add(
           new TickInput(
               inputUtil.forwardKey().isDown(),
@@ -180,7 +182,9 @@ public final class GameTickListener {
               inputUtil.sprintKey().isDown(),
               inputUtil.sneakKey().isDown(),
               yaw,
-              pitch));
+              pitch
+          )
+      );
     }
   }
 
@@ -197,10 +201,8 @@ public final class GameTickListener {
         && startOffsetZ <= playerParkourState.runStartPosition().offsetZ()
         && playerParkourState.runStartPosition().posY() == player.position().getY()
     ) {
+      playerParkourState.resetRun();
       playerParkourState.runStarted(true);
-      playerParkourState.runSplits().forEach(split -> split.passed(false));
-      playerParkourState.runGroundTime(0);
-      playerParkourState.runTickInputs().clear();
     }
 
     // Splits
@@ -214,7 +216,7 @@ public final class GameTickListener {
             && splitOffsetZ <= split.positionOffset().offsetZ() / 2
             && split.positionOffset().posY() == player.position().getY()
         ) {
-          split.updatePB(this.addon, playerParkourState.runTickInputs().size());
+          split.updatePB(this.addon, playerParkourState.runTimer());
           split.passed(true);
         }
       }
@@ -226,7 +228,7 @@ public final class GameTickListener {
         && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ() / 2
         && playerParkourState.runEndSplit().positionOffset().posY() == player.position().getY()
     ) {
-      playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTickInputs().size());
+      playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTimer());
       playerParkourState.runStarted(false);
     }
   }

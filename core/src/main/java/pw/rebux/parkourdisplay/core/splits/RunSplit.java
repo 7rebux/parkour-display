@@ -7,6 +7,7 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
+import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
 @RequiredArgsConstructor
@@ -16,13 +17,12 @@ public final class RunSplit {
   private final PositionOffset positionOffset;
 
   private boolean passed;
-  private Integer personalBest;
-  private Integer lastTicks;
+  private Long personalBest;
+  private Long lastTicks;
 
-  // TODO: Logic should not be in here
-  public void updatePB(ParkourDisplayAddon addon, int ticks) {
+  public void updatePB(ParkourDisplayAddon addon, long ticks) {
     var color = NamedTextColor.GRAY;
-    var delta = 0;
+    var delta = 0L;
 
     if (personalBest == null) {
       this.personalBest = ticks;
@@ -38,6 +38,17 @@ public final class RunSplit {
     }
 
     this.lastTicks = ticks;
-    addon.displayMessage(Component.text("Split: %d (%d)".formatted(ticks, delta), color));
+
+    if (addon.configuration().showRunSplitsInChat().get()) {
+      var formattedTicks = addon.configuration().formatRunSplits().get()
+          ? TickFormatter.formatTicks(ticks)
+          : String.valueOf(ticks);
+      var formattedDelta = addon.configuration().formatRunSplits().get()
+          ? TickFormatter.formatTicks(delta)
+          : delta > 0 ? "+" + delta : String.valueOf(delta);
+
+      addon.displayMessage(
+          Component.text("Split: %s (%s)".formatted(formattedTicks, formattedDelta), color));
+    }
   }
 }
