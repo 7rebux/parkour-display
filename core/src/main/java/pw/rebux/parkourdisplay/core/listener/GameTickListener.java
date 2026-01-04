@@ -31,6 +31,9 @@ public final class GameTickListener {
   private int sneakTime = -2;
   private boolean locked = false;
 
+  // To unpress all keys in the tick after the macro was finished
+  private boolean macroFinished = false;
+
   public GameTickListener(ParkourDisplayAddon addon) {
     this.addon = addon;
     this.inputUtil = new MinecraftInputUtil(addon);
@@ -326,8 +329,13 @@ public final class GameTickListener {
     return input.toString();
   }
 
-  // TODO: Unpress all the tick after the macro is finished
   private void processMacros(ClientPlayer player) {
+    if (macroFinished) {
+      this.inputUtil.unpressAll();
+      macroFinished = false;
+      return;
+    }
+
     var activeMacro = this.addon.macroManager().activeMacro();
 
     if (activeMacro.isEmpty()) {
@@ -346,5 +354,9 @@ public final class GameTickListener {
 
     player.setRotationYaw(tickInput.yaw());
     player.setRotationPitch(tickInput.pitch());
+
+    if (activeMacro.isEmpty()) {
+      macroFinished = true;
+    }
   }
 }
