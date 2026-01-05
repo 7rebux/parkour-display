@@ -14,7 +14,7 @@ public final class AddRunSplitCommand extends SubCommand {
   private final ParkourDisplayAddon addon;
 
   public AddRunSplitCommand(ParkourDisplayAddon addon) {
-    super("addsplit", "setsplit");
+    super("addsplit", "setsplit", "as");
     this.addon = addon;
   }
 
