@@ -53,7 +53,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
     var splitRows = splits.stream()
         .map(split -> {
           // Label
-          var label = RenderableComponent.of(Component.text("Label", NamedTextColor.WHITE));
+          var label = RenderableComponent.of(Component.text(split.label(), NamedTextColor.WHITE));
 
           // Time
           var timeColor = split.passed()

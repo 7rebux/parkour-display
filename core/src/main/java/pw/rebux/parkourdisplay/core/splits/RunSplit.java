@@ -14,6 +14,7 @@ import pw.rebux.parkourdisplay.core.util.TickFormatter;
 @Accessors(fluent = true)
 public final class RunSplit {
 
+  private final String label;
   private final PositionOffset positionOffset;
 
   private boolean passed;
@@ -48,7 +49,7 @@ public final class RunSplit {
           : delta > 0 ? "+" + delta : String.valueOf(delta);
 
       addon.displayMessage(
-          Component.text("Split: %s (%s)".formatted(formattedTicks, formattedDelta), color));
+          Component.text("%s: %s (%s)".formatted(label, formattedTicks, formattedDelta), color));
     }
   }
 }

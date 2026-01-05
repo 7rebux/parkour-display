@@ -116,6 +116,7 @@ public final class SplitsManager {
 
     var endPosObj = rootObj.getAsJsonObject("endPos");
     var runEndSplit = new RunSplit(
+        "Finish",
         PositionOffset.builder()
             .posX(endPosObj.get("x").getAsDouble())
             .posY(endPosObj.get("y").getAsDouble())
@@ -136,6 +137,7 @@ public final class SplitsManager {
     for (var i = 0; i < rootObj.get("splitCount").getAsInt(); i++) {
       var splitObj = splitsArrayObj.get(i).getAsJsonObject();
       var split = new RunSplit(
+          "Split %d".formatted(i + 1),
           PositionOffset.builder()
               .posX(splitObj.get("x").getAsDouble())
               .posY(splitObj.get("y").getAsDouble())

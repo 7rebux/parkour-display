@@ -17,6 +17,7 @@ import pw.rebux.parkourdisplay.core.command.macro.ListMacrosCommand;
 import pw.rebux.parkourdisplay.core.command.macro.RunMacroCommand;
 import pw.rebux.parkourdisplay.core.command.macro.SaveMacroCommand;
 import pw.rebux.parkourdisplay.core.command.run.AddRunSplitCommand;
+import pw.rebux.parkourdisplay.core.command.run.ClearRunCommand;
 import pw.rebux.parkourdisplay.core.command.run.ListRunSplitFiles;
 import pw.rebux.parkourdisplay.core.command.run.LoadRunSplitsCommand;
 import pw.rebux.parkourdisplay.core.command.run.RemoveRunSplitCommand;
@@ -56,6 +57,7 @@ public class BaseCommand extends Command {
     this.withSubCommand(new SaveRunSplitsCommand(addon));
     this.withSubCommand(new LoadRunSplitsCommand(addon));
     this.withSubCommand(new ListRunSplitFiles(addon));
+    this.withSubCommand(new ClearRunCommand(addon));
   }
 
   @Override

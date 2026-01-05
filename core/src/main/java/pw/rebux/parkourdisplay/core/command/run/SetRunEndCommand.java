@@ -26,6 +26,7 @@ public final class SetRunEndCommand extends SubCommand {
 
     this.addon.playerParkourState().runEndSplit(
         new RunSplit(
+            "Finish",
             PositionOffset.builder()
               .posX(player.position().getX())
               .posY(player.position().getY())

@@ -21,11 +21,13 @@ public final class AddRunSplitCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
+    var runSplits = this.addon.playerParkourState().runSplits();
     var offsetX = arguments.length > 0 ? Double.parseDouble(arguments[0]) : 3;
     var offsetZ = arguments.length > 1 ? Double.parseDouble(arguments[1]) : 3;
 
-    this.addon.playerParkourState().runSplits().add(
+    runSplits.add(
         new RunSplit(
+            "Split %d".formatted(runSplits.size() + 1),
             PositionOffset.builder()
                 .posX(player.position().getX())
                 .posY(player.position().getY())

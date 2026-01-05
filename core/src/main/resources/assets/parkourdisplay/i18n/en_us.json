@@ -325,6 +325,12 @@
           "nameRequired": "Please provide a name for the file.",
           "success": "Successfully saved splits."
         }
+      },
+      "clearrun": {
+        "description": "Resets run start, end and split data.",
+        "messages": {
+          "success": "Successfully cleared run data."
+        }
       }
     }
   }
