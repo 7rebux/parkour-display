@@ -17,6 +17,9 @@ import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 
 public final class GameTickListener {
 
+  // Persisting a maximum of 6.000 ticks (5 minutes)
+  private static final int MAX_RUN_TICK_INPUTS = 5 * 60 * 20;
+
   private final ParkourDisplayAddon addon;
   private final MinecraftInputUtil inputUtil;
 
@@ -175,19 +178,21 @@ public final class GameTickListener {
     if (playerParkourState.runStarted()) {
       playerParkourState.runTimer(playerParkourState.runTimer() + 1);
 
-      playerParkourState.runTickInputs().add(
-          new TickInput(
-              inputUtil.forwardKey().isDown(),
-              inputUtil.leftKey().isDown(),
-              inputUtil.backKey().isDown(),
-              inputUtil.rightKey().isDown(),
-              inputUtil.jumpKey().isDown(),
-              inputUtil.sprintKey().isDown(),
-              inputUtil.sneakKey().isDown(),
-              yaw,
-              pitch
-          )
-      );
+      if (playerParkourState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
+        playerParkourState.runTickInputs().add(
+            new TickInput(
+                inputUtil.forwardKey().isDown(),
+                inputUtil.leftKey().isDown(),
+                inputUtil.backKey().isDown(),
+                inputUtil.rightKey().isDown(),
+                inputUtil.jumpKey().isDown(),
+                inputUtil.sprintKey().isDown(),
+                inputUtil.sneakKey().isDown(),
+                yaw,
+                pitch
+            )
+        );
+      }
     }
   }
 

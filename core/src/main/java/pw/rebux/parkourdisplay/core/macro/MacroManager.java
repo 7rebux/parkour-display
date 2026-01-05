@@ -57,16 +57,16 @@ public class MacroManager {
     return this.addon.gson().fromJson(reader, GSON_DATA_TYPE);
   }
 
-  public void saveMacro(List<TickInput> tickStates, String name) throws IOException {
+  public void saveMacro(List<TickInput> tickInputs, String name) throws IOException {
     var file = new File(MACROS_DIR, name + ".json");
 
     try (FileWriter writer = new FileWriter(file)) {
-      this.addon.gson().toJson(tickStates, writer);
+      this.addon.gson().toJson(tickInputs, writer);
     }
   }
 
-  public void runMacro(List<TickInput> tickStates) {
+  public void runMacro(List<TickInput> tickInputs) {
     this.activeMacro.clear();
-    this.activeMacro.addAll(tickStates);
+    this.activeMacro.addAll(tickInputs);
   }
 }
