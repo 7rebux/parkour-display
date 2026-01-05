@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.splits.RunSplit;
 
 @Data
@@ -27,8 +28,8 @@ public final class PlayerParkourState {
   private double lastTotalLandingBlockOffset = 0;
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
-  private PositionOffset runStartPosition = null;
-  private RunSplit runEndSplit = null;
+  @Nullable private PositionOffset runStartPosition = null;
+  @Nullable private RunSplit runEndSplit = null;
   private List<RunSplit> runSplits = new ArrayList<>();
   private boolean runStarted = false;
   private long runTimer = 0;

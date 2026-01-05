@@ -44,7 +44,7 @@ public final class RunSplit {
           ? TickFormatter.formatTicks(ticks)
           : String.valueOf(ticks);
       var formattedDelta = addon.configuration().formatRunSplits().get()
-          ? TickFormatter.formatTicks(delta)
+          ? delta > 0 ? "+" + TickFormatter.formatTicks(delta) : TickFormatter.formatTicks(delta)
           : delta > 0 ? "+" + delta : String.valueOf(delta);
 
       addon.displayMessage(

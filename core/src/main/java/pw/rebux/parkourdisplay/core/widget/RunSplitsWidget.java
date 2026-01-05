@@ -87,13 +87,15 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
 
     // Timer component
     var timerTicks = this.addon.playerParkourState().runTimer();
-    var timerColor = timerTicks <= endSplit.personalBest()
+    var timerColor = endSplit == null || endSplit.personalBest() == null || timerTicks <= endSplit.personalBest()
         ? NamedTextColor.GREEN
         : NamedTextColor.RED;
     var timerComponent = RenderableComponent.of(Component.text(formatTicks(timerTicks), timerColor));
 
     // Personal best component
-    var personalBest = endSplit.personalBest() == null ? "N/A" : formatTicks(endSplit.personalBest());
+    var personalBest = endSplit == null || endSplit.personalBest() == null
+        ? "N/A"
+        : formatTicks(endSplit.personalBest());
     var personalBestComponent = RenderableComponent.of(Component.text(personalBest, NamedTextColor.WHITE));
     var personalBestLabelComponent = RenderableComponent.of(Component.text("Personal Best", NamedTextColor.WHITE));
 
@@ -139,6 +141,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
       // Render personal best
       context.canvas().submitRenderableComponent(personalBestComponent, WIDTH - personalBestComponent.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.SHADOW);
       context.canvas().submitRenderableComponent(personalBestLabelComponent, PADDING, yOffset + PADDING, -1, TextRenderingOptions.NONE);
+      yOffset += timerComponent.getHeight();
     }
 
     size.set(WIDTH, yOffset + (PADDING * 2));
@@ -165,7 +168,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
 
     @ColorPickerSetting(alpha = true, chroma = true)
     private final ConfigProperty<Color> backgroundColor =
-        new ConfigProperty<>(Color.ofRGB(0, 192, 255, 25));
+        new ConfigProperty<>(Color.ofRGB(0, 0, 0, 40));
   }
 
   private record SplitRow(
