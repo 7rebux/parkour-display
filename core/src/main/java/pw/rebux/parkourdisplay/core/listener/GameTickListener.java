@@ -174,26 +174,6 @@ public final class GameTickListener {
     lastTick.onGround(onGround);
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
-
-    if (playerParkourState.runStarted()) {
-      playerParkourState.runTimer(playerParkourState.runTimer() + 1);
-
-      if (playerParkourState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
-        playerParkourState.runTickInputs().add(
-            new TickInput(
-                inputUtil.forwardKey().isDown(),
-                inputUtil.leftKey().isDown(),
-                inputUtil.backKey().isDown(),
-                inputUtil.rightKey().isDown(),
-                inputUtil.jumpKey().isDown(),
-                inputUtil.sprintKey().isDown(),
-                inputUtil.sneakKey().isDown(),
-                yaw,
-                pitch
-            )
-        );
-      }
-    }
   }
 
   private void handleActiveRun(ClientPlayer player) {
@@ -238,6 +218,29 @@ public final class GameTickListener {
     ) {
       playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTimer());
       playerParkourState.runStarted(false);
+    }
+
+    // Timers etc.
+    if (playerParkourState.runStarted()) {
+      playerParkourState.runTimer(playerParkourState.runTimer() + 1);
+
+      if (lastTick.onGround() && player.isOnGround()) {
+        playerParkourState.runGroundTime(playerParkourState.runGroundTime() + 1);
+      }
+
+      if (playerParkourState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
+        playerParkourState.runTickInputs().add(
+            new TickInput(
+                inputUtil.forwardKey().isDown(),
+                inputUtil.leftKey().isDown(),
+                inputUtil.backKey().isDown(),
+                inputUtil.rightKey().isDown(),
+                inputUtil.jumpKey().isDown(),
+                inputUtil.sprintKey().isDown(),
+                inputUtil.sneakKey().isDown(),
+                player.getRotationYaw(),
+                player.getRotationPitch()));
+      }
     }
   }
 

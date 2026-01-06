@@ -70,7 +70,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
           Optional<RenderableComponent> delta = Optional.empty();
 
           if (split.passed()) {
-            long ticks = split.lastTicks() - split.personalBest();
+            long ticks = split.lastDelta();
             var color = ticks < 0
                 ? NamedTextColor.GREEN
                 : ticks > 0

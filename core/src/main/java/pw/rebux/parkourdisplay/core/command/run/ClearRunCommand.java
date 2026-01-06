@@ -19,8 +19,8 @@ public final class ClearRunCommand extends SubCommand {
   public boolean execute(String prefix, String[] arguments) {
     var playerParkourState = this.addon.playerParkourState();
 
-    playerParkourState.runSplits().forEach(split -> split.personalBest(null));
     playerParkourState.resetRun();
+    playerParkourState.runSplits().clear();
     playerParkourState.runStartPosition(null);
     playerParkourState.runEndSplit(null);
 

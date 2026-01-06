@@ -20,6 +20,7 @@ public final class RunSplit {
   private boolean passed;
   private Long personalBest;
   private Long lastTicks;
+  private Long lastDelta;
 
   public void updatePB(ParkourDisplayAddon addon, long ticks) {
     var color = NamedTextColor.GRAY;
@@ -39,6 +40,7 @@ public final class RunSplit {
     }
 
     this.lastTicks = ticks;
+    this.lastDelta = delta;
 
     if (addon.configuration().showRunSplitsInChat().get()) {
       var formattedTicks = addon.configuration().formatRunSplits().get()

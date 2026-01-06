@@ -38,6 +38,7 @@ public final class PlayerParkourState {
 
   public void resetRun() {
     this.runSplits.forEach(split -> split.passed(false));
+    this.runStarted = false;
     this.runTimer = 0;
     this.runGroundTime = 0;
     this.runTickInputs.clear();
