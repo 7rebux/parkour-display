@@ -94,10 +94,6 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
-
-    if (!DATA_DIR.exists() && !DATA_DIR.mkdir()) {
-      throw new RuntimeException("Failed to create data directory: " + DATA_DIR.getAbsolutePath());
-    }
   }
 
   @Override

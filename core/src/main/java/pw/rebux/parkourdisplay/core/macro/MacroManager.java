@@ -29,7 +29,7 @@ public class MacroManager {
   private final ParkourDisplayAddon addon;
 
   static {
-    if (!MACROS_DIR.exists() && !MACROS_DIR.mkdir()) {
+    if (!MACROS_DIR.exists() && !MACROS_DIR.mkdirs()) {
       throw new RuntimeException("Failed to create macros directory: " + MACROS_DIR.getAbsolutePath());
     }
   }

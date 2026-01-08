@@ -25,7 +25,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
   private static final Component SPLITS_TITLE_COMPONENT =
       Component.text("SPLITS", NamedTextColor.YELLOW);
 
-  private static final float WIDTH = 100;
+  private static final float BASE_WIDTH = 100;
   private static final float PADDING = 2;
 
   private final ParkourDisplayAddon addon;
@@ -99,34 +99,36 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
     var personalBestComponent = RenderableComponent.of(Component.text(personalBest, NamedTextColor.WHITE));
     var personalBestLabelComponent = RenderableComponent.of(Component.text("Personal Best", NamedTextColor.WHITE));
 
+    float dynamicWidth = BASE_WIDTH + (personalBestComponent.getWidth() / 2);
+    float totalHeight = 0
+        + titleComponent.getHeight()
+        + (splits.size() * (titleComponent.getHeight() + 1))
+        + titleComponent.getHeight()
+        + timerComponent.getHeight()
+        + personalBestComponent.getHeight()
+        + (PADDING * 2);
+
     float yOffset = 0;
 
     if (phase.canRender()) {
       int backgroundRGBA = this.config.backgroundColor().get().get();
-      float totalHeight = 0
-          + titleComponent.getHeight()
-          + (splits.size() * (titleComponent.getHeight() + 1))
-          + titleComponent.getHeight()
-          + timerComponent.getHeight()
-          + personalBestComponent.getHeight()
-          + (PADDING * 2);
 
       // Render background
-      context.canvas().submitRect(Rectangle.relative(0, 0, WIDTH, totalHeight), backgroundRGBA);
-      context.canvas().submitRect(Rectangle.relative(0, 0, WIDTH, titleComponent.getHeight() + 2), backgroundRGBA);
+      context.canvas().submitRect(Rectangle.relative(0, 0, dynamicWidth, totalHeight), backgroundRGBA);
+      context.canvas().submitRect(Rectangle.relative(0, 0, dynamicWidth, titleComponent.getHeight() + 2), backgroundRGBA);
 
       // Render Title
-      context.canvas().submitRenderableComponent(titleComponent, WIDTH / 2, PADDING, -1, TextRenderingOptions.CENTERED);
+      context.canvas().submitRenderableComponent(titleComponent, dynamicWidth / 2, PADDING, -1, TextRenderingOptions.CENTERED);
       yOffset += titleComponent.getHeight() + 2;
 
       // Render splits
       for (var splitRow : splitRows) {
         context.canvas().submitRenderableComponent(splitRow.label, PADDING, yOffset + PADDING, -1, TextRenderingOptions.NONE);
-        context.canvas().submitRenderableComponent(splitRow.time, WIDTH - splitRow.time.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.NONE);
+        context.canvas().submitRenderableComponent(splitRow.time, dynamicWidth - splitRow.time.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.NONE);
 
         if (splitRow.delta.isPresent()) {
           var deltaComponent = splitRow.delta.get();
-          context.canvas().submitRenderableComponent(deltaComponent, WIDTH - splitRow.time.getWidth() - deltaComponent.getWidth() - 10, yOffset + PADDING, -1, TextRenderingOptions.NONE);
+          context.canvas().submitRenderableComponent(deltaComponent, dynamicWidth - splitRow.time.getWidth() - deltaComponent.getWidth() - 10, yOffset + PADDING, -1, TextRenderingOptions.NONE);
         }
 
         yOffset += splitRow.label.getHeight() + 1;
@@ -135,16 +137,15 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
       yOffset += titleComponent.getHeight();
 
       // Render timer
-      context.canvas().submitRenderableComponent(timerComponent, WIDTH - timerComponent.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.SHADOW);
+      context.canvas().submitRenderableComponent(timerComponent, dynamicWidth - timerComponent.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.SHADOW);
       yOffset += timerComponent.getHeight() + 1;
 
       // Render personal best
-      context.canvas().submitRenderableComponent(personalBestComponent, WIDTH - personalBestComponent.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.SHADOW);
+      context.canvas().submitRenderableComponent(personalBestComponent, dynamicWidth - personalBestComponent.getWidth() - PADDING, yOffset + PADDING, -1, TextRenderingOptions.SHADOW);
       context.canvas().submitRenderableComponent(personalBestLabelComponent, PADDING, yOffset + PADDING, -1, TextRenderingOptions.NONE);
-      yOffset += timerComponent.getHeight();
     }
 
-    size.set(WIDTH, yOffset + (PADDING * 2));
+    size.set(dynamicWidth, totalHeight);
   }
 
   @Override

@@ -77,10 +77,6 @@ public final class GameTickListener {
 
     if (lastTick.onGround() && onGround) {
       groundTime = Math.min(groundTime + 1, Integer.MAX_VALUE);
-
-      if (playerParkourState.runStarted()) {
-        playerParkourState.runGroundTime(playerParkourState.runGroundTime() + 1);
-      }
     }
 
     // If the player landed this tick or is still airborne, we increase the air time

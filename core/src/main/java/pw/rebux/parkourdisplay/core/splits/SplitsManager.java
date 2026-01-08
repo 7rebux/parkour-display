@@ -26,7 +26,7 @@ public final class SplitsManager {
   private final ParkourDisplayAddon addon;
 
   static {
-    if (!SPLITS_DIR.exists() && !SPLITS_DIR.mkdir()) {
+    if (!SPLITS_DIR.exists() && !SPLITS_DIR.mkdirs()) {
       throw new RuntimeException("Failed to create splits directory: " + SPLITS_DIR.getAbsolutePath());
     }
   }

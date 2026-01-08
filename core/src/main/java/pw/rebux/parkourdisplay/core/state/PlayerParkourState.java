@@ -33,14 +33,14 @@ public final class PlayerParkourState {
   private List<RunSplit> runSplits = new ArrayList<>();
   private boolean runStarted = false;
   private long runTimer = 0;
-  private long runGroundTime = 0;
+  private long runGroundTime = -1;
   private ArrayList<TickInput> runTickInputs = new ArrayList<>();
 
   public void resetRun() {
     this.runSplits.forEach(split -> split.passed(false));
     this.runStarted = false;
     this.runTimer = 0;
-    this.runGroundTime = 0;
+    this.runGroundTime = -1;
     this.runTickInputs.clear();
   }
 
