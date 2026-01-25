@@ -1,19 +1,19 @@
 package pw.rebux.parkourdisplay.core;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.addon.AddonConfig;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SliderWidget.SliderSetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.color.ColorPickerWidget.ColorPickerSetting;
+import net.labymod.api.client.gui.screen.widget.widgets.input.dropdown.DropdownWidget.DropdownSetting;
 import net.labymod.api.configuration.loader.annotation.ConfigName;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 import net.labymod.api.configuration.settings.annotation.SettingSection;
 import net.labymod.api.util.Color;
+import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 
 @ConfigName("settings")
 @Getter
-@Accessors(fluent = true)
 public class ParkourDisplayConfiguration extends AddonConfig {
 
   @SwitchSetting
@@ -71,4 +71,12 @@ public class ParkourDisplayConfiguration extends AddonConfig {
   @SliderSetting(min = 0.01F, max = 1.0F, steps = 0.01F)
   private final ConfigProperty<Float> runSplitOutlineThickness =
       new ConfigProperty<>(0.01F);
+
+  @SettingSection("macro")
+  @SwitchSetting
+  private final ConfigProperty<Boolean> unpressKeys = new ConfigProperty<>(true);
+
+  @DropdownSetting
+  private final ConfigProperty<MacroRotationChange> rotationChange =
+      new ConfigProperty<>(MacroRotationChange.RELATIVE);
 }

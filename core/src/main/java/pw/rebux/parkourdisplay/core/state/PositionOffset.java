@@ -2,13 +2,11 @@ package pw.rebux.parkourdisplay.core.state;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
 
 @Builder
 @Getter
-@Accessors(fluent = true)
 public class PositionOffset {
 
   private final double posX;

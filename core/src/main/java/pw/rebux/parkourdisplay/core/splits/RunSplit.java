@@ -2,7 +2,6 @@ package pw.rebux.parkourdisplay.core.splits;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -11,7 +10,6 @@ import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
 @RequiredArgsConstructor
-@Accessors(fluent = true)
 public final class RunSplit {
 
   private final String label;

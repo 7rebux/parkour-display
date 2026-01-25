@@ -1,12 +1,10 @@
 package pw.rebux.parkourdisplay.core.util;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.options.MinecraftInputMapping;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @Getter
-@Accessors(fluent = true)
 public class MinecraftInputUtil {
 
   private final MinecraftInputMapping forwardKey;

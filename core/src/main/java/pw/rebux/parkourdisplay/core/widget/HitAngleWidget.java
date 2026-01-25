@@ -3,7 +3,6 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -42,7 +41,6 @@ public class HitAngleWidget extends TextHudWidget<HitAngleWidgetConfig> {
     this.textLine.updateAndFlush(hitFacing);
   }
 
-  @Accessors(fluent = true)
   @Getter
   public static class HitAngleWidgetConfig extends TextHudWidgetConfig {
 

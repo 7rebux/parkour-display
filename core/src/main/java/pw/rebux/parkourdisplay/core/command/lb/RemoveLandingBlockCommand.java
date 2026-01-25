@@ -21,7 +21,7 @@ public final class RemoveLandingBlockCommand extends SubCommand {
     var landingBlockManager = this.addon.landingBlockManager();
 
     if (arguments.length == 0) {
-      landingBlockManager.getLandingBlocks().clear();
+      landingBlockManager.landingBlocks().clear();
       this.displayMessage(
           translatable(
               "parkourdisplay.commands.removelb.messages.successAll",
@@ -29,7 +29,7 @@ public final class RemoveLandingBlockCommand extends SubCommand {
     } else {
       var index = Ints.tryParse(arguments[0]);
 
-      if (index == null || landingBlockManager.getLandingBlocks().size() <= index) {
+      if (index == null || landingBlockManager.landingBlocks().size() <= index) {
         this.displayMessage(
             translatable(
                 "parkourdisplay.commands.removelb.messages.invalidIndex",
@@ -37,7 +37,7 @@ public final class RemoveLandingBlockCommand extends SubCommand {
         return true;
       }
 
-      landingBlockManager.getLandingBlocks().remove(index.intValue());
+      landingBlockManager.landingBlocks().remove(index.intValue());
       this.displayMessage(
           translatable(
               "parkourdisplay.commands.removelb.messages.successSingle",

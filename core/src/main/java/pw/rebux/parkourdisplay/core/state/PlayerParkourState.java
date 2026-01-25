@@ -3,12 +3,10 @@ package pw.rebux.parkourdisplay.core.state;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.splits.RunSplit;
 
 @Data
-@Accessors(fluent = true)
 public final class PlayerParkourState {
 
   private double velocityX = 0, velocityY = 0, velocityZ = 0;

@@ -2,7 +2,6 @@ package pw.rebux.parkourdisplay.core.widget;
 
 import java.util.Optional;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.gfx.pipeline.renderer.text.TextRenderingOptions;
@@ -161,7 +160,6 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
   }
 
   @Getter
-  @Accessors(fluent = true)
   public static class RunSplitsWidgetConfig extends HudWidgetConfig {
 
     @SwitchSetting

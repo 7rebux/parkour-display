@@ -3,7 +3,6 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -59,7 +58,6 @@ public class LandingCoordinatesWidget extends TextHudWidget<LandingCoordinatesWi
     }
   }
 
-  @Accessors(fluent = true)
   @Getter
   public static class LandingCoordinatesWidgetConfig extends TextHudWidgetConfig {
 

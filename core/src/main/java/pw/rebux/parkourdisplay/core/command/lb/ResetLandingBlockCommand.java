@@ -22,7 +22,7 @@ public final class ResetLandingBlockCommand extends SubCommand {
     var landingBlockManager = this.addon.landingBlockManager();
 
     if (arguments.length == 0) {
-      landingBlockManager.getLandingBlocks().forEach(landingBlock ->
+      landingBlockManager.landingBlocks().forEach(landingBlock ->
           landingBlock.offsets(new LandingBlockOffsets()));
       this.displayMessage(
           translatable(
@@ -31,7 +31,7 @@ public final class ResetLandingBlockCommand extends SubCommand {
     } else {
       var index = Ints.tryParse(arguments[0]);
 
-      if (index == null || landingBlockManager.getLandingBlocks().size() <= index) {
+      if (index == null || landingBlockManager.landingBlocks().size() <= index) {
         this.displayMessage(
             translatable(
                 "parkourdisplay.commands.resetlb.messages.invalidIndex",
@@ -39,7 +39,7 @@ public final class ResetLandingBlockCommand extends SubCommand {
         return true;
       }
 
-      var landingBlock = landingBlockManager.getLandingBlocks().get(index);
+      var landingBlock = landingBlockManager.landingBlocks().get(index);
 
       landingBlock.offsets(new LandingBlockOffsets());
       this.displayMessage(

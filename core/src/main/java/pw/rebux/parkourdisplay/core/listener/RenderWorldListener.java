@@ -23,7 +23,7 @@ public class RenderWorldListener {
       return;
     }
 
-    var landingBlocks = this.addon.landingBlockManager().getLandingBlocks();
+    var landingBlocks = this.addon.landingBlockManager().landingBlocks();
 
     for (var landingBlock : landingBlocks) {
       RenderUtil.renderBoundingBox(

@@ -23,7 +23,7 @@ public final class ListLandingBlocksCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var landingBlocks = this.addon.landingBlockManager().getLandingBlocks();
+    var landingBlocks = this.addon.landingBlockManager().landingBlocks();
 
     if (landingBlocks.isEmpty()) {
       this.displayMessage(

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
@@ -13,9 +12,11 @@ import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
 import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
 import pw.rebux.parkourdisplay.core.macro.MacroManager;
+import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.splits.SplitsManager;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.state.TickInput;
+import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.adapter.TickInputAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
@@ -37,41 +38,35 @@ import pw.rebux.parkourdisplay.core.widget.TierWidget;
 import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
 
 @AddonMain
-@Accessors(fluent = true)
+@Getter
 public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> {
 
   public static final String NAMESPACE = "parkourdisplay";
   public static final File DATA_DIR = new File("parkour-display");
 
-  @Getter
   private final Gson gson = new GsonBuilder()
       .setPrettyPrinting()
       .registerTypeAdapter(TickInput.class, new TickInputAdapter())
       .create();
-
-  @Getter
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
-
-  @Getter
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
-
-  @Getter
   private final MacroManager macroManager = new MacroManager(this);
-
-  @Getter
   private final SplitsManager splitsManager = new SplitsManager(this);
-
-  @Getter
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
+
+  private MinecraftInputUtil minecraftInputUtil;
 
   @Override
   protected void enable() {
+    this.minecraftInputUtil = new MinecraftInputUtil(this);
+
     var hudWidgetRegistry = this.labyAPI().hudWidgetRegistry();
 
     this.registerSettingCategory();
 
     this.registerListener(new GameTickListener(this));
     this.registerListener(new RenderWorldListener(this));
+    this.registerListener(new MacroRunner(this));
 
     this.registerCommand(new BaseCommand(this));
 

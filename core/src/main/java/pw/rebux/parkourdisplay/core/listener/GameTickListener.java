@@ -3,25 +3,27 @@ package pw.rebux.parkourdisplay.core.listener;
 import static net.labymod.api.client.component.Component.text;
 import static net.labymod.api.client.component.Component.translatable;
 
+import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
+import net.labymod.api.event.Priority;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
-import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 
+@RequiredArgsConstructor
 public final class GameTickListener {
 
   // Persisting a maximum of 6.000 ticks (5 minutes)
   private static final int MAX_RUN_TICK_INPUTS = 5 * 60 * 20;
 
   private final ParkourDisplayAddon addon;
-  private final MinecraftInputUtil inputUtil;
 
   private final TickPosition lastTick = new TickPosition();
   private int airTime = 0;
@@ -34,26 +36,19 @@ public final class GameTickListener {
   private int sneakTime = -2;
   private boolean locked = false;
 
-  // To unpress all keys in the tick after the macro was finished
-  private boolean macroFinished = false;
-
-  public GameTickListener(ParkourDisplayAddon addon) {
-    this.addon = addon;
-    this.inputUtil = new MinecraftInputUtil(addon);
-  }
-
-  @Subscribe
+  @Subscribe(Priority.FIRST)
   public void onGameTick(GameTickEvent event) {
-    var minecraft = addon.labyAPI().minecraft();
+    var minecraft = this.addon.labyAPI().minecraft();
+    var inputUtil = this.addon.minecraftInputUtil();
     var player = minecraft.getClientPlayer();
-    var playerParkourState = addon.playerParkourState();
+    var playerParkourState = this.addon.playerParkourState();
 
-    if (player == null || player.isAbilitiesFlying() || player.gameMode() == GameMode.SPECTATOR || minecraft.isPaused()) {
-      return;
-    }
-
-    if (event.phase() == Phase.PRE) {
-      processMacros(player);
+    if (event.phase() == Phase.PRE
+        || player == null
+        || player.isAbilitiesFlying()
+        || player.gameMode() == GameMode.SPECTATOR
+        || minecraft.isPaused()
+    ) {
       return;
     }
 
@@ -173,6 +168,7 @@ public final class GameTickListener {
   }
 
   private void handleActiveRun(ClientPlayer player) {
+    var inputUtil = this.addon.minecraftInputUtil();
     var playerParkourState = this.addon.playerParkourState();
 
     var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - player.position().getX());
@@ -225,6 +221,10 @@ public final class GameTickListener {
       }
 
       if (playerParkourState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
+        var isRelativeRotation = this.addon.configuration().rotationChange().get() == MacroRotationChange.RELATIVE;
+        var yawChange = player.getRotationYaw() - lastTick.yaw();
+        var pitchChange = player.getRotationPitch() - lastTick.pitch();
+
         playerParkourState.runTickInputs().add(
             new TickInput(
                 inputUtil.forwardKey().isDown(),
@@ -234,8 +234,8 @@ public final class GameTickListener {
                 inputUtil.jumpKey().isDown(),
                 inputUtil.sprintKey().isDown(),
                 inputUtil.sneakKey().isDown(),
-                player.getRotationYaw(),
-                player.getRotationPitch()));
+                isRelativeRotation ? yawChange : player.getRotationYaw(),
+                isRelativeRotation ? pitchChange: player.getRotationPitch()));
       }
     }
   }
@@ -250,6 +250,8 @@ public final class GameTickListener {
 
   // https://www.mcpk.wiki/wiki/Timings
   private void updateLastTiming(PlayerParkourState playerParkourState) {
+    var inputUtil = this.addon.minecraftInputUtil();
+
     // Movement
     if (inputUtil.isMoving()) {
       moveTime++;
@@ -308,6 +310,7 @@ public final class GameTickListener {
   }
 
   private String buildInputString() {
+    var inputUtil = this.addon.minecraftInputUtil();
     var input = new StringBuilder();
     var hasMovement = false;
 
@@ -331,36 +334,5 @@ public final class GameTickListener {
     }
 
     return input.toString();
-  }
-
-  private void processMacros(ClientPlayer player) {
-    if (macroFinished) {
-      this.inputUtil.unpressAll();
-      macroFinished = false;
-      return;
-    }
-
-    var activeMacro = this.addon.macroManager().activeMacro();
-
-    if (activeMacro.isEmpty()) {
-      return;
-    }
-
-    var tickInput = activeMacro.pop();
-
-    this.inputUtil.setPressed(this.inputUtil.forwardKey(), tickInput.w());
-    this.inputUtil.setPressed(this.inputUtil.leftKey(), tickInput.a());
-    this.inputUtil.setPressed(this.inputUtil.backKey(), tickInput.s());
-    this.inputUtil.setPressed(this.inputUtil.rightKey(), tickInput.d());
-    this.inputUtil.setPressed(this.inputUtil.jumpKey(), tickInput.jump());
-    this.inputUtil.setPressed(this.inputUtil.sprintKey(), tickInput.sprint());
-    this.inputUtil.setPressed(this.inputUtil.sneakKey(), tickInput.sneak());
-
-    player.setRotationYaw(tickInput.yaw());
-    player.setRotationPitch(tickInput.pitch());
-
-    if (activeMacro.isEmpty()) {
-      macroFinished = true;
-    }
   }
 }

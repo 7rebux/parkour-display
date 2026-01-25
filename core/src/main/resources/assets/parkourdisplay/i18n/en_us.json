@@ -126,6 +126,9 @@
         },
         "runSplit": {
           "name": "Run Splits"
+        },
+        "macro": {
+          "name": "Macros"
         }
       },
       "enabled": {
@@ -172,6 +175,12 @@
       },
       "formatRunSplits": {
         "name": "Format Run Splits"
+      },
+      "unpressKeys": {
+        "name": "Unpress Keys On Macro End"
+      },
+      "rotationChange": {
+        "name": "Rotation Change"
       }
     },
     "labels": {
