@@ -27,7 +27,7 @@ public final class LoadRunSplitsCommand extends SubCommand {
     }
 
     try {
-      this.addon.splitsManager().loadSplits(arguments[0]);
+      this.addon.splitManager().loadSplits(arguments[0]);
       this.displayMessage(
           translatable(
               "parkourdisplay.commands.loadsplits.messages.success",

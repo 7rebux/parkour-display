@@ -27,7 +27,7 @@ public final class SaveMacroCommand extends SubCommand {
       return true;
     }
 
-    var tickInputs = new ArrayList<>(this.addon.playerParkourState().runTickInputs());
+    var tickInputs = new ArrayList<>(this.addon.runState().runTickInputs());
 
     try {
       this.addon.macroManager().saveMacro(tickInputs, arguments[0]);

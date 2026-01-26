@@ -28,6 +28,6 @@ public final class RunGroundTimeWidget extends TextHudWidget<TextHudWidgetConfig
 
   @Override
   public void onTick(boolean isEditorContext) {
-    this.textLine.updateAndFlush(this.addon.playerParkourState().runGroundTime());
+    this.textLine.updateAndFlush(this.addon.runState().runGroundTime());
   }
 }

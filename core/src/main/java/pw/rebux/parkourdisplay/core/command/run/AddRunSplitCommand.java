@@ -6,7 +6,7 @@ import java.util.Objects;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.splits.RunSplit;
+import pw.rebux.parkourdisplay.core.run.split.RunSplit;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
 
 public final class AddRunSplitCommand extends SubCommand {
@@ -21,7 +21,7 @@ public final class AddRunSplitCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
-    var runSplits = this.addon.playerParkourState().runSplits();
+    var runSplits = this.addon.runState().runSplits();
     var offsetX = arguments.length > 0 ? Double.parseDouble(arguments[0]) : 3;
     var offsetZ = arguments.length > 1 ? Double.parseDouble(arguments[1]) : 3;
 

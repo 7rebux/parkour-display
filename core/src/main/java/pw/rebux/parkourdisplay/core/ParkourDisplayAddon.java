@@ -8,12 +8,14 @@ import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
+import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
 import pw.rebux.parkourdisplay.core.listener.GameTickListener;
-import pw.rebux.parkourdisplay.core.listener.RenderWorldListener;
 import pw.rebux.parkourdisplay.core.macro.MacroManager;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
-import pw.rebux.parkourdisplay.core.splits.SplitsManager;
+import pw.rebux.parkourdisplay.core.run.RunListener;
+import pw.rebux.parkourdisplay.core.run.RunState;
+import pw.rebux.parkourdisplay.core.run.split.SplitManager;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
@@ -51,8 +53,9 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
   private final MacroManager macroManager = new MacroManager(this);
-  private final SplitsManager splitsManager = new SplitsManager(this);
+  private final SplitManager splitManager = new SplitManager(this);
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
+  private final RunState runState = new RunState();
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -65,8 +68,9 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     this.registerSettingCategory();
 
     this.registerListener(new GameTickListener(this));
-    this.registerListener(new RenderWorldListener(this));
     this.registerListener(new MacroRunner(this));
+    this.registerListener(new RunListener(this));
+    this.registerListener(new LandingBlockListener(this));
 
     this.registerCommand(new BaseCommand(this));
 

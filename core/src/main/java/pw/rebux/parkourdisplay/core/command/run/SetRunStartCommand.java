@@ -23,7 +23,7 @@ public final class SetRunStartCommand extends SubCommand {
     var offsetX = arguments.length > 0 ? Double.parseDouble(arguments[0]) : 0.1;
     var offsetZ = arguments.length > 1 ? Double.parseDouble(arguments[1]) : 0.1;
 
-    this.addon.playerParkourState().runStartPosition(
+    this.addon.runState().runStartPosition(
         PositionOffset.builder()
             .posX(player.position().getX())
             .posY(player.position().getY())

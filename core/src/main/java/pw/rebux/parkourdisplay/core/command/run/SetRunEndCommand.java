@@ -6,7 +6,7 @@ import java.util.Objects;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.splits.RunSplit;
+import pw.rebux.parkourdisplay.core.run.split.RunSplit;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
 
 public final class SetRunEndCommand extends SubCommand {
@@ -24,7 +24,7 @@ public final class SetRunEndCommand extends SubCommand {
     var offsetX = arguments.length > 0 ? Double.parseDouble(arguments[0]) : 3.0;
     var offsetZ = arguments.length > 1 ? Double.parseDouble(arguments[1]) : 3.0;
 
-    this.addon.playerParkourState().runEndSplit(
+    this.addon.runState().runEndSplit(
         new RunSplit(
             "Finish",
             PositionOffset.builder()

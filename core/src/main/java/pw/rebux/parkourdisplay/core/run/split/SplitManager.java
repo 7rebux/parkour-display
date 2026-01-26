@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.splits;
+package pw.rebux.parkourdisplay.core.run.split;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.PositionOffset;
 
 @RequiredArgsConstructor
-public final class SplitsManager {
+public final class SplitManager {
 
   private static final File SPLITS_DIR = new File(ParkourDisplayAddon.DATA_DIR, "splits");
   private static final File ZORTMOD_DATA_DIR = new File("zmdata");
@@ -41,9 +41,11 @@ public final class SplitsManager {
   }
 
   public void saveCurrentSplits(String fileName) throws IOException {
+    var runState = this.addon.runState();
+
     var rootObj = new JsonObject();
 
-    var startPos = this.addon.playerParkourState().runStartPosition();
+    var startPos = runState.runStartPosition();
     var startPosObj = new JsonObject();
     startPosObj.addProperty("x", startPos.posX());
     startPosObj.addProperty("y", startPos.posY());
@@ -52,7 +54,7 @@ public final class SplitsManager {
     rootObj.add("startDx", new JsonPrimitive(startPos.offsetX()));
     rootObj.add("startDz", new JsonPrimitive(startPos.offsetZ()));
 
-    var endPos = this.addon.playerParkourState().runEndSplit().positionOffset();
+    var endPos = runState.runEndSplit().positionOffset();
     var endPosObj = new JsonObject();
     endPosObj.addProperty("x", endPos.posX());
     endPosObj.addProperty("y", endPos.posY());
@@ -60,9 +62,9 @@ public final class SplitsManager {
     rootObj.add("endPos", endPosObj);
     rootObj.add("endDx", new JsonPrimitive(endPos.offsetX()));
     rootObj.add("endDz", new JsonPrimitive(endPos.offsetZ()));
-    rootObj.add("pb", new JsonPrimitive(this.addon.playerParkourState().runEndSplit().personalBest()));
+    rootObj.add("pb", new JsonPrimitive(runState.runEndSplit().personalBest()));
 
-    var splits = this.addon.playerParkourState().runSplits();
+    var splits = runState.runSplits();
     var splitsArrayObj = new JsonArray();
     var splitDxArrayObj = new JsonArray();
     var splitDzArrayObj = new JsonArray();
@@ -105,7 +107,7 @@ public final class SplitsManager {
     var rootObj = this.addon.gson().fromJson(new FileReader(file), JsonObject.class);
 
     var startPosObj = rootObj.getAsJsonObject("startPos");
-    this.addon.playerParkourState().runStartPosition(
+    this.addon.runState().runStartPosition(
         PositionOffset.builder()
             .posX(startPosObj.get("x").getAsDouble())
             .posY(startPosObj.get("y").getAsDouble())
@@ -125,14 +127,14 @@ public final class SplitsManager {
             .offsetZ(rootObj.get("endDz").getAsDouble())
             .build());
     runEndSplit.personalBest(rootObj.get("pb").getAsLong());
-    this.addon.playerParkourState().runEndSplit(runEndSplit);
+    this.addon.runState().runEndSplit(runEndSplit);
 
     var splitsArrayObj = rootObj.getAsJsonArray("splits");
     var splitDxArrayObj = rootObj.getAsJsonArray("splitDx");
     var splitDzArrayObj = rootObj.getAsJsonArray("splitDz");
     var bestSplitsArrayObj = rootObj.getAsJsonArray("bestSplits");
 
-    this.addon.playerParkourState().runSplits().clear();
+    this.addon.runState().runSplits().clear();
 
     for (var i = 0; i < rootObj.get("splitCount").getAsInt(); i++) {
       var splitObj = splitsArrayObj.get(i).getAsJsonObject();
@@ -147,7 +149,7 @@ public final class SplitsManager {
               .build());
       split.personalBest(bestSplitsArrayObj.get(i).getAsLong());
 
-      this.addon.playerParkourState().runSplits().add(split);
+      this.addon.runState().runSplits().add(split);
     }
   }
 

@@ -17,12 +17,12 @@ public final class ClearRunCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var playerParkourState = this.addon.playerParkourState();
+    var runState = this.addon.runState();
 
-    playerParkourState.resetRun();
-    playerParkourState.runSplits().clear();
-    playerParkourState.runStartPosition(null);
-    playerParkourState.runEndSplit(null);
+    runState.reset();
+    runState.runSplits().clear();
+    runState.runStartPosition(null);
+    runState.runEndSplit(null);
 
     this.displayMessage(
         translatable(

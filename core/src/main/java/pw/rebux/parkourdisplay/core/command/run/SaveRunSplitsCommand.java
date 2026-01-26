@@ -27,7 +27,7 @@ public final class SaveRunSplitsCommand extends SubCommand {
     }
 
     try {
-      this.addon.splitsManager().saveCurrentSplits(arguments[0]);
+      this.addon.splitManager().saveCurrentSplits(arguments[0]);
       this.displayMessage(
           translatable(
               "parkourdisplay.commands.savesplits.messages.success",

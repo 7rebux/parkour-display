@@ -12,16 +12,11 @@ import net.labymod.api.event.Priority;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
-import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 
 @RequiredArgsConstructor
 public final class GameTickListener {
-
-  // Persisting a maximum of 6.000 ticks (5 minutes)
-  private static final int MAX_RUN_TICK_INPUTS = 5 * 60 * 20;
 
   private final ParkourDisplayAddon addon;
 
@@ -39,7 +34,6 @@ public final class GameTickListener {
   @Subscribe(Priority.FIRST)
   public void onGameTick(GameTickEvent event) {
     var minecraft = this.addon.labyAPI().minecraft();
-    var inputUtil = this.addon.minecraftInputUtil();
     var player = minecraft.getClientPlayer();
     var playerParkourState = this.addon.playerParkourState();
 
@@ -140,16 +134,7 @@ public final class GameTickListener {
       playerParkourState.lastFF(yaw - lastTick.yaw());
     }
 
-    // Player is falling
-    if (vy < 0 && airTime > 1) {
-      addon.landingBlockManager().checkOffsets(player, lastTick);
-    }
-
     playerParkourState.lastInput(buildInputString());
-
-    if (playerParkourState.isRunSetUp()) {
-      handleActiveRun(player);
-    }
 
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
 
@@ -165,79 +150,6 @@ public final class GameTickListener {
     lastTick.onGround(onGround);
     lastTick.movingForward(movingForward);
     lastTick.movingSideways(movingSideways);
-  }
-
-  private void handleActiveRun(ClientPlayer player) {
-    var inputUtil = this.addon.minecraftInputUtil();
-    var playerParkourState = this.addon.playerParkourState();
-
-    var startOffsetX = Math.abs(playerParkourState.runStartPosition().posX() - player.position().getX());
-    var startOffsetZ = Math.abs(playerParkourState.runStartPosition().posZ() - player.position().getZ());
-    var endOffsetX = Math.abs(playerParkourState.runEndSplit().positionOffset().posX() - player.position().getX());
-    var endOffsetZ = Math.abs(playerParkourState.runEndSplit().positionOffset().posZ() - player.position().getZ());
-
-    // Start
-    if (startOffsetX <= playerParkourState.runStartPosition().offsetX()
-        && startOffsetZ <= playerParkourState.runStartPosition().offsetZ()
-        && playerParkourState.runStartPosition().posY() == player.position().getY()
-    ) {
-      playerParkourState.resetRun();
-      playerParkourState.runStarted(true);
-    }
-
-    // Splits
-    if (playerParkourState.runStarted()) {
-      for (var split : playerParkourState.runSplits()) {
-        var splitOffsetX = Math.abs(split.positionOffset().posX() - player.position().getX());
-        var splitOffsetZ = Math.abs(split.positionOffset().posZ() - player.position().getZ());
-
-        if (!split.passed()
-            && splitOffsetX <= split.positionOffset().offsetX() / 2
-            && splitOffsetZ <= split.positionOffset().offsetZ() / 2
-            && split.positionOffset().posY() == player.position().getY()
-        ) {
-          split.updatePB(this.addon, playerParkourState.runTimer());
-          split.passed(true);
-        }
-      }
-    }
-
-    // End
-    if (playerParkourState.runStarted()
-        && endOffsetX <= playerParkourState.runEndSplit().positionOffset().offsetX() / 2
-        && endOffsetZ <= playerParkourState.runEndSplit().positionOffset().offsetZ() / 2
-        && playerParkourState.runEndSplit().positionOffset().posY() == player.position().getY()
-    ) {
-      playerParkourState.runEndSplit().updatePB(addon, playerParkourState.runTimer());
-      playerParkourState.runStarted(false);
-    }
-
-    // Timers etc.
-    if (playerParkourState.runStarted()) {
-      playerParkourState.runTimer(playerParkourState.runTimer() + 1);
-
-      if (lastTick.onGround() && player.isOnGround()) {
-        playerParkourState.runGroundTime(playerParkourState.runGroundTime() + 1);
-      }
-
-      if (playerParkourState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
-        var isRelativeRotation = this.addon.configuration().rotationChange().get() == MacroRotationChange.RELATIVE;
-        var yawChange = player.getRotationYaw() - lastTick.yaw();
-        var pitchChange = player.getRotationPitch() - lastTick.pitch();
-
-        playerParkourState.runTickInputs().add(
-            new TickInput(
-                inputUtil.forwardKey().isDown(),
-                inputUtil.leftKey().isDown(),
-                inputUtil.backKey().isDown(),
-                inputUtil.rightKey().isDown(),
-                inputUtil.jumpKey().isDown(),
-                inputUtil.sprintKey().isDown(),
-                inputUtil.sneakKey().isDown(),
-                isRelativeRotation ? yawChange : player.getRotationYaw(),
-                isRelativeRotation ? pitchChange: player.getRotationPitch()));
-      }
-    }
   }
 
   private boolean tryGetMovingSideways(ClientPlayer player) {

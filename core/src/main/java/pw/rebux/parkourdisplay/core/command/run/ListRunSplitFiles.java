@@ -23,7 +23,7 @@ public final class ListRunSplitFiles extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-      var files = this.addon.splitsManager().listAvailableFiles();
+      var files = this.addon.splitManager().listAvailableFiles();
 
       if (files.isEmpty()) {
         this.displayMessage(

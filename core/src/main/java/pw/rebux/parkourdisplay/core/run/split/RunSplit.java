@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.splits;
+package pw.rebux.parkourdisplay.core.run.split;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

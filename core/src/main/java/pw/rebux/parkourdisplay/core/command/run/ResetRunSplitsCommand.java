@@ -17,13 +17,13 @@ public final class ResetRunSplitsCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var playerParkourState = this.addon.playerParkourState();
+    var runState = this.addon.runState();
 
-    if (playerParkourState.runEndSplit() != null) {
-      playerParkourState.runEndSplit().personalBest(null);
+    if (runState.runEndSplit() != null) {
+      runState.runEndSplit().personalBest(null);
     }
 
-    playerParkourState.runSplits().forEach(split -> split.personalBest(null));
+    runState.runSplits().forEach(split -> split.personalBest(null));
 
     this.displayMessage(
         translatable(

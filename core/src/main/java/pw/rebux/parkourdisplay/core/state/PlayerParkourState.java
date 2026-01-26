@@ -1,10 +1,6 @@
 package pw.rebux.parkourdisplay.core.state;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
-import org.jspecify.annotations.Nullable;
-import pw.rebux.parkourdisplay.core.splits.RunSplit;
 
 @Data
 public final class PlayerParkourState {
@@ -23,26 +19,7 @@ public final class PlayerParkourState {
   private String lastInput = "-";
   private String lastTiming = "-";
 
+  // TODO: Move to Landing block manager?
   private double lastTotalLandingBlockOffset = 0;
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
-
-  @Nullable private PositionOffset runStartPosition = null;
-  @Nullable private RunSplit runEndSplit = null;
-  private List<RunSplit> runSplits = new ArrayList<>();
-  private boolean runStarted = false;
-  private long runTimer = 0;
-  private long runGroundTime = -1;
-  private ArrayList<TickInput> runTickInputs = new ArrayList<>();
-
-  public void resetRun() {
-    this.runSplits.forEach(split -> split.passed(false));
-    this.runStarted = false;
-    this.runTimer = 0;
-    this.runGroundTime = -1;
-    this.runTickInputs.clear();
-  }
-
-  public boolean isRunSetUp() {
-    return runStartPosition != null && runEndSplit != null;
-  }
 }

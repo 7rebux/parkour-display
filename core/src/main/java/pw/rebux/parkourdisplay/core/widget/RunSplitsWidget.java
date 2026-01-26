@@ -42,8 +42,8 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
       boolean isEditorContext,
       HudSize size
   ) {
-    var splits = this.addon.playerParkourState().runSplits();
-    var endSplit = this.addon.playerParkourState().runEndSplit();
+    var splits = this.addon.runState().runSplits();
+    var endSplit = this.addon.runState().runEndSplit();
 
     // Title component
     var titleComponent = RenderableComponent.of(SPLITS_TITLE_COMPONENT);
@@ -85,7 +85,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
         .toList();
 
     // Timer component
-    var timerTicks = this.addon.playerParkourState().runTimer();
+    var timerTicks = this.addon.runState().runTimer();
     var timerColor = endSplit == null || endSplit.personalBest() == null || timerTicks <= endSplit.personalBest()
         ? NamedTextColor.GREEN
         : NamedTextColor.RED;
@@ -149,7 +149,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
 
   @Override
   public boolean isVisibleInGame() {
-    return this.addon.playerParkourState().isRunSetUp();
+    return this.addon.runState().isRunSetUp();
   }
 
   private String formatTicks(long ticks) {

@@ -15,6 +15,7 @@ public class MacroRunner {
 
   private boolean macroFinished = false;
 
+  // TODO: Create one listener per feature instead (FeatureAListener)
   @Subscribe(Priority.LATEST)
   public void onGameTick(GameTickEvent event) {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
