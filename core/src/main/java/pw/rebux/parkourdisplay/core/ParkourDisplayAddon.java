@@ -17,6 +17,8 @@ import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.run.split.SplitManager;
 import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
+import pw.rebux.parkourdisplay.core.state.PlayerState;
+import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.adapter.TickInputAdapter;
@@ -41,7 +43,7 @@ import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
 
 @AddonMain
 @Getter
-public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> {
+public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> {
 
   public static final String NAMESPACE = "parkourdisplay";
   public static final File DATA_DIR = new File("parkour-display");
@@ -54,6 +56,7 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
   private final MacroManager macroManager = new MacroManager(this);
   private final SplitManager splitManager = new SplitManager(this);
+  private final PlayerState playerState = new PlayerState();
   private final PlayerParkourState playerParkourState = new PlayerParkourState();
   private final RunState runState = new RunState();
 
@@ -71,14 +74,17 @@ public class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfiguration> 
     this.registerListener(new MacroRunner(this));
     this.registerListener(new RunListener(this));
     this.registerListener(new LandingBlockListener(this));
+    this.registerListener(new PlayerStateListener(this));
 
     this.registerCommand(new BaseCommand(this));
 
     hudWidgetRegistry.categoryRegistry().register(this.category);
+    hudWidgetRegistry.register(new AirTimeWidget(this));
+
+    hudWidgetRegistry.register(new GroundTimeWidget(this));
+
     hudWidgetRegistry.register(new VelocityWidget(this));
     hudWidgetRegistry.register(new SpeedVectorWidget(this));
-    hudWidgetRegistry.register(new GroundTimeWidget(this));
-    hudWidgetRegistry.register(new AirTimeWidget(this));
     hudWidgetRegistry.register(new TierWidget(this));
     hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
     hudWidgetRegistry.register(new JumpAngleWidget(this));

@@ -5,7 +5,7 @@ import net.labymod.api.client.options.MinecraftInputMapping;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @Getter
-public class MinecraftInputUtil {
+public final class MinecraftInputUtil {
 
   private final MinecraftInputMapping forwardKey;
   private final MinecraftInputMapping backKey;

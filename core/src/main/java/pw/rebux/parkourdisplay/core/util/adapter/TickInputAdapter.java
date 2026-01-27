@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import pw.rebux.parkourdisplay.core.state.TickInput;
 
-public class TickInputAdapter extends TypeAdapter<TickInput> {
+public final class TickInputAdapter extends TypeAdapter<TickInput> {
 
   @Override
   public void write(JsonWriter out, TickInput value) throws IOException {

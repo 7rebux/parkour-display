@@ -14,7 +14,7 @@ import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 
 @ConfigName("settings")
 @Getter
-public class ParkourDisplayConfiguration extends AddonConfig {
+public final class ParkourDisplayConfiguration extends AddonConfig {
 
   @SwitchSetting
   private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);

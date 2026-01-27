@@ -26,7 +26,11 @@
         }
       },
       "air_time": {
-        "name": "Airtime"
+        "name": "Airtime",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the air time label incrementally while airborne."
+        }
       },
       "ground_time": {
         "name": "Ground Time"
