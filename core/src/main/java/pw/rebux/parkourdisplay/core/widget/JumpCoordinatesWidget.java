@@ -44,10 +44,16 @@ public class JumpCoordinatesWidget extends TextHudWidget<JumpCoordinatesWidgetCo
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var parkourState = this.addon.playerParkourState();
-    var x = String.format(this.stringFormat, parkourState.jumpX());
-    var y = String.format(this.stringFormat, parkourState.jumpY());
-    var z = String.format(this.stringFormat, parkourState.jumpZ());
+    var state = this.addon.playerState();
+
+    // Make sure the player initiated a jump
+    if (!state.lastTick().onGround() || state.currentTick().onGround()) {
+      return;
+    }
+
+    var x = String.format(this.stringFormat, state.currentTick().x());
+    var y = String.format(this.stringFormat, state.currentTick().y());
+    var z = String.format(this.stringFormat, state.currentTick().z());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s %s".formatted(x, y, z));

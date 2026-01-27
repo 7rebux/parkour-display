@@ -91,10 +91,6 @@ public final class GameTickListener {
       }
 
       groundTime = 0;
-
-      playerParkourState.jumpX(x);
-      playerParkourState.jumpY(y);
-      playerParkourState.jumpZ(z);
       playerParkourState.jumpYaw(yaw);
     }
 
