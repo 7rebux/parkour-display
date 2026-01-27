@@ -3,6 +3,7 @@ package pw.rebux.parkourdisplay.core.landingblock;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.world.block.BlockState;
 import net.labymod.api.util.math.vector.IntVector3;
@@ -15,6 +16,9 @@ public class LandingBlockManager {
 
   private final ParkourDisplayAddon addon;
   private final ArrayList<LandingBlock> landingBlocks = new ArrayList<>();
+
+  @Getter @Setter private double lastTotalLandingBlockOffset = 0;
+  @Getter @Setter private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
   public void register(BlockState blockState) {
     var pos = blockState.position();

@@ -16,7 +16,6 @@ import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.run.split.SplitManager;
-import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.state.TickInput;
@@ -57,7 +56,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final MacroManager macroManager = new MacroManager(this);
   private final SplitManager splitManager = new SplitManager(this);
   private final PlayerState playerState = new PlayerState();
-  private final PlayerParkourState playerParkourState = new PlayerParkourState();
   private final RunState runState = new RunState();
 
   private MinecraftInputUtil minecraftInputUtil;
@@ -82,28 +80,21 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new AirTimeWidget(this));
     hudWidgetRegistry.register(new GroundTimeWidget(this));
     hudWidgetRegistry.register(new TierWidget(this));
-
     hudWidgetRegistry.register(new VelocityWidget(this));
     hudWidgetRegistry.register(new SpeedVectorWidget(this));
-
     hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
     hudWidgetRegistry.register(new JumpAngleWidget(this));
-
     hudWidgetRegistry.register(new LandingCoordinatesWidget(this));
-
     hudWidgetRegistry.register(new HitCoordinatesWidget(this));
     hudWidgetRegistry.register(new HitAngleWidget(this));
     hudWidgetRegistry.register(new HitVelocityWidget(this));
-
     hudWidgetRegistry.register(new LastTurnWidget(this));
     hudWidgetRegistry.register(new LastFortyFiveWidget(this));
-
     hudWidgetRegistry.register(new LastInputWidget(this));
     hudWidgetRegistry.register(new LastTimingWidget(this));
-
+    hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
-    hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
   }
 
   @Override

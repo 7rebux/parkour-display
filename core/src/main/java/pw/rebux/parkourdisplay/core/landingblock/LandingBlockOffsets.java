@@ -39,9 +39,9 @@ public class LandingBlockOffsets {
     var formattedZ = String.format(format, tempZOffset);
     var formattedTotal = String.format(format, tempTotalOffset);
 
-    addon.playerParkourState().lastTotalLandingBlockOffset(tempTotalOffset);
-    addon.playerParkourState().lastLandingBlockOffsetX(tempXOffset);
-    addon.playerParkourState().lastLandingBlockOffsetZ(tempZOffset);
+    addon.landingBlockManager().lastTotalLandingBlockOffset(tempTotalOffset);
+    addon.landingBlockManager().lastLandingBlockOffsetX(tempXOffset);
+    addon.landingBlockManager().lastLandingBlockOffsetZ(tempZOffset);
 
     if (bestOffset == null || tempTotalOffset > bestOffset) {
       bestOffset = tempTotalOffset;
