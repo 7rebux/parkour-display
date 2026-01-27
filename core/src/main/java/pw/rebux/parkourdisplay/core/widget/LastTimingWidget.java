@@ -15,11 +15,8 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
   private TextLine textLine;
   private String value = "-";
 
-  // TODO: Duplicated kinda
-  private int airTime = 0;
-
   private int moveTime = -1;
-  private int groundMovedTime = -1;
+  private int groundMoveTime = -1;
   private int jumpTime = -1;
   private int sneakTime = -2;
   private boolean locked = false;
@@ -46,22 +43,12 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
 
     this.updateLastTiming(state);
 
-    // If the player landed this tick or is still airborne, we increase the air time
-    if (!state.lastTick().onGround() || state.currentTick().onGround()) {
-      this.airTime++;
-    }
-
     // Player landed in this tick
     if (state.currentTick().onGround() && !state.lastTick().onGround()) {
-      this.groundMovedTime = 0;
+      this.groundMoveTime = 0;
     }
 
     this.textLine.updateAndFlush(value);
-
-    // TODO: This should always happen in the LAST event
-    if (state.currentTick().onGround()) {
-      this.airTime = 0;
-    }
   }
 
   // https://www.mcpk.wiki/wiki/Timings
@@ -71,9 +58,9 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     // Movement
     if (inputUtil.isMoving()) {
       moveTime++;
-      groundMovedTime++;
+      groundMoveTime++;
 
-      if (jumpTime > -1 && moveTime == 0 && airTime != 0
+      if (jumpTime > -1 && moveTime == 0 && state.airTicks() != 0
           && (this.value.contains("Pessi") || !locked)
       ) {
         if (jumpTime == 0) {
@@ -85,11 +72,11 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
       }
     } else {
       moveTime = -1;
-      groundMovedTime = -1;
+      groundMoveTime = -1;
     }
 
     // Jumping
-    if (inputUtil.jumpKey().isDown() && airTime == 0) { // Initiated jump
+    if (inputUtil.jumpKey().isDown() && state.airTicks() == 0) { // Initiated jump
       jumpTime = 0;
 
       if (moveTime == 0) {
@@ -97,11 +84,11 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
         locked = true;
       } else if (moveTime > 0 && !locked) {
         if (sneakTime > -1) {
-          this.value = "Burstjam %dt".formatted(groundMovedTime);
+          this.value = "Burstjam %dt".formatted(groundMoveTime);
         } else if (sneakTime == -1) {
-          this.value = "Burst %dt".formatted(groundMovedTime);
+          this.value = "Burst %dt".formatted(groundMoveTime);
         } else {
-          this.value = "HH %dt".formatted(groundMovedTime);
+          this.value = "HH %dt".formatted(groundMoveTime);
         }
         locked = true;
       }
@@ -120,7 +107,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     }
 
     // Unlock
-    if (!inputUtil.isMoving() && airTime == 0) {
+    if (!inputUtil.isMoving() && state.airTicks() == 0) {
       locked = false;
     }
   }

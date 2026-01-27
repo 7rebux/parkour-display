@@ -1,7 +1,6 @@
 package pw.rebux.parkourdisplay.core.run;
 
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
@@ -19,67 +18,19 @@ public final class RunListener {
 
   private final ParkourDisplayAddon addon;
 
-  // TODO: Duplicated logic
-  private boolean lastOnGround = false;
-  private float lastYaw = 0;
-  private float lastPitch = 0;
-
   @Subscribe
   public void onGameTick(GameTickEvent event) {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
-
-    if (event.phase() == Phase.PRE) {
-      return;
-    }
-
-    if (player == null) {
-      return;
-    }
-
-    if (this.addon.runState().isRunSetUp()) {
-      handleActiveRun(player);
-    }
-
-    this.lastOnGround = player.isOnGround();
-    this.lastYaw = player.getRotationYaw();
-    this.lastPitch = player.getRotationPitch();
-  }
-
-  @Subscribe
-  public void onRenderWorld(RenderWorldEvent event) {
-    if (!addon.configuration().highlightRunSplits().get()) {
-      return;
-    }
-
-    var splits = this.addon.runState().runSplits();
-    var runEndSplit = this.addon.runState().runEndSplit();
-
-    for (var split : splits) {
-      RenderUtil.renderBoundingBox(
-          split.positionOffset().positionVector(),
-          event.camera().renderPosition(),
-          split.positionOffset().boundingBox(),
-          this.addon.configuration().runSplitOutlineThickness().get(),
-          event.stack(),
-          this.addon.configuration().runSplitFillColor().get().get(),
-          this.addon.configuration().runSplitOutlineColor().get().get());
-    }
-
-    if (runEndSplit != null) {
-      RenderUtil.renderBoundingBox(
-          runEndSplit.positionOffset().positionVector(),
-          event.camera().renderPosition(),
-          runEndSplit.positionOffset().boundingBox(),
-          this.addon.configuration().runSplitOutlineThickness().get(),
-          event.stack(),
-          this.addon.configuration().runSplitFillColor().get().get(),
-          this.addon.configuration().runSplitOutlineColor().get().get());
-    }
-  }
-
-  private void handleActiveRun(ClientPlayer player) {
+    var state = this.addon.playerState();
     var inputUtil = this.addon.minecraftInputUtil();
     var runState = this.addon.runState();
+
+    if (event.phase() != Phase.POST
+        || player == null
+        || !runState.isRunSetUp()
+    ) {
+      return;
+    }
 
     var startOffsetX = Math.abs(runState.runStartPosition().posX() - player.position().getX());
     var startOffsetZ = Math.abs(runState.runStartPosition().posZ() - player.position().getZ());
@@ -126,14 +77,14 @@ public final class RunListener {
     if (runState.runStarted()) {
       runState.runTimer(runState.runTimer() + 1);
 
-      if (lastOnGround && player.isOnGround()) {
+      if (state.lastTick().onGround() && player.isOnGround()) {
         runState.runGroundTime(runState.runGroundTime() + 1);
       }
 
       if (runState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
         var isRelativeRotation = this.addon.configuration().rotationChange().get() == MacroRotationChange.RELATIVE;
-        var yawChange = player.getRotationYaw() - lastYaw;
-        var pitchChange = player.getRotationPitch() - lastPitch;
+        var yawChange = player.getRotationYaw() - state.lastTick().yaw();
+        var pitchChange = player.getRotationPitch() - state.lastTick().pitch();
 
         runState.runTickInputs().add(
             new TickInput(
@@ -147,6 +98,38 @@ public final class RunListener {
                 isRelativeRotation ? yawChange : player.getRotationYaw(),
                 isRelativeRotation ? pitchChange: player.getRotationPitch()));
       }
+    }
+  }
+
+  @Subscribe
+  public void onRenderWorld(RenderWorldEvent event) {
+    if (!addon.configuration().highlightRunSplits().get()) {
+      return;
+    }
+
+    var splits = this.addon.runState().runSplits();
+    var runEndSplit = this.addon.runState().runEndSplit();
+
+    for (var split : splits) {
+      RenderUtil.renderBoundingBox(
+          split.positionOffset().positionVector(),
+          event.camera().renderPosition(),
+          split.positionOffset().boundingBox(),
+          this.addon.configuration().runSplitOutlineThickness().get(),
+          event.stack(),
+          this.addon.configuration().runSplitFillColor().get().get(),
+          this.addon.configuration().runSplitOutlineColor().get().get());
+    }
+
+    if (runEndSplit != null) {
+      RenderUtil.renderBoundingBox(
+          runEndSplit.positionOffset().positionVector(),
+          event.camera().renderPosition(),
+          runEndSplit.positionOffset().boundingBox(),
+          this.addon.configuration().runSplitOutlineThickness().get(),
+          event.stack(),
+          this.addon.configuration().runSplitFillColor().get().get(),
+          this.addon.configuration().runSplitOutlineColor().get().get());
     }
   }
 }

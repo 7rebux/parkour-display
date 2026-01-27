@@ -39,6 +39,11 @@ public final class PlayerStateListener {
     currentTick.onGround(player.isOnGround());
     currentTick.movingForward(player.getForwardMovingSpeed() != 0);
     currentTick.movingSideways(tryGetMovingSideways(player));
+
+    // If the player landed this tick or is still airborne, we increase the air time
+    if (!state.lastTick().onGround() || !player.isOnGround()) {
+      state.airTicks(state.airTicks() + 1);
+    }
   }
 
   // This listener must always run after all other listeners.
@@ -64,6 +69,10 @@ public final class PlayerStateListener {
     lastTick.onGround(player.isOnGround());
     lastTick.movingForward(player.getForwardMovingSpeed() != 0);
     lastTick.movingSideways(tryGetMovingSideways(player));
+
+    if (player.isOnGround()) {
+      state.airTicks(0);
+    }
   }
 
   private boolean tryGetMovingSideways(ClientPlayer player) {

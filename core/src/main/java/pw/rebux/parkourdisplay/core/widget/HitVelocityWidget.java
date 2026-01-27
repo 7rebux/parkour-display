@@ -50,9 +50,8 @@ public class HitVelocityWidget extends TextHudWidget<HitVelocityWidgetConfig> {
       return;
     }
 
-    // TODO: Reused 3rd time already
-    var x = String.format(this.stringFormat, state.currentTick().x() - state.lastTick().x());
-    var z = String.format(this.stringFormat, state.currentTick().z() - state.lastTick().z());
+    var x = String.format(this.stringFormat, state.vx());
+    var z = String.format(this.stringFormat, state.vz());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s".formatted(x, z));

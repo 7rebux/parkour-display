@@ -16,7 +16,6 @@ public class AirTimeWidget extends TextHudWidget<AirTimeWidgetConfig> {
   private final ParkourDisplayAddon addon;
 
   private TextLine textLine;
-  private long counter;
 
   public AirTimeWidget(ParkourDisplayAddon addon) {
     super("air_time", AirTimeWidgetConfig.class);
@@ -28,28 +27,16 @@ public class AirTimeWidget extends TextHudWidget<AirTimeWidgetConfig> {
   public void load(AirTimeWidgetConfig config) {
     super.load(config);
 
-    this.textLine = createLine(
-        translatable("parkourdisplay.labels.air_time"),
-        this.counter
-    );
+    this.textLine = createLine(translatable("parkourdisplay.labels.air_time"), 0);
   }
 
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-
-    // If the player landed this tick or is still airborne, we increase the air time
-    if (!state.lastTick().onGround() || !state.currentTick().onGround()) {
-      this.counter++;
-    }
-
     var shouldUpdate = this.config.incremental().get() || state.currentTick().onGround();
-    if (counter > 0 && shouldUpdate) {
-      this.textLine.updateAndFlush(this.counter);
-    }
 
-    if (state.currentTick().onGround()) {
-      this.counter = 0;
+    if (state.airTicks() > 0 && shouldUpdate) {
+      this.textLine.updateAndFlush(state.airTicks());
     }
   }
 

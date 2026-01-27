@@ -45,9 +45,9 @@ public class VelocityWidget extends TextHudWidget<VelocityWidgetConfig> {
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-    var vx = String.format(this.stringFormat, state.currentTick().x() - state.lastTick().x());
-    var vy = String.format(this.stringFormat, state.currentTick().y() - state.lastTick().y());
-    var vz = String.format(this.stringFormat, state.currentTick().z() - state.lastTick().z());
+    var vx = String.format(this.stringFormat, state.vx());
+    var vy = String.format(this.stringFormat, state.vy());
+    var vz = String.format(this.stringFormat, state.vz());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s %s".formatted(vx, vy, vz));

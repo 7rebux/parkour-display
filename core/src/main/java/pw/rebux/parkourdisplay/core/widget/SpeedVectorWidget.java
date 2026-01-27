@@ -44,11 +44,8 @@ public class SpeedVectorWidget extends TextHudWidget<SpeedVectorWidgetConfig> {
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-    // TODO: These values are used in multiple places, might put them in PlayerState
-    var vx = state.currentTick().x() - state.lastTick().x();
-    var vz = state.currentTick().z() - state.lastTick().z();
-    var speed = Math.hypot(vx, vz);
-    var angle = Math.toDegrees(Math.atan2(vx == 0 ? 0 : -vx, vz));
+    var speed = Math.hypot(state.vx(), state.vz());
+    var angle = Math.toDegrees(Math.atan2(state.vx() == 0 ? 0 : -state.vx(), state.vz()));
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s / %s".formatted(speed, angle));
