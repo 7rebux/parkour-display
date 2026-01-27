@@ -44,6 +44,15 @@ public final class PlayerStateListener {
     if (!state.lastTick().onGround() || !player.isOnGround()) {
       state.airTicks(state.airTicks() + 1);
     }
+
+    if (state.lastTick().onGround() && state.currentTick().onGround()) {
+      state.groundTicks(state.groundTicks() + 1);
+    }
+
+    // Player landed in this tick
+    if (!state.lastTick().onGround() && state.currentTick().onGround()) {
+      state.groundTicks(0);
+    }
   }
 
   // This listener must always run after all other listeners.

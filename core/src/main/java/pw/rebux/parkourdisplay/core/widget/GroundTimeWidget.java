@@ -16,7 +16,6 @@ public class GroundTimeWidget extends TextHudWidget<GroundTimeWidgetConfig> {
   private final ParkourDisplayAddon addon;
 
   private TextLine textLine;
-  private long counter;
 
   public GroundTimeWidget(ParkourDisplayAddon addon) {
     super("ground_time", GroundTimeWidgetConfig.class);
@@ -28,28 +27,16 @@ public class GroundTimeWidget extends TextHudWidget<GroundTimeWidgetConfig> {
   public void load(GroundTimeWidgetConfig config) {
     super.load(config);
 
-    this.textLine = createLine(
-        translatable("parkourdisplay.labels.ground_time"),
-        this.counter
-    );
+    this.textLine = createLine(translatable("parkourdisplay.labels.ground_time"), 0);
   }
 
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-
-    if (state.lastTick().onGround() && state.currentTick().onGround()) {
-      this.counter++;
-    }
-
-    // Player landed in this tick
-    if (!state.lastTick().onGround() && state.currentTick().onGround()) {
-      this.counter = 0;
-    }
-
     var initiatedJump = state.lastTick().onGround() && !state.currentTick().onGround();
+
     if (this.config.incremental().get() || initiatedJump) {
-      this.textLine.updateAndFlush(this.counter);
+      this.textLine.updateAndFlush(state.groundTicks());
     }
   }
 

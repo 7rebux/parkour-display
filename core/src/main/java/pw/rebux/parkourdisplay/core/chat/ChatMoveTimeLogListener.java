@@ -15,9 +15,6 @@ public final class ChatMoveTimeLogListener {
 
   private final ParkourDisplayAddon addon;
 
-  // TODO: Duplicated..
-  private long groundTime = 0;
-
   @Subscribe
   public void onGameTick(GameTickEvent event) {
     var state = this.addon.playerState();
@@ -26,14 +23,9 @@ public final class ChatMoveTimeLogListener {
       return;
     }
 
-    if (state.lastTick().onGround() && state.currentTick().onGround()) {
-      this.groundTime++;
-    }
-
     // Player jumped in this tick
     if (state.lastTick().onGround() && !state.currentTick().onGround()) {
-      this.logGroundTime(this.groundTime);
-      this.groundTime = 0;
+      this.logGroundTime(state.groundTicks());
     }
 
     // Player landed in this tick

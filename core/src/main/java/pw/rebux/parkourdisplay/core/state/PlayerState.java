@@ -15,6 +15,7 @@ public final class PlayerState {
   private TickPosition lastTick = new TickPosition();
 
   private long airTicks;
+  private long groundTicks;
 
   public double vx() {
     return this.currentTick.x() - this.lastTick.x();
