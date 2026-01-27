@@ -91,7 +91,6 @@ public final class GameTickListener {
       }
 
       groundTime = 0;
-      playerParkourState.jumpYaw(yaw);
     }
 
     // Player landed in this tick

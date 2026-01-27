@@ -35,10 +35,15 @@ public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var jumpYaw = this.addon.playerParkourState().jumpYaw();
-    var facing = String.format(this.stringFormat, MathHelper.formatYaw(jumpYaw));
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(facing);
+    // Make sure the player initiated a jump
+    if (!state.lastTick().onGround() || state.currentTick().onGround()) {
+      return;
+    }
+
+    var yaw = String.format(this.stringFormat, MathHelper.formatYaw(state.currentTick().yaw()));
+    this.textLine.updateAndFlush(yaw);
   }
 
   @Getter
