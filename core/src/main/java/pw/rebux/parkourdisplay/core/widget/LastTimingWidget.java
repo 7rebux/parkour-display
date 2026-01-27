@@ -76,7 +76,10 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     }
 
     // Jumping
-    if (inputUtil.jumpKey().isDown() && state.airTime() == 0) { // Initiated jump
+    if (inputUtil.jumpKey().isDown()
+        && state.lastTick().onGround()
+        && !state.currentTick().onGround()
+    ) {
       jumpTime = 0;
 
       if (moveTime == 0) {
@@ -107,7 +110,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     }
 
     // Unlock
-    if (!inputUtil.isMoving() && state.airTime() == 0) {
+    if (!inputUtil.isMoving() && state.currentTick().onGround()) {
       locked = false;
     }
   }
