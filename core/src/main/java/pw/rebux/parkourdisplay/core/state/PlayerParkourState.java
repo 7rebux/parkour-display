@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public final class PlayerParkourState {
 
-  private String lastInput = "-";
   private String lastTiming = "-";
 
   // TODO: Move to Landing block manager?
