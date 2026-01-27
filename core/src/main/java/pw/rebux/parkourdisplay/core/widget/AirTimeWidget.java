@@ -16,6 +16,7 @@ public class AirTimeWidget extends TextHudWidget<AirTimeWidgetConfig> {
   private final ParkourDisplayAddon addon;
 
   private TextLine textLine;
+  private long counter;
 
   public AirTimeWidget(ParkourDisplayAddon addon) {
     super("air_time", AirTimeWidgetConfig.class);
@@ -27,17 +28,28 @@ public class AirTimeWidget extends TextHudWidget<AirTimeWidgetConfig> {
   public void load(AirTimeWidgetConfig config) {
     super.load(config);
 
-    this.textLine = createLine(translatable("parkourdisplay.labels.air_time"), 0);
+    this.textLine = createLine(
+        translatable("parkourdisplay.labels.air_time"),
+        this.counter
+    );
   }
 
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-    var shouldUpdate = state.airTicks() > 0
-        && (this.config.incremental().get() || state.currentTick().onGround());
 
-    if (shouldUpdate) {
-      this.textLine.updateAndFlush(state.airTicks());
+    // If the player landed this tick or is still airborne, we increase the air time
+    if (!state.lastTick().onGround() || !state.currentTick().onGround()) {
+      this.counter++;
+    }
+
+    var shouldUpdate = this.config.incremental().get() || state.currentTick().onGround();
+    if (counter > 0 && shouldUpdate) {
+      this.textLine.updateAndFlush(this.counter);
+    }
+
+    if (state.currentTick().onGround()) {
+      this.counter = 0;
     }
   }
 
@@ -45,7 +57,7 @@ public class AirTimeWidget extends TextHudWidget<AirTimeWidgetConfig> {
   public static class AirTimeWidgetConfig extends TextHudWidgetConfig {
 
     /**
-     * Whether to update the air time label incrementally while airborne.
+     * Whether to update the label continuously while airborne.
      */
     @SwitchSetting
     private final ConfigProperty<Boolean> incremental = new ConfigProperty<>(true);

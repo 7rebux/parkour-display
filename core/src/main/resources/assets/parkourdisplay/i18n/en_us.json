@@ -26,14 +26,18 @@
         }
       },
       "air_time": {
-        "name": "Airtime",
+        "name": "Air Time",
         "incremental": {
           "name": "Incremental",
-          "description": "Whether to update the air time label incrementally while airborne."
+          "description": "Whether to update the label continuously while airborne."
         }
       },
       "ground_time": {
-        "name": "Ground Time"
+        "name": "Ground Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while on ground."
+        }
       },
       "tier": {
         "name": "Tier"
