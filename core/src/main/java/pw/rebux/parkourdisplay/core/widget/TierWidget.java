@@ -12,6 +12,8 @@ public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
   private final ParkourDisplayAddon addon;
 
   private TextLine textLine;
+  // TODO: This is used in multiple places, might put them in PlayerState
+  private long airTime;
 
   public TierWidget(ParkourDisplayAddon addon) {
     super("tier");
@@ -28,9 +30,19 @@ public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    // https://www.mcpk.wiki/wiki/Tiers
-    var tier = 12 - this.addon.playerParkourState().jumpDuration();
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(tier);
+    if (!state.lastTick().onGround() || !state.currentTick().onGround()) {
+      this.airTime++;
+    }
+
+    if (airTime > 0) {
+      // https://www.mcpk.wiki/wiki/Tiers
+      this.textLine.updateAndFlush(12 - this.airTime);
+    }
+
+    if (state.currentTick().onGround()) {
+      this.airTime = 0;
+    }
   }
 }
