@@ -44,10 +44,16 @@ public class HitCoordinatesWidget extends TextHudWidget<HitCoordinatesWidgetConf
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var parkourState = this.addon.playerParkourState();
-    var x = String.format(this.stringFormat, parkourState.hitX());
-    var y = String.format(this.stringFormat, parkourState.hitY());
-    var z = String.format(this.stringFormat, parkourState.hitZ());
+    var state = this.addon.playerState();
+
+    // Make sure the player landed in this tick
+    if (!state.currentTick().onGround() || state.lastTick().onGround()) {
+      return;
+    }
+
+    var x = String.format(this.stringFormat, state.currentTick().x());
+    var y = String.format(this.stringFormat, state.currentTick().y());
+    var z = String.format(this.stringFormat, state.currentTick().z());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s %s".formatted(x, y, z));
