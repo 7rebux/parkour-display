@@ -35,10 +35,15 @@ public class HitAngleWidget extends TextHudWidget<HitAngleWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var hitYaw = this.addon.playerParkourState().hitYaw();
-    var hitFacing = String.format(this.stringFormat, MathHelper.formatYaw(hitYaw));
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(hitFacing);
+    // Make sure the player landed in this tick
+    if (!state.currentTick().onGround() || state.lastTick().onGround()) {
+      return;
+    }
+
+    var yaw = String.format(this.stringFormat, MathHelper.formatYaw(state.currentTick().yaw()));
+    this.textLine.updateAndFlush(yaw);
   }
 
   @Getter

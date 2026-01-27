@@ -104,10 +104,6 @@ public final class GameTickListener {
                 .append(translatable("parkourdisplay.labels.air_time", NamedTextColor.GRAY)));
       }
 
-      playerParkourState.hitX(x);
-      playerParkourState.hitY(y);
-      playerParkourState.hitZ(z);
-      playerParkourState.hitYaw(yaw);
       playerParkourState.hitVelocityX(vx);
       playerParkourState.hitVelocityZ(vz);
 
