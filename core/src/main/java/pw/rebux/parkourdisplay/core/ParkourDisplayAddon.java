@@ -7,10 +7,10 @@ import lombok.Getter;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
+import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
-import pw.rebux.parkourdisplay.core.listener.GameTickListener;
 import pw.rebux.parkourdisplay.core.macro.MacroManager;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.run.RunListener;
@@ -68,11 +68,11 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
     this.registerSettingCategory();
 
-    this.registerListener(new GameTickListener(this));
-    this.registerListener(new MacroRunner(this));
-    this.registerListener(new RunListener(this));
-    this.registerListener(new LandingBlockListener(this));
     this.registerListener(new PlayerStateListener(this));
+    this.registerListener(new ChatMoveTimeLogListener(this));
+    this.registerListener(new LandingBlockListener(this));
+    this.registerListener(new RunListener(this));
+    this.registerListener(new MacroRunner(this));
 
     this.registerCommand(new BaseCommand(this));
 
