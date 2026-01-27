@@ -60,7 +60,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
       moveTime++;
       groundMoveTime++;
 
-      if (jumpTime > -1 && moveTime == 0 && state.airTicks() != 0
+      if (jumpTime > -1 && moveTime == 0 && state.airTime() != 0
           && (this.value.contains("Pessi") || !locked)
       ) {
         if (jumpTime == 0) {
@@ -76,7 +76,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     }
 
     // Jumping
-    if (inputUtil.jumpKey().isDown() && state.airTicks() == 0) { // Initiated jump
+    if (inputUtil.jumpKey().isDown() && state.airTime() == 0) { // Initiated jump
       jumpTime = 0;
 
       if (moveTime == 0) {
@@ -107,7 +107,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     }
 
     // Unlock
-    if (!inputUtil.isMoving() && state.airTicks() == 0) {
+    if (!inputUtil.isMoving() && state.airTime() == 0) {
       locked = false;
     }
   }

@@ -37,11 +37,7 @@ public class LastTurnWidget extends TextHudWidget<LastTurnWidgetConfig> {
     var state = this.addon.playerState();
 
     if (state.currentTick().yaw() != state.lastTick().yaw()) {
-      var lastTurn = String.format(
-          this.stringFormat,
-          state.currentTick().yaw() - state.lastTick().yaw()
-      );
-
+      var lastTurn = String.format(this.stringFormat, state.yawTurn());
       this.textLine.updateAndFlush(lastTurn);
     }
   }

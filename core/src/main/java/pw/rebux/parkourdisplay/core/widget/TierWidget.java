@@ -30,9 +30,9 @@ public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
 
-    if (state.airTicks() > 0) {
+    if (state.airTime() > 0) {
       // https://www.mcpk.wiki/wiki/Tiers
-      this.textLine.updateAndFlush(12 - state.airTicks());
+      this.textLine.updateAndFlush(12 - state.airTime());
     }
   }
 }

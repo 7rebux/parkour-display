@@ -36,7 +36,7 @@ public class GroundTimeWidget extends TextHudWidget<GroundTimeWidgetConfig> {
     var initiatedJump = state.lastTick().onGround() && !state.currentTick().onGround();
 
     if (this.config.incremental().get() || initiatedJump) {
-      this.textLine.updateAndFlush(state.groundTicks());
+      this.textLine.updateAndFlush(state.groundTime());
     }
   }
 

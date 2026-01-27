@@ -42,16 +42,16 @@ public final class PlayerStateListener {
 
     // If the player landed this tick or is still airborne, we increase the air time
     if (!state.lastTick().onGround() || !player.isOnGround()) {
-      state.airTicks(state.airTicks() + 1);
+      state.airTime(state.airTime() + 1);
     }
 
     if (state.lastTick().onGround() && state.currentTick().onGround()) {
-      state.groundTicks(state.groundTicks() + 1);
+      state.groundTime(state.groundTime() + 1);
     }
 
     // Player landed in this tick
     if (!state.lastTick().onGround() && state.currentTick().onGround()) {
-      state.groundTicks(0);
+      state.groundTime(0);
     }
   }
 
@@ -80,7 +80,7 @@ public final class PlayerStateListener {
     lastTick.movingSideways(tryGetMovingSideways(player));
 
     if (player.isOnGround()) {
-      state.airTicks(0);
+      state.airTime(0);
     }
   }
 

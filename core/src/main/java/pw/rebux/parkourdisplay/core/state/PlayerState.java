@@ -13,9 +13,14 @@ public final class PlayerState {
    * Position data computed at the end of the current tick.
    */
   private TickPosition lastTick = new TickPosition();
-
-  private long airTicks;
-  private long groundTicks;
+  /**
+   * Amount of ticks the player has been continuously in the air.
+   */
+  private long airTime;
+  /**
+   * Amount of ticks the player has been continuously on the ground.
+   */
+  private long groundTime;
 
   public double vx() {
     return this.currentTick.x() - this.lastTick.x();
@@ -27,5 +32,9 @@ public final class PlayerState {
 
   public double vz() {
     return this.currentTick.z() - this.lastTick.z();
+  }
+
+  public double yawTurn() {
+    return this.currentTick.yaw() - this.lastTick.yaw();
   }
 }

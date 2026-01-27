@@ -35,8 +35,8 @@ public class AirTimeWidget extends TextHudWidget<AirTimeWidgetConfig> {
     var state = this.addon.playerState();
     var shouldUpdate = this.config.incremental().get() || state.currentTick().onGround();
 
-    if (state.airTicks() > 0 && shouldUpdate) {
-      this.textLine.updateAndFlush(state.airTicks());
+    if (state.airTime() > 0 && shouldUpdate) {
+      this.textLine.updateAndFlush(state.airTime());
     }
   }
 

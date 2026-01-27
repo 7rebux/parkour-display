@@ -25,12 +25,12 @@ public final class ChatMoveTimeLogListener {
 
     // Player jumped in this tick
     if (state.lastTick().onGround() && !state.currentTick().onGround()) {
-      this.logGroundTime(state.groundTicks());
+      this.logGroundTime(state.groundTime());
     }
 
     // Player landed in this tick
     if (state.currentTick().onGround() && !state.lastTick().onGround()) {
-      this.logAirTime(state.airTicks());
+      this.logAirTime(state.airTime());
     }
   }
 

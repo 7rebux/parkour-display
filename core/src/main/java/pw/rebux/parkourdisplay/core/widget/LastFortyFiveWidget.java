@@ -43,11 +43,7 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
         && state.currentTick().movingSideways()
         && !state.currentTick().onGround()
     ) {
-      var lastFF = String.format(
-          this.stringFormat,
-          state.currentTick().yaw() - state.lastTick().yaw()
-      );
-
+      var lastFF = String.format(this.stringFormat, state.yawTurn());
       this.textLine.updateAndFlush(lastFF);
     }
   }
