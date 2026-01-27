@@ -34,9 +34,22 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var lastFF = String.format(this.stringFormat, this.addon.playerParkourState().lastFF());
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(lastFF);
+    // Player attempted 45 degree strafe
+    if (state.lastTick().movingForward()
+        && !state.lastTick().movingSideways()
+        && state.currentTick().movingForward()
+        && state.currentTick().movingSideways()
+        && !state.currentTick().onGround()
+    ) {
+      var lastFF = String.format(
+          this.stringFormat,
+          state.currentTick().yaw() - state.lastTick().yaw()
+      );
+
+      this.textLine.updateAndFlush(lastFF);
+    }
   }
 
   @Getter

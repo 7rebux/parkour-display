@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public final class PlayerParkourState {
 
-  private float lastFF = 0;
   private String lastInput = "-";
   private String lastTiming = "-";
 

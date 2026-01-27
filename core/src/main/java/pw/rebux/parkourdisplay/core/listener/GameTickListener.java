@@ -91,12 +91,6 @@ public final class GameTickListener {
       }
     }
 
-    // Player attempted 45 degree strafe
-    if (lastTick.movingForward() && !lastTick.movingSideways()
-        && movingForward && movingSideways && !onGround) {
-      playerParkourState.lastFF(yaw - lastTick.yaw());
-    }
-
     playerParkourState.lastInput(buildInputString());
 
     /* EVERYTHING UNDER HERE WILL UPDATE VALUES FOR THE NEXT CALCULATIONS */
