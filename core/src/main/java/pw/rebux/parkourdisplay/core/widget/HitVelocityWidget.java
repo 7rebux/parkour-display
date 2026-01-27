@@ -43,9 +43,16 @@ public class HitVelocityWidget extends TextHudWidget<HitVelocityWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var parkourState = this.addon.playerParkourState();
-    var x = String.format(this.stringFormat, parkourState.hitVelocityX());
-    var z = String.format(this.stringFormat, parkourState.hitVelocityZ());
+    var state = this.addon.playerState();
+
+    // Make sure the player landed in this tick
+    if (!state.currentTick().onGround() || state.lastTick().onGround()) {
+      return;
+    }
+
+    // TODO: Reused 3rd time already
+    var x = String.format(this.stringFormat, state.currentTick().x() - state.lastTick().x());
+    var z = String.format(this.stringFormat, state.currentTick().z() - state.lastTick().z());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s".formatted(x, z));
