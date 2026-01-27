@@ -44,17 +44,17 @@ public class VelocityWidget extends TextHudWidget<VelocityWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var parkourState = this.addon.playerParkourState();
-    var x = String.format(this.stringFormat, parkourState.velocityX());
-    var y = String.format(this.stringFormat, parkourState.velocityY());
-    var z = String.format(this.stringFormat, parkourState.velocityZ());
+    var state = this.addon.playerState();
+    var vx = String.format(this.stringFormat, state.currentTick().x() - state.lastTick().x());
+    var vy = String.format(this.stringFormat, state.currentTick().y() - state.lastTick().y());
+    var vz = String.format(this.stringFormat, state.currentTick().z() - state.lastTick().z());
 
     if (this.config.singleLine().get()) {
-      this.textLines[0].updateAndFlush("%s %s %s".formatted(x, y, z));
+      this.textLines[0].updateAndFlush("%s %s %s".formatted(vx, vy, vz));
     } else {
-      this.textLines[0].updateAndFlush(x);
-      this.textLines[1].updateAndFlush(y);
-      this.textLines[2].updateAndFlush(z);
+      this.textLines[0].updateAndFlush(vx);
+      this.textLines[1].updateAndFlush(vy);
+      this.textLines[2].updateAndFlush(vz);
     }
   }
 

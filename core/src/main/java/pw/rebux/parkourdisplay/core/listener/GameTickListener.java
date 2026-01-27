@@ -54,15 +54,10 @@ public final class GameTickListener {
     final var yaw = player.getRotationYaw();
     final var pitch = player.getRotationPitch();
     final var vx = x - lastTick.x();
-    final var vy = y - lastTick.y();
     final var vz = z - lastTick.z();
     final var onGround = player.isOnGround();
     final var movingForward = player.getForwardMovingSpeed() != 0;
     final var movingSideways = tryGetMovingSideways(player);
-
-    playerParkourState.velocityX(vx);
-    playerParkourState.velocityY(vy);
-    playerParkourState.velocityZ(vz);
 
     if (lastTick.onGround() && onGround) {
       groundTime = Math.min(groundTime + 1, Integer.MAX_VALUE);
