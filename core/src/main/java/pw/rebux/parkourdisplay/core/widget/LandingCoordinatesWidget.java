@@ -44,10 +44,16 @@ public class LandingCoordinatesWidget extends TextHudWidget<LandingCoordinatesWi
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var parkourState = this.addon.playerParkourState();
-    var x = String.format(this.stringFormat, parkourState.landingX());
-    var y = String.format(this.stringFormat, parkourState.landingY());
-    var z = String.format(this.stringFormat, parkourState.landingZ());
+    var state = this.addon.playerState();
+
+    // Make sure the player landed in this tick
+    if (!state.currentTick().onGround() || state.lastTick().onGround()) {
+      return;
+    }
+
+    var x = String.format(this.stringFormat, state.lastTick().x());
+    var y = String.format(this.stringFormat, state.lastTick().y());
+    var z = String.format(this.stringFormat, state.lastTick().z());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s %s".formatted(x, y, z));
