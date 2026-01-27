@@ -8,7 +8,7 @@ import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
-import pw.rebux.parkourdisplay.core.state.TickInput;
+import pw.rebux.parkourdisplay.core.macro.TickInput;
 import pw.rebux.parkourdisplay.core.util.RenderUtil;
 
 @RequiredArgsConstructor

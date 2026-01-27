@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.PositionOffset;
+import pw.rebux.parkourdisplay.core.run.PositionOffset;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data

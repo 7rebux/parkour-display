@@ -16,7 +16,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.TickInput;
 
 @RequiredArgsConstructor
 public class MacroManager {

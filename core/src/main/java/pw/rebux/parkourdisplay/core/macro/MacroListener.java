@@ -9,14 +9,13 @@ import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @RequiredArgsConstructor
-public class MacroRunner {
+public class MacroListener {
 
   private final ParkourDisplayAddon addon;
 
   private boolean macroFinished = false;
 
-  // TODO: Create one listener per feature instead (FeatureAListener)
-  @Subscribe(Priority.LATEST)
+  @Subscribe(Priority.LATE)
   public void onGameTick(GameTickEvent event) {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
     var activeMacro = this.addon.macroManager().activeMacro();

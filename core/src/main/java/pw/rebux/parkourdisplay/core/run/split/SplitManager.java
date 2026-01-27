@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.PositionOffset;
+import pw.rebux.parkourdisplay.core.run.PositionOffset;
 
 @RequiredArgsConstructor
 public final class SplitManager {

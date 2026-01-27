@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.state;
+package pw.rebux.parkourdisplay.core.macro;
 
 public record TickInput(
   boolean w,

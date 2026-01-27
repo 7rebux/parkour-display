@@ -4,7 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import pw.rebux.parkourdisplay.core.state.TickInput;
+import pw.rebux.parkourdisplay.core.macro.TickInput;
 
 public final class TickInputAdapter extends TypeAdapter<TickInput> {
 

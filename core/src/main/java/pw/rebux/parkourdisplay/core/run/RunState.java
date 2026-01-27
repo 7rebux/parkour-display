@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import org.jspecify.annotations.Nullable;
+import pw.rebux.parkourdisplay.core.macro.TickInput;
 import pw.rebux.parkourdisplay.core.run.split.RunSplit;
-import pw.rebux.parkourdisplay.core.state.PositionOffset;
-import pw.rebux.parkourdisplay.core.state.TickInput;
 
 @Data
 public class RunState {

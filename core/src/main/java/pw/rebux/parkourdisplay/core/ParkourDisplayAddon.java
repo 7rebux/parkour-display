@@ -11,14 +11,14 @@ import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
+import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroManager;
-import pw.rebux.parkourdisplay.core.macro.MacroRunner;
+import pw.rebux.parkourdisplay.core.macro.TickInput;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.run.split.SplitManager;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
-import pw.rebux.parkourdisplay.core.state.TickInput;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.adapter.TickInputAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
@@ -72,7 +72,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new LandingBlockListener(this));
     this.registerListener(new RunListener(this));
-    this.registerListener(new MacroRunner(this));
+    this.registerListener(new MacroListener(this));
 
     this.registerCommand(new BaseCommand(this));
 
