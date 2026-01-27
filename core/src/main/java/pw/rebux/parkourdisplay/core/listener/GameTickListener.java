@@ -5,14 +5,12 @@ import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.format.NamedTextColor;
-import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Priority;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.PlayerParkourState;
 import pw.rebux.parkourdisplay.core.state.TickPosition;
 
 @RequiredArgsConstructor
@@ -24,18 +22,10 @@ public final class GameTickListener {
   private int airTime = 0;
   private int groundTime = 0;
 
-  // For last timing determination
-  private int moveTime = -1;
-  private int groundMovedTime = -1;
-  private int jumpTime = -1;
-  private int sneakTime = -2;
-  private boolean locked = false;
-
   @Subscribe(Priority.FIRST)
   public void onGameTick(GameTickEvent event) {
     var minecraft = this.addon.labyAPI().minecraft();
     var player = minecraft.getClientPlayer();
-    var playerParkourState = this.addon.playerParkourState();
 
     if (event.phase() == Phase.PRE
         || player == null
@@ -46,16 +36,7 @@ public final class GameTickListener {
       return;
     }
 
-    updateLastTiming(playerParkourState);
-
-    final var x = player.position().getX();
-    final var y = player.position().getY();
-    final var z = player.position().getZ();
-    final var yaw = player.getRotationYaw();
-    final var pitch = player.getRotationPitch();
     final var onGround = player.isOnGround();
-    final var movingForward = player.getForwardMovingSpeed() != 0;
-    final var movingSideways = tryGetMovingSideways(player);
 
     if (lastTick.onGround() && onGround) {
       groundTime = Math.min(groundTime + 1, Integer.MAX_VALUE);
@@ -81,8 +62,6 @@ public final class GameTickListener {
 
     // Player landed in this tick
     if (onGround && !lastTick.onGround()) {
-      groundMovedTime = 0;
-
       if (addon.configuration().showJumpDurations().get()) {
         addon.displayMessage(
             text("%dt".formatted(airTime), NamedTextColor.GOLD)
@@ -97,82 +76,6 @@ public final class GameTickListener {
       airTime = 0;
     }
 
-    lastTick.x(x);
-    lastTick.y(y);
-    lastTick.z(z);
-    lastTick.yaw(yaw);
-    lastTick.pitch(pitch);
     lastTick.onGround(onGround);
-    lastTick.movingForward(movingForward);
-    lastTick.movingSideways(movingSideways);
-  }
-
-  private boolean tryGetMovingSideways(ClientPlayer player) {
-    try {
-      return player.getStrafeMovingSpeed() != 0;
-    } catch (Throwable throwable) {
-      return false;
-    }
-  }
-
-  // https://www.mcpk.wiki/wiki/Timings
-  private void updateLastTiming(PlayerParkourState playerParkourState) {
-    var inputUtil = this.addon.minecraftInputUtil();
-
-    // Movement
-    if (inputUtil.isMoving()) {
-      moveTime++;
-      groundMovedTime++;
-
-      if (jumpTime > -1 && moveTime == 0 && airTime != 0
-          && (playerParkourState.lastTiming().contains("Pessi") || !locked)
-      ) {
-        if (jumpTime == 0) {
-          playerParkourState.lastTiming("Max Pessi");
-        } else {
-          playerParkourState.lastTiming("Pessi %d ticks".formatted(jumpTime + 1));
-        }
-        locked = true;
-      }
-    } else {
-      moveTime = -1;
-      groundMovedTime = -1;
-    }
-
-    // Jumping
-    if (inputUtil.jumpKey().isDown() && airTime == 0) { // Initiated jump
-      jumpTime = 0;
-
-      if (moveTime == 0) {
-        playerParkourState.lastTiming("Jam");
-        locked = true;
-      } else if (moveTime > 0 && !locked) {
-        if (sneakTime > -1) {
-          playerParkourState.lastTiming("Burstjam %d ticks".formatted(groundMovedTime));
-        } else if (sneakTime == -1) {
-          playerParkourState.lastTiming("Burst %d ticks".formatted(groundMovedTime));
-        } else {
-          playerParkourState.lastTiming("HH %d ticks".formatted(groundMovedTime));
-        }
-        locked = true;
-      }
-    } else if (!lastTick.onGround() && jumpTime > -1) { // Midair
-      jumpTime++;
-    } else {
-      jumpTime = -1;
-    }
-
-    // Sneaking
-    if (inputUtil.sneakKey().isDown()) {
-      sneakTime = sneakTime == -2 ? 0 : sneakTime + 1;
-    }
-    else {
-      sneakTime = sneakTime < 0 ? -2 : -1;
-    }
-
-    // Unlock
-    if (!inputUtil.isMoving() && airTime == 0) {
-      locked = false;
-    }
   }
 }
