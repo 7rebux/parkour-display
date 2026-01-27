@@ -95,13 +95,15 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new HitAngleWidget(this));
     hudWidgetRegistry.register(new HitVelocityWidget(this));
 
-    hudWidgetRegistry.register(new LastTimingWidget(this));
     hudWidgetRegistry.register(new LastTurnWidget(this));
+
     hudWidgetRegistry.register(new LastFortyFiveWidget(this));
     hudWidgetRegistry.register(new LastInputWidget(this));
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
+
+    hudWidgetRegistry.register(new LastTimingWidget(this));
   }
 
   @Override

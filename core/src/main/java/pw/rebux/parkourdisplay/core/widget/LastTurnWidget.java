@@ -34,9 +34,16 @@ public class LastTurnWidget extends TextHudWidget<LastTurnWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var lastTurn = String.format(this.stringFormat, this.addon.playerParkourState().lastTurn());
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(lastTurn);
+    if (state.currentTick().yaw() != state.lastTick().yaw()) {
+      var lastTurn = String.format(
+          this.stringFormat,
+          state.currentTick().yaw() - state.lastTick().yaw()
+      );
+
+      this.textLine.updateAndFlush(lastTurn);
+    }
   }
 
   @Getter

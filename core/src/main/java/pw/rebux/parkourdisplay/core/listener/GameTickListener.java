@@ -53,8 +53,6 @@ public final class GameTickListener {
     final var z = player.position().getZ();
     final var yaw = player.getRotationYaw();
     final var pitch = player.getRotationPitch();
-    final var vx = x - lastTick.x();
-    final var vz = z - lastTick.z();
     final var onGround = player.isOnGround();
     final var movingForward = player.getForwardMovingSpeed() != 0;
     final var movingSideways = tryGetMovingSideways(player);
@@ -66,18 +64,6 @@ public final class GameTickListener {
     // If the player landed this tick or is still airborne, we increase the air time
     if (!lastTick.onGround() || !onGround) {
       airTime++;
-    }
-
-    if (groundTime > 0) {
-      playerParkourState.groundDuration(groundTime);
-    }
-
-    if (airTime > 0) {
-      playerParkourState.jumpDuration(airTime);
-    }
-
-    if (yaw != lastTick.yaw()) {
-      playerParkourState.lastTurn(yaw - lastTick.yaw());
     }
 
     // Player jumped in this tick
@@ -103,8 +89,6 @@ public final class GameTickListener {
                 .append(text(" "))
                 .append(translatable("parkourdisplay.labels.air_time", NamedTextColor.GRAY)));
       }
-
-      playerParkourState.groundDuration(0);
     }
 
     // Player attempted 45 degree strafe
