@@ -7,7 +7,7 @@ import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.util.RenderUtil;
+import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
 @RequiredArgsConstructor
 public final class LandingBlockListener {
@@ -38,7 +38,7 @@ public final class LandingBlockListener {
     var landingBlocks = this.addon.landingBlockManager().landingBlocks();
 
     for (var landingBlock : landingBlocks) {
-      RenderUtil.renderBoundingBox(
+      RenderUtils.renderBoundingBox(
           landingBlock.blockPosition(),
           event.camera().renderPosition(),
           Objects.requireNonNull(landingBlock.boundingBox()),

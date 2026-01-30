@@ -1,137 +1,163 @@
 package pw.rebux.parkourdisplay.core.run;
 
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
+import net.labymod.api.util.Color;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 import pw.rebux.parkourdisplay.core.macro.TickInput;
-import pw.rebux.parkourdisplay.core.util.RenderUtil;
+import pw.rebux.parkourdisplay.core.run.split.RunSplit;
+import pw.rebux.parkourdisplay.core.util.RenderUtils;
+import pw.rebux.parkourdisplay.core.util.TickPosition;
 
+// TODO: BB hat coole funktionen die ich vllt benutzen kann für LB auch
 @RequiredArgsConstructor
 public final class RunListener {
-
-  // Persisting a maximum of 6.000 ticks (5 minutes)
-  private static final int MAX_RUN_TICK_INPUTS = 5 * 60 * 20;
 
   private final ParkourDisplayAddon addon;
 
   @Subscribe
-  public void onGameTick(GameTickEvent event) {
-    var player = this.addon.labyAPI().minecraft().getClientPlayer();
-    var state = this.addon.playerState();
-    var inputUtil = this.addon.minecraftInputUtil();
-    var runState = this.addon.runState();
-
-    if (event.phase() != Phase.POST
-        || player == null
-        || !runState.isRunSetUp()
-    ) {
+  public void onGameTickNew(GameTickEvent event) {
+    if (event.phase() != Phase.POST) {
       return;
     }
 
-    var startOffsetX = Math.abs(runState.runStartPosition().posX() - player.position().getX());
-    var startOffsetZ = Math.abs(runState.runStartPosition().posZ() - player.position().getZ());
-    var endOffsetX = Math.abs(runState.runEndSplit().positionOffset().posX() - player.position().getX());
-    var endOffsetZ = Math.abs(runState.runEndSplit().positionOffset().posZ() - player.position().getZ());
+    var player = this.addon.labyAPI().minecraft().getClientPlayer();
+    if (player == null) {
+      return;
+    }
 
-    // Start
-    if (startOffsetX <= runState.runStartPosition().offsetX()
-        && startOffsetZ <= runState.runStartPosition().offsetZ()
-        && runState.runStartPosition().posY() == player.position().getY()
+    var run = this.addon.runState();
+    var runStartPosition = run.runStartPosition();
+    var runEndSplit = run.runEndSplit();
+
+    if (runStartPosition == null) {
+      return;
+    }
+    if (runEndSplit == null) {
+      return;
+    }
+
+    // Handle start
+    var startOffsetX = Math.abs(runStartPosition.posX() - player.position().getX());
+    var startOffsetZ = Math.abs(runStartPosition.posZ() - player.position().getZ());
+
+    // TODO: Still a shit check, but still kinda needed until I have a better idea
+    if (startOffsetX <= runStartPosition.offsetX()
+        && startOffsetZ <= runStartPosition.offsetZ()
+        && runStartPosition.posY() == player.position().getY()
     ) {
-      runState.reset();
-      runState.runStarted(true);
+      run.reset();
+      run.runStarted(true);
     }
 
-    // Splits
-    if (runState.runStarted()) {
-      for (var split : runState.runSplits()) {
-        var splitOffsetX = Math.abs(split.positionOffset().posX() - player.position().getX());
-        var splitOffsetZ = Math.abs(split.positionOffset().posZ() - player.position().getZ());
+    if (!run.runStarted()) {
+      return;
+    }
 
-        if (!split.passed()
-            && splitOffsetX <= split.positionOffset().offsetX() / 2
-            && splitOffsetZ <= split.positionOffset().offsetZ() / 2
-            && split.positionOffset().posY() == player.position().getY()
-        ) {
-          split.updatePB(this.addon, runState.runTimer());
-          split.passed(true);
-        }
+    // Handle splits
+    for (var split : run.runSplits()) {
+      if (!split.passed() && split.intersects(player.axisAlignedBoundingBox())) {
+        split.updatePB(this.addon, run.timer());
+        split.passed(true);
       }
     }
 
-    // End
-    if (runState.runStarted()
-        && endOffsetX <= runState.runEndSplit().positionOffset().offsetX() / 2
-        && endOffsetZ <= runState.runEndSplit().positionOffset().offsetZ() / 2
-        && runState.runEndSplit().positionOffset().posY() == player.position().getY()
-    ) {
-      runState.runEndSplit().updatePB(addon, runState.runTimer());
-      runState.runStarted(false);
+    // Handle finish
+    if (runEndSplit.intersects(player.axisAlignedBoundingBox())) {
+      run.processFinish();
+      return;
     }
 
-    // Timers etc.
-    if (runState.runStarted()) {
-      runState.runTimer(runState.runTimer() + 1);
+    // Track tick data
+    run.processTick(buildTickState(player));
+  }
 
-      if (state.lastTick().onGround() && player.isOnGround()) {
-        runState.runGroundTime(runState.runGroundTime() + 1);
-      }
+  private RunTickState buildTickState(ClientPlayer player) {
+    var inputUtil = this.addon.minecraftInputUtil();
+    var tickInput = new TickInput(
+        inputUtil.forwardKey().isDown(),
+        inputUtil.leftKey().isDown(),
+        inputUtil.backKey().isDown(),
+        inputUtil.rightKey().isDown(),
+        inputUtil.jumpKey().isDown(),
+        inputUtil.sprintKey().isDown(),
+        inputUtil.sneakKey().isDown()
+    );
+    var tickPosition = new TickPosition(
+        player.position().getX(),
+        player.position().getY(),
+        player.position().getZ(),
+        player.getRotationYaw(),
+        player.getRotationPitch(),
+        player.isOnGround()
+    );
 
-      if (runState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
-        var isRelativeRotation =
-            this.addon.configuration().rotationChange().get() == MacroRotationChange.Relative;
-        var yawChange = player.getRotationYaw() - state.lastTick().yaw();
-        var pitchChange = player.getRotationPitch() - state.lastTick().pitch();
-
-        runState.runTickInputs().add(
-            new TickInput(
-                inputUtil.forwardKey().isDown(),
-                inputUtil.leftKey().isDown(),
-                inputUtil.backKey().isDown(),
-                inputUtil.rightKey().isDown(),
-                inputUtil.jumpKey().isDown(),
-                inputUtil.sprintKey().isDown(),
-                inputUtil.sneakKey().isDown(),
-                isRelativeRotation ? yawChange : player.getRotationYaw(),
-                isRelativeRotation ? pitchChange: player.getRotationPitch()));
-      }
-    }
+    return new RunTickState(tickInput, tickPosition, player.axisAlignedBoundingBox());
   }
 
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
+    var player = this.addon.labyAPI().minecraft().getClientPlayer();
+
+    if (player == null) {
+      return;
+    }
+
+//    for (var tickState : this.addon.runState().previousTickStates()) {
+//      var tickPosition = tickState.position();
+//      RenderUtils.renderAbsoluteBoundingBox(
+//          event.camera().renderPosition(),
+//          tickState.playerBB(),
+//          this.addon.configuration().runSplitOutlineThickness().get(),
+//          event.stack(),
+//          this.addon.configuration().runSplitFillColor().get().get(),
+//          this.addon.configuration().runSplitOutlineColor().get().get());
+//    }
+
     if (!addon.configuration().highlightRunSplits().get()) {
       return;
     }
 
     var splits = this.addon.runState().runSplits();
     for (var split : splits) {
-      this.renderSplit(event, split.positionOffset());
+      var intersecting = split.intersects(player.axisAlignedBoundingBox());
+      this.renderSplit(event, split, intersecting ? Color.GREEN.withAlpha(80).get() : Color.RED.withAlpha(80).get());
     }
 
     var runStartPosition = this.addon.runState().runStartPosition();
     if (runStartPosition != null) {
-      this.renderSplit(event, runStartPosition);
+      this.renderSplit(event, runStartPosition, this.addon.configuration().runSplitFillColor().get().get());
     }
 
     var runEndSplit = this.addon.runState().runEndSplit();
     if (runEndSplit != null) {
-      this.renderSplit(event, runEndSplit.positionOffset());
+      var intersecting = runEndSplit.intersects(player.axisAlignedBoundingBox());
+      this.renderSplit(event, runEndSplit, intersecting ? Color.GREEN.withAlpha(80).get() : Color.RED.withAlpha(80).get());
     }
   }
 
-  private void renderSplit(RenderWorldEvent event, PositionOffset positionOffset) {
-    RenderUtil.renderBoundingBox(
+  private void renderSplit(RenderWorldEvent event, PositionOffset positionOffset, int color) {
+    RenderUtils.renderBoundingBox(
         positionOffset.positionVector(),
         event.camera().renderPosition(),
         positionOffset.boundingBox(),
         this.addon.configuration().runSplitOutlineThickness().get(),
         event.stack(),
-        this.addon.configuration().runSplitFillColor().get().get(),
+        color,
+        this.addon.configuration().runSplitOutlineColor().get().get());
+  }
+
+  private void renderSplit(RenderWorldEvent event, RunSplit runSplit, int color) {
+    RenderUtils.renderAbsoluteBoundingBox(
+        event.camera().renderPosition(),
+        runSplit.boundingBox(),
+        this.addon.configuration().runSplitOutlineThickness().get(),
+        event.stack(),
+        color,
         this.addon.configuration().runSplitOutlineColor().get().get());
   }
 }

@@ -3,6 +3,7 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
+import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -17,6 +18,9 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
 
   private TextLine textLine;
   private String stringFormat;
+
+  private boolean lastTickMovingForward;
+  private boolean lastTickMovingSideways;
 
   public LastFortyFiveWidget(ParkourDisplayAddon addon) {
     super("last_forty_five", LastFortyFiveWidgetConfig.class);
@@ -34,17 +38,36 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
 
   @Override
   public void onTick(boolean isEditorContext) {
+    var player = this.addon.labyAPI().minecraft().getClientPlayer();
     var state = this.addon.playerState();
 
+    if (player == null) {
+      return;
+    }
+
+    var movingForward = player.getForwardMovingSpeed() != 0;
+    var movingSideways = tryGetMovingSideways(player);
+
     // Player attempted 45 degree strafe
-    if (state.lastTick().movingForward()
-        && !state.lastTick().movingSideways()
-        && state.currentTick().movingForward()
-        && state.currentTick().movingSideways()
+    if (this.lastTickMovingForward
+        && !this.lastTickMovingSideways
+        && movingForward
+        && movingSideways
         && !state.currentTick().onGround()
     ) {
       var lastFF = String.format(this.stringFormat, state.yawTurn());
       this.textLine.updateAndFlush(lastFF);
+    }
+
+    this.lastTickMovingForward = movingForward;
+    this.lastTickMovingSideways = movingSideways;
+  }
+
+  private boolean tryGetMovingSideways(ClientPlayer player) {
+    try {
+      return player.getStrafeMovingSpeed() != 0;
+    } catch (Throwable throwable) {
+      return false;
     }
   }
 

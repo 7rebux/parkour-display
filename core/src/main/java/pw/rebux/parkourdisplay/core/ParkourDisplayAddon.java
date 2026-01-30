@@ -20,7 +20,7 @@ import pw.rebux.parkourdisplay.core.run.split.SplitManager;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
-import pw.rebux.parkourdisplay.core.util.adapter.TickInputAdapter;
+import pw.rebux.parkourdisplay.core.util.adapter.MacroTickStateAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
@@ -51,14 +51,14 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
   private final Gson gson = new GsonBuilder()
       .setPrettyPrinting()
-      .registerTypeAdapter(TickInput.class, new TickInputAdapter())
+      .registerTypeAdapter(TickInput.class, new MacroTickStateAdapter())
       .create();
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
   private final MacroManager macroManager = new MacroManager(this);
   private final SplitManager splitManager = new SplitManager(this);
   private final PlayerState playerState = new PlayerState();
-  private final RunState runState = new RunState();
+  private final RunState runState = new RunState(this);
 
   private MinecraftInputUtil minecraftInputUtil;
 

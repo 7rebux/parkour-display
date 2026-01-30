@@ -10,7 +10,7 @@ import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.IntVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.TickPosition;
+import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 @Getter
 @RequiredArgsConstructor

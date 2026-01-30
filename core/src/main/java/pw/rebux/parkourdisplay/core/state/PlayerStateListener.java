@@ -1,7 +1,6 @@
 package pw.rebux.parkourdisplay.core.state;
 
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Priority;
 import net.labymod.api.event.Subscribe;
@@ -37,8 +36,6 @@ public final class PlayerStateListener {
     currentTick.yaw(player.getRotationYaw());
     currentTick.pitch(player.getRotationPitch());
     currentTick.onGround(player.isOnGround());
-    currentTick.movingForward(player.getForwardMovingSpeed() != 0);
-    currentTick.movingSideways(tryGetMovingSideways(player));
 
     // If the player landed this tick or is still airborne, we increase the air time
     if (!state.lastTick().onGround() || !player.isOnGround()) {
@@ -76,19 +73,9 @@ public final class PlayerStateListener {
     lastTick.yaw(player.getRotationYaw());
     lastTick.pitch(player.getRotationPitch());
     lastTick.onGround(player.isOnGround());
-    lastTick.movingForward(player.getForwardMovingSpeed() != 0);
-    lastTick.movingSideways(tryGetMovingSideways(player));
 
     if (player.isOnGround()) {
       state.airTime(0);
-    }
-  }
-
-  private boolean tryGetMovingSideways(ClientPlayer player) {
-    try {
-      return player.getStrafeMovingSpeed() != 0;
-    } catch (Throwable throwable) {
-      return false;
     }
   }
 }
