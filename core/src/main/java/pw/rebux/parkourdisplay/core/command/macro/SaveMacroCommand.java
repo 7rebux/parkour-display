@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 
 public final class SaveMacroCommand extends SubCommand {
 
@@ -27,10 +28,23 @@ public final class SaveMacroCommand extends SubCommand {
       return true;
     }
 
-    var tickInputs = new ArrayList<>(this.addon.runState().runTickInputs());
+    // TODO: Handle absolute vs relative mode
+    var macroTickStates = new ArrayList<>(this.addon.runState().previousTickStates()).stream()
+        .map(state -> new MacroTickState(
+            state.input().w(),
+            state.input().a(),
+            state.input().s(),
+            state.input().d(),
+            state.input().jump(),
+            state.input().sprint(),
+            state.input().sneak(),
+            state.position().yaw(),
+            state.position().pitch()
+        ))
+        .toList();
 
     try {
-      this.addon.macroManager().saveMacro(tickInputs, arguments[0]);
+      this.addon.macroManager().saveMacro(macroTickStates, arguments[0]);
       this.displayMessage(
           translatable(
               "parkourdisplay.commands.savemacro.messages.success",

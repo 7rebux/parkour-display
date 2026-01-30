@@ -1,6 +1,7 @@
 package pw.rebux.parkourdisplay.core.state;
 
 import lombok.Data;
+import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 @Data
 public final class PlayerState {

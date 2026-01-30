@@ -7,8 +7,6 @@ public record TickInput(
   boolean d,
   boolean jump,
   boolean sprint,
-  boolean sneak,
-  float yaw,
-  float pitch
+  boolean sneak
 ) {
 }

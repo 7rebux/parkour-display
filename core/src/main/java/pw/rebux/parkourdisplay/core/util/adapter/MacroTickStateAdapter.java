@@ -4,12 +4,12 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import pw.rebux.parkourdisplay.core.macro.TickInput;
+import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 
-public final class TickInputAdapter extends TypeAdapter<TickInput> {
+public final class MacroTickStateAdapter extends TypeAdapter<MacroTickState> {
 
   @Override
-  public void write(JsonWriter out, TickInput value) throws IOException {
+  public void write(JsonWriter out, MacroTickState value) throws IOException {
     out.beginArray();
     out.value(value.w());
     out.value(value.a());
@@ -24,7 +24,7 @@ public final class TickInputAdapter extends TypeAdapter<TickInput> {
   }
 
   @Override
-  public TickInput read(JsonReader in) throws IOException {
+  public MacroTickState read(JsonReader in) throws IOException {
     in.beginArray();
 
     boolean w = in.nextBoolean();
@@ -39,6 +39,6 @@ public final class TickInputAdapter extends TypeAdapter<TickInput> {
 
     in.endArray();
 
-    return new TickInput(w, a, s, d, jump, sprint, sneak, yaw, pitch);
+    return new MacroTickState(w, a, s, d, jump, sprint, sneak, yaw, pitch);
   }
 }

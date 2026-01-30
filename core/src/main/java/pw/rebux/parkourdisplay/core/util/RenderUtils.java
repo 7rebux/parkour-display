@@ -7,13 +7,12 @@ import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import net.labymod.api.util.math.vector.IntVector3;
 
-public final class RenderUtil {
+public final class RenderUtils {
 
   private static final RectangleRenderContext RECTANGLE_RENDER_CONTEXT =
       Laby.references().rectangleRenderContext();
 
-  public static void renderBoundingBox(
-      IntVector3 objectPosition,
+  public static void renderAbsoluteBoundingBox(
       DoubleVector3 renderPosition,
       AxisAlignedBoundingBox boundingBox,
       float outlineThickness,
@@ -21,33 +20,12 @@ public final class RenderUtil {
       Integer fillColor,
       Integer outlineColor
   ) {
-    renderBoundingBox(
-        new DoubleVector3(objectPosition.getX(), objectPosition.getY(), objectPosition.getZ()),
-        renderPosition,
-        boundingBox,
-        outlineThickness,
-        stack,
-        fillColor,
-        outlineColor
-    );
-  }
-
-  public static void renderBoundingBox(
-      DoubleVector3 objectPosition,
-      DoubleVector3 renderPosition,
-      AxisAlignedBoundingBox boundingBox,
-      float outlineThickness,
-      Stack stack,
-      Integer fillColor,
-      Integer outlineColor
-  ) {
-    var absBB = boundingBox.move(objectPosition);
-    var minX = (float) (absBB.getMinX() - renderPosition.getX());
-    var minY = (float) (absBB.getMinY() - renderPosition.getY());
-    var minZ = (float) (absBB.getMinZ() - renderPosition.getZ());
-    var maxX = (float) (absBB.getMaxX() - renderPosition.getX());
-    var maxY = (float) (absBB.getMaxY() - renderPosition.getY());
-    var maxZ = (float) (absBB.getMaxZ() - renderPosition.getZ());
+    var minX = (float) (boundingBox.getMinX() - renderPosition.getX());
+    var minY = (float) (boundingBox.getMinY() - renderPosition.getY());
+    var minZ = (float) (boundingBox.getMinZ() - renderPosition.getZ());
+    var maxX = (float) (boundingBox.getMaxX() - renderPosition.getX());
+    var maxY = (float) (boundingBox.getMaxY() - renderPosition.getY());
+    var maxZ = (float) (boundingBox.getMaxZ() - renderPosition.getZ());
     var width = maxX - minX;
     var height = maxY - minY;
     var depth = maxZ - minZ;
@@ -91,6 +69,45 @@ public final class RenderUtil {
     stack.translate(minX, minY, maxZ);
     drawOutlinedRectangle(stack, width, height, outlineThickness, fillColor, outlineColor);
     stack.pop();
+  }
+
+  public static void renderBoundingBox(
+      IntVector3 objectPosition,
+      DoubleVector3 renderPosition,
+      AxisAlignedBoundingBox boundingBox,
+      float outlineThickness,
+      Stack stack,
+      Integer fillColor,
+      Integer outlineColor
+  ) {
+    renderBoundingBox(
+        new DoubleVector3(objectPosition.getX(), objectPosition.getY(), objectPosition.getZ()),
+        renderPosition,
+        boundingBox,
+        outlineThickness,
+        stack,
+        fillColor,
+        outlineColor
+    );
+  }
+
+  public static void renderBoundingBox(
+      DoubleVector3 objectPosition,
+      DoubleVector3 renderPosition,
+      AxisAlignedBoundingBox boundingBox,
+      float outlineThickness,
+      Stack stack,
+      Integer fillColor,
+      Integer outlineColor
+  ) {
+    renderAbsoluteBoundingBox(
+        renderPosition,
+        boundingBox.move(objectPosition),
+        outlineThickness,
+        stack,
+        fillColor,
+        outlineColor
+    );
   }
 
   private static void drawOutlinedRectangle(

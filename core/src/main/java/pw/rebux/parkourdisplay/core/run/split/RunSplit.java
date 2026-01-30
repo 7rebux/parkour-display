@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
+import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.run.PositionOffset;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
@@ -13,12 +13,25 @@ import pw.rebux.parkourdisplay.core.util.TickFormatter;
 public final class RunSplit {
 
   private final String label;
-  private final PositionOffset positionOffset;
+  private final AxisAlignedBoundingBox boundingBox;
 
   private boolean passed;
   private Long personalBest;
   private Long lastTicks;
   private Long lastDelta;
+
+  public boolean intersects(AxisAlignedBoundingBox other) {
+    var isFlat = this.boundingBox.getMinY() == this.boundingBox.getMaxY();
+
+    return isFlat
+        ? intersectsXZ(other) && boundingBox.getMinY() == other.getMinY()
+        : this.boundingBox.intersects(other);
+  }
+
+  private boolean intersectsXZ(AxisAlignedBoundingBox other) {
+    return boundingBox.getMinX() < other.getMaxX() && boundingBox.getMaxX() > other.getMinX() &&
+        boundingBox.getMinZ() < other.getMaxZ() && boundingBox.getMaxZ() > other.getMinZ();
+  }
 
   public void updatePB(ParkourDisplayAddon addon, long ticks) {
     var color = NamedTextColor.GRAY;

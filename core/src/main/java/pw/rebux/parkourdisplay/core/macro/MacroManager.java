@@ -24,7 +24,7 @@ import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 public class MacroManager {
 
   private static final File MACROS_DIR = new File(ParkourDisplayAddon.DATA_DIR, "macros");
-  private static final Type GSON_DATA_TYPE = new TypeToken<ArrayList<TickInput>>() {}.getType();
+  private static final Type GSON_DATA_TYPE = new TypeToken<ArrayList<MacroTickState>>() {}.getType();
 
   private final ParkourDisplayAddon addon;
 
@@ -35,7 +35,7 @@ public class MacroManager {
   }
 
   @Getter
-  private final ArrayDeque<TickInput> activeMacro = new ArrayDeque<>();
+  private final ArrayDeque<MacroTickState> activeMacro = new ArrayDeque<>();
 
   public List<MacroFile> listAvailableFiles() {
     var files = MACROS_DIR.listFiles(f -> f.getName().endsWith(".json"));
@@ -50,14 +50,14 @@ public class MacroManager {
             .toList();
   }
 
-  public List<TickInput> loadMacro(String name) throws FileNotFoundException {
+  public List<MacroTickState> loadMacro(String name) throws FileNotFoundException {
     var file = new File(MACROS_DIR, name + ".json");
     var reader = new JsonReader(new FileReader(file));
 
     return this.addon.gson().fromJson(reader, GSON_DATA_TYPE);
   }
 
-  public void saveMacro(List<TickInput> tickInputs, String name) throws IOException {
+  public void saveMacro(List<MacroTickState> tickInputs, String name) throws IOException {
     var file = new File(MACROS_DIR, name + ".json");
 
     try (FileWriter writer = new FileWriter(file)) {
@@ -65,7 +65,7 @@ public class MacroManager {
     }
   }
 
-  public void runMacro(List<TickInput> tickInputs) {
+  public void runMacro(List<MacroTickState> tickInputs) {
     if (!this.isAllowed()) {
       this.addon.displayMessage(
           text("Macros are disabled on this server.", NamedTextColor.RED));

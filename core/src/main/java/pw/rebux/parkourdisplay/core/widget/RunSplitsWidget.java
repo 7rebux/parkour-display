@@ -85,7 +85,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
         .toList();
 
     // Timer component
-    var timerTicks = this.addon.runState().runTimer();
+    var timerTicks = this.addon.runState().timer();
     var timerColor = endSplit == null || endSplit.personalBest() == null || timerTicks <= endSplit.personalBest()
         ? NamedTextColor.GREEN
         : NamedTextColor.RED;
@@ -149,7 +149,8 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
 
   @Override
   public boolean isVisibleInGame() {
-    return this.addon.runState().isRunSetUp();
+    var run = this.addon.runState();
+    return run.runStartPosition() != null && run.runEndSplit() != null;
   }
 
   private String formatTicks(long ticks) {
