@@ -47,6 +47,8 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   public static final String NAMESPACE = "parkourdisplay";
   public static final File DATA_DIR = new File("parkour-display");
 
+  public static final String MACRO_PERMISSION = NAMESPACE + ".macro";
+
   private final Gson gson = new GsonBuilder()
       .setPrettyPrinting()
       .registerTypeAdapter(TickInput.class, new TickInputAdapter())
@@ -64,9 +66,9 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   protected void enable() {
     this.minecraftInputUtil = new MinecraftInputUtil(this);
 
-    var hudWidgetRegistry = this.labyAPI().hudWidgetRegistry();
-
     this.registerSettingCategory();
+
+    this.labyAPI().permissionRegistry().register(MACRO_PERMISSION, false, true);
 
     this.registerListener(new PlayerStateListener(this));
     this.registerListener(new ChatMoveTimeLogListener(this));
@@ -76,6 +78,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
     this.registerCommand(new BaseCommand(this));
 
+    var hudWidgetRegistry = this.labyAPI().hudWidgetRegistry();
     hudWidgetRegistry.categoryRegistry().register(this.category);
     hudWidgetRegistry.register(new AirTimeWidget(this));
     hudWidgetRegistry.register(new GroundTimeWidget(this));

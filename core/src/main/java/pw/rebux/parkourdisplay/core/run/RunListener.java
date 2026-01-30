@@ -82,7 +82,8 @@ public final class RunListener {
       }
 
       if (runState.runTickInputs().size() < MAX_RUN_TICK_INPUTS) {
-        var isRelativeRotation = this.addon.configuration().rotationChange().get() == MacroRotationChange.RELATIVE;
+        var isRelativeRotation =
+            this.addon.configuration().rotationChange().get() == MacroRotationChange.Relative;
         var yawChange = player.getRotationYaw() - state.lastTick().yaw();
         var pitchChange = player.getRotationPitch() - state.lastTick().pitch();
 
@@ -108,28 +109,29 @@ public final class RunListener {
     }
 
     var splits = this.addon.runState().runSplits();
-    var runEndSplit = this.addon.runState().runEndSplit();
-
     for (var split : splits) {
-      RenderUtil.renderBoundingBox(
-          split.positionOffset().positionVector(),
-          event.camera().renderPosition(),
-          split.positionOffset().boundingBox(),
-          this.addon.configuration().runSplitOutlineThickness().get(),
-          event.stack(),
-          this.addon.configuration().runSplitFillColor().get().get(),
-          this.addon.configuration().runSplitOutlineColor().get().get());
+      this.renderSplit(event, split.positionOffset());
     }
 
-    if (runEndSplit != null) {
-      RenderUtil.renderBoundingBox(
-          runEndSplit.positionOffset().positionVector(),
-          event.camera().renderPosition(),
-          runEndSplit.positionOffset().boundingBox(),
-          this.addon.configuration().runSplitOutlineThickness().get(),
-          event.stack(),
-          this.addon.configuration().runSplitFillColor().get().get(),
-          this.addon.configuration().runSplitOutlineColor().get().get());
+    var runStartPosition = this.addon.runState().runStartPosition();
+    if (runStartPosition != null) {
+      this.renderSplit(event, runStartPosition);
     }
+
+    var runEndSplit = this.addon.runState().runEndSplit();
+    if (runEndSplit != null) {
+      this.renderSplit(event, runEndSplit.positionOffset());
+    }
+  }
+
+  private void renderSplit(RenderWorldEvent event, PositionOffset positionOffset) {
+    RenderUtil.renderBoundingBox(
+        positionOffset.positionVector(),
+        event.camera().renderPosition(),
+        positionOffset.boundingBox(),
+        this.addon.configuration().runSplitOutlineThickness().get(),
+        event.stack(),
+        this.addon.configuration().runSplitFillColor().get().get(),
+        this.addon.configuration().runSplitOutlineColor().get().get());
   }
 }

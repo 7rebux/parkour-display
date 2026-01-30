@@ -8,6 +8,7 @@ import net.labymod.api.client.gui.screen.widget.widgets.input.color.ColorPickerW
 import net.labymod.api.client.gui.screen.widget.widgets.input.dropdown.DropdownWidget.DropdownSetting;
 import net.labymod.api.configuration.loader.annotation.ConfigName;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
+import net.labymod.api.configuration.settings.annotation.SettingRequires;
 import net.labymod.api.configuration.settings.annotation.SettingSection;
 import net.labymod.api.util.Color;
 import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
@@ -39,14 +40,17 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
       new ConfigProperty<>(true);
 
   @ColorPickerSetting(alpha = true, chroma = true)
+  @SettingRequires(value = "highlightLandingBlocks")
   private final ConfigProperty<Color> landingBlockFillColor =
       new ConfigProperty<>(Color.ofRGB(0, 192, 255, 25));
 
   @ColorPickerSetting(alpha = true, chroma = true)
+  @SettingRequires(value = "highlightLandingBlocks")
   private final ConfigProperty<Color> landingBlockOutlineColor =
       new ConfigProperty<>(Color.ofRGB(0, 192, 255, 75));
 
   @SliderSetting(min = 0.01F, max = 1.0F, steps = 0.01F)
+  @SettingRequires(value = "highlightLandingBlocks")
   private final ConfigProperty<Float> landingBlockOutlineThickness =
       new ConfigProperty<>(0.01F);
 
@@ -61,14 +65,17 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(true);
 
   @ColorPickerSetting(alpha = true, chroma = true)
+  @SettingRequires(value = "highlightRunSplits")
   private final ConfigProperty<Color> runSplitFillColor =
       new ConfigProperty<>(Color.ofRGB(0, 192, 255, 25));
 
   @ColorPickerSetting(alpha = true, chroma = true)
+  @SettingRequires(value = "highlightRunSplits")
   private final ConfigProperty<Color> runSplitOutlineColor =
       new ConfigProperty<>(Color.ofRGB(0, 192, 255, 75));
 
   @SliderSetting(min = 0.01F, max = 1.0F, steps = 0.01F)
+  @SettingRequires(value = "highlightRunSplits")
   private final ConfigProperty<Float> runSplitOutlineThickness =
       new ConfigProperty<>(0.01F);
 
@@ -78,5 +85,5 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
   @DropdownSetting
   private final ConfigProperty<MacroRotationChange> rotationChange =
-      new ConfigProperty<>(MacroRotationChange.RELATIVE);
+      new ConfigProperty<>(MacroRotationChange.Relative);
 }

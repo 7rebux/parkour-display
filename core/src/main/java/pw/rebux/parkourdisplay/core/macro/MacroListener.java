@@ -52,7 +52,7 @@ public class MacroListener {
     inputUtil.setPressed(inputUtil.sprintKey(), tickInput.sprint());
     inputUtil.setPressed(inputUtil.sneakKey(), tickInput.sneak());
 
-    if (this.addon.configuration().rotationChange().get() == MacroRotationChange.RELATIVE) {
+    if (this.addon.configuration().rotationChange().get() == MacroRotationChange.Relative) {
       player.setRotationYaw(player.getRotationYaw() + tickInput.yaw());
       player.setRotationPitch(player.getRotationPitch() + tickInput.pitch());
     } else {

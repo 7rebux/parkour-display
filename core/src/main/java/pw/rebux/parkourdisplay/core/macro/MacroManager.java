@@ -1,5 +1,7 @@
 package pw.rebux.parkourdisplay.core.macro;
 
+import static net.labymod.api.client.component.Component.text;
+
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import java.io.File;
@@ -15,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @RequiredArgsConstructor
@@ -63,7 +66,19 @@ public class MacroManager {
   }
 
   public void runMacro(List<TickInput> tickInputs) {
+    if (!this.isAllowed()) {
+      this.addon.displayMessage(
+          text("Macros are disabled on this server.", NamedTextColor.RED));
+      return;
+    }
+
     this.activeMacro.clear();
     this.activeMacro.addAll(tickInputs);
+  }
+
+  private boolean isAllowed() {
+    return this.addon.labyAPI()
+        .permissionRegistry()
+        .isPermissionEnabled(ParkourDisplayAddon.MACRO_PERMISSION);
   }
 }
