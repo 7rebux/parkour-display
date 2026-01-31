@@ -6,6 +6,7 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
@@ -14,6 +15,7 @@ public final class RunSplit {
 
   private final String label;
   private final AxisAlignedBoundingBox boundingBox;
+  private final SplitBoxTriggerMode triggerMode;
 
   private boolean passed;
   private Long personalBest;
@@ -21,16 +23,11 @@ public final class RunSplit {
   private Long lastDelta;
 
   public boolean intersects(AxisAlignedBoundingBox other) {
-    var isFlat = this.boundingBox.getMinY() == this.boundingBox.getMaxY();
-
-    return isFlat
-        ? intersectsXZ(other) && boundingBox.getMinY() == other.getMinY()
-        : this.boundingBox.intersects(other);
-  }
-
-  private boolean intersectsXZ(AxisAlignedBoundingBox other) {
-    return boundingBox.getMinX() < other.getMaxX() && boundingBox.getMaxX() > other.getMinX() &&
-        boundingBox.getMinZ() < other.getMaxZ() && boundingBox.getMaxZ() > other.getMinZ();
+    return switch (this.triggerMode) {
+      case Intersect -> this.boundingBox.intersects(other);
+      case IntersectXZAboveY -> BoundingBoxUtils.intersectsXZAboveY(this.boundingBox, other);
+      case IntersectXZSameY -> BoundingBoxUtils.intersectsXZSameY(this.boundingBox, other);
+    };
   }
 
   public void updatePB(ParkourDisplayAddon addon, long ticks) {

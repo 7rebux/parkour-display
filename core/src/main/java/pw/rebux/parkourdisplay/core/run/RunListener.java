@@ -42,10 +42,10 @@ public final class RunListener {
     }
 
     // Handle start
+    // TODO: Still a shit check, but still kinda needed until I have a better idea
     var startOffsetX = Math.abs(runStartPosition.posX() - player.position().getX());
     var startOffsetZ = Math.abs(runStartPosition.posZ() - player.position().getZ());
 
-    // TODO: Still a shit check, but still kinda needed until I have a better idea
     if (startOffsetX <= runStartPosition.offsetX()
         && startOffsetZ <= runStartPosition.offsetZ()
         && runStartPosition.posY() == player.position().getY()
@@ -58,6 +58,9 @@ public final class RunListener {
       return;
     }
 
+    // Track tick data
+    run.processTick(buildTickState(player));
+
     // Handle splits
     for (var split : run.runSplits()) {
       if (!split.passed() && split.intersects(player.axisAlignedBoundingBox())) {
@@ -69,11 +72,7 @@ public final class RunListener {
     // Handle finish
     if (runEndSplit.intersects(player.axisAlignedBoundingBox())) {
       run.processFinish();
-      return;
     }
-
-    // Track tick data
-    run.processTick(buildTickState(player));
   }
 
   private RunTickState buildTickState(ClientPlayer player) {
@@ -95,8 +94,10 @@ public final class RunListener {
         player.getRotationPitch(),
         player.isOnGround()
     );
+    // Cloning to avoid storing the reference
+    var boundingBox = player.axisAlignedBoundingBox().move(0, 0, 0);
 
-    return new RunTickState(tickInput, tickPosition, player.axisAlignedBoundingBox());
+    return new RunTickState(tickInput, tickPosition, boundingBox);
   }
 
   @Subscribe
@@ -107,16 +108,17 @@ public final class RunListener {
       return;
     }
 
-//    for (var tickState : this.addon.runState().previousTickStates()) {
-//      var tickPosition = tickState.position();
-//      RenderUtils.renderAbsoluteBoundingBox(
-//          event.camera().renderPosition(),
-//          tickState.playerBB(),
-//          this.addon.configuration().runSplitOutlineThickness().get(),
-//          event.stack(),
-//          this.addon.configuration().runSplitFillColor().get().get(),
-//          this.addon.configuration().runSplitOutlineColor().get().get());
-//    }
+    if (this.addon.configuration().showPrevRunTickStates().get()) {
+      for (var tickState : this.addon.runState().previousTickStates()) {
+        RenderUtils.renderAbsoluteBoundingBox(
+            event.camera().renderPosition(),
+            tickState.playerBB(),
+            this.addon.configuration().runSplitOutlineThickness().get(),
+            event.stack(),
+            this.addon.configuration().runSplitFillColor().get().get(),
+            this.addon.configuration().runSplitOutlineColor().get().get());
+      }
+    }
 
     if (!addon.configuration().highlightRunSplits().get()) {
       return;

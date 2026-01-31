@@ -79,6 +79,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Float> runSplitOutlineThickness =
       new ConfigProperty<>(0.01F);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showPrevRunTickStates = new ConfigProperty<>(false);
+
   @SettingSection("macro")
   @SwitchSetting
   private final ConfigProperty<Boolean> unpressKeys = new ConfigProperty<>(true);

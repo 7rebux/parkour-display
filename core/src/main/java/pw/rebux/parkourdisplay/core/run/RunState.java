@@ -49,7 +49,7 @@ public class RunState {
 
     timer++;
 
-    if (tickStates.size() >= MAX_RUN_TICKS) {
+    if (trackingEnabled && tickStates.size() >= MAX_RUN_TICKS) {
       this.addon.displayMessage(RUN_TOO_LONG_MESSAGE);
       trackingEnabled = false;
     }

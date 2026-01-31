@@ -5,6 +5,7 @@ import java.util.Optional;
 import net.labymod.api.Laby;
 import net.labymod.api.client.Minecraft;
 import net.labymod.api.client.world.block.BlockState;
+import net.labymod.api.client.world.phys.hit.HitResult.HitType;
 
 public final class WorldUtils {
 
@@ -22,5 +23,15 @@ public final class WorldUtils {
         .filter(BlockState::hasCollision);
 
     return inside.or(() -> below);
+  }
+
+  public static Optional<BlockState> getBlockLookingAt() {
+    var hitResult = minecraft.getHitResult();
+
+    if (hitResult.type() != HitType.BLOCK) {
+      return Optional.empty();
+    }
+
+    return Optional.of(minecraft.clientWorld().getBlockState(hitResult.location()));
   }
 }
