@@ -128,7 +128,8 @@ public final class SplitManager {
             endPosObj.get("z").getAsDouble() - (rootObj.get("endDz").getAsDouble() / 2),
             endPosObj.get("x").getAsDouble() + (rootObj.get("endDx").getAsDouble() / 2),
             endPosObj.get("y").getAsDouble(),
-            endPosObj.get("z").getAsDouble() + (rootObj.get("endDz").getAsDouble() / 2)));
+            endPosObj.get("z").getAsDouble() + (rootObj.get("endDz").getAsDouble() / 2)),
+        SplitBoxTriggerMode.IntersectXZSameY);
     runEndSplit.personalBest(rootObj.get("pb").getAsLong());
     this.addon.runState().runEndSplit(runEndSplit);
 
@@ -149,7 +150,8 @@ public final class SplitManager {
               splitObj.get("z").getAsDouble() - (splitDzArrayObj.get(i).getAsDouble() / 2),
               splitObj.get("x").getAsDouble() + (splitDxArrayObj.get(i).getAsDouble() / 2),
               splitObj.get("y").getAsDouble(),
-              splitObj.get("z").getAsDouble() + (splitDzArrayObj.get(i).getAsDouble() / 2)));
+              splitObj.get("z").getAsDouble() + (splitDzArrayObj.get(i).getAsDouble() / 2)),
+          SplitBoxTriggerMode.IntersectXZSameY);
       split.personalBest(bestSplitsArrayObj.get(i).getAsLong());
 
       this.addon.runState().runSplits().add(split);

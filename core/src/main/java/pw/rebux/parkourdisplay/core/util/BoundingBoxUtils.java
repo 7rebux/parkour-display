@@ -1,0 +1,28 @@
+package pw.rebux.parkourdisplay.core.util;
+
+import net.labymod.api.util.math.AxisAlignedBoundingBox;
+
+public final class BoundingBoxUtils {
+
+  public static boolean intersectsXZ(
+      AxisAlignedBoundingBox a,
+      AxisAlignedBoundingBox b
+  ) {
+    return a.getMinX() < b.getMaxX() && a.getMaxX() > b.getMinX() &&
+        a.getMinZ() < b.getMaxZ() && a.getMaxZ() > b.getMinZ();
+  }
+
+  public static boolean intersectsXZAboveY(
+      AxisAlignedBoundingBox a,
+      AxisAlignedBoundingBox b
+  ) {
+    return intersectsXZ(a, b) && a.getMaxY() >= b.getMinY();
+  }
+
+  public static boolean intersectsXZSameY(
+      AxisAlignedBoundingBox a,
+      AxisAlignedBoundingBox b
+  ) {
+    return intersectsXZ(a, b) && a.getMaxY() == b.getMinY();
+  }
+}
