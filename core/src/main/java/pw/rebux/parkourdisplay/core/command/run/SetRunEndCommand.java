@@ -14,8 +14,8 @@ import pw.rebux.parkourdisplay.core.util.WorldUtils;
 public final class SetRunEndCommand extends SubCommand {
 
   private static final double halfPlayerWidth = 0.3;
-  // TODO: Shouldn't this be added in the intersection logic?
-  private static final double epsilon = 1.0E-7;
+  private static final double plateMaxOffsetY = 0.25;
+  private static final double plateInset = 1.0 / 16;
 
   private final ParkourDisplayAddon addon;
 
@@ -24,30 +24,49 @@ public final class SetRunEndCommand extends SubCommand {
     this.addon = addon;
   }
 
-  // TODO: orElseThrow would be much cleaner, but what happens with it
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var targetBlock = WorldUtils.getBlockLookingAt().or(WorldUtils::getBlockStandingOn)
-        .orElseThrow(() -> new IllegalStateException("No block found"));
+    var targetBlockOptional = WorldUtils.getBlockLookingAt().or(WorldUtils::getBlockStandingOn);
     var mode = arguments.length > 0
         ? Arrays.stream(Mode.values())
           .filter(v -> v.toString().toUpperCase().equalsIgnoreCase(arguments[0]))
           .findFirst()
-          .orElse(null)
-        : this.isPressurePlate(targetBlock) ? Mode.Plate : Mode.Default;
+          .orElseGet(() -> {
+            this.displayMessage("Invalid mode. Using default.");
+            return Mode.Default;
+          })
+        : Mode.Default;
 
-    if (mode == null) {
-      this.displayMessage("Invalid mode");
+    if (targetBlockOptional.isEmpty()) {
+      this.displayMessage("No block found.");
+      return true;
+    }
+
+    var targetBlock = targetBlockOptional.get();
+
+    if (!isPressurePlate(targetBlock) && (mode == Mode.Plate || mode == Mode.PlateOld)) {
+      this.displayMessage("Target block is not a pressure plate.");
       return true;
     }
 
     var absoluteBB = targetBlock.bounds().move(targetBlock.position());
-    var triggerMode = SplitBoxTriggerMode.IntersectXZSameY;
+    SplitBoxTriggerMode triggerMode;
 
     switch (mode) {
-      case Default -> absoluteBB = absoluteBB.minY(absoluteBB.getMaxY());
+      case Default -> {
+        absoluteBB = absoluteBB.minY(absoluteBB.getMaxY());
+        triggerMode = SplitBoxTriggerMode.IntersectXZSameY;
+      }
+      // BB inset by 1/16 on all sides
       case Plate -> {
-        absoluteBB = absoluteBB.maxY(absoluteBB.getMaxY() + epsilon);
+        absoluteBB = absoluteBB.maxY(absoluteBB.getMinY() + plateMaxOffsetY);
+        triggerMode = SplitBoxTriggerMode.Intersect;
+      }
+      // Sensitive BB inset by 1/8 on all sides
+      case PlateOld -> {
+        absoluteBB = absoluteBB.maxY(absoluteBB.getMinY() + plateMaxOffsetY);
+        // Regular BB is 1/16, so we add another 1/16 to end up on 1/8
+        absoluteBB = absoluteBB.inflate(-plateInset, 0, -plateInset);
         triggerMode = SplitBoxTriggerMode.Intersect;
       }
       case GroundXYZ -> {
@@ -60,6 +79,7 @@ public final class SetRunEndCommand extends SubCommand {
         absoluteBB = absoluteBB.minY(absoluteBB.getMaxY());
         triggerMode = SplitBoxTriggerMode.IntersectXZAboveY;
       }
+      default -> throw new IllegalStateException("Unexpected mode: " + mode);
     }
 
     var split = new RunSplit("Finish", absoluteBB, triggerMode);
@@ -80,6 +100,7 @@ public final class SetRunEndCommand extends SubCommand {
   private enum Mode {
     Default,
     Plate,
+    PlateOld,
     GroundXZ,
     GroundXYZ
   }
