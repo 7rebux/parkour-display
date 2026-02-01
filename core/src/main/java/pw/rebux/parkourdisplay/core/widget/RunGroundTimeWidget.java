@@ -30,4 +30,10 @@ public final class RunGroundTimeWidget extends TextHudWidget<TextHudWidgetConfig
   public void onTick(boolean isEditorContext) {
     this.textLine.updateAndFlush(this.addon.runState().runGroundTime());
   }
+
+  @Override
+  public boolean isVisibleInGame() {
+    var run = this.addon.runState();
+    return run.runStartPosition() != null && run.runEndSplit() != null;
+  }
 }
