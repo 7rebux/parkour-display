@@ -24,7 +24,7 @@ public final class AddRunSplitCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
-    var runSplits = this.addon.runState().runSplits();
+    var runSplits = this.addon.runState().splits();
 
     var blockStateOptional = WorldUtils.getBlockStandingOn();
     Optional<Double> customOffset = arguments.length > 0

@@ -42,8 +42,8 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
       boolean isEditorContext,
       HudSize size
   ) {
-    var splits = this.addon.runState().runSplits();
-    var endSplit = this.addon.runState().runEndSplit();
+    var splits = this.addon.runState().splits();
+    var endSplit = this.addon.runState().endSplit();
 
     // Title component
     var titleComponent = RenderableComponent.of(SPLITS_TITLE_COMPONENT);
@@ -150,7 +150,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
   @Override
   public boolean isVisibleInGame() {
     var run = this.addon.runState();
-    return run.runStartPosition() != null && run.runEndSplit() != null;
+    return run.startPosition() != null && run.endSplit() != null;
   }
 
   private String formatTicks(long ticks) {

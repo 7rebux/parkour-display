@@ -19,11 +19,11 @@ public final class ResetRunSplitsCommand extends SubCommand {
   public boolean execute(String prefix, String[] arguments) {
     var runState = this.addon.runState();
 
-    if (runState.runEndSplit() != null) {
-      runState.runEndSplit().personalBest(null);
+    if (runState.endSplit() != null) {
+      runState.endSplit().personalBest(null);
     }
 
-    runState.runSplits().forEach(split -> split.personalBest(null));
+    runState.splits().forEach(split -> split.personalBest(null));
 
     this.displayMessage(
         translatable(

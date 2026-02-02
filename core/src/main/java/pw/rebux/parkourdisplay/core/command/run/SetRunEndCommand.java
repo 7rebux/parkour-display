@@ -32,10 +32,10 @@ public final class SetRunEndCommand extends SubCommand {
           .filter(v -> v.toString().toUpperCase().equalsIgnoreCase(arguments[0]))
           .findFirst()
           .orElseGet(() -> {
-            this.displayMessage("Invalid mode. Using default.");
-            return Mode.Default;
+            this.displayMessage("Invalid mode. Using ground.");
+            return Mode.Ground;
           })
-        : Mode.Default;
+        : Mode.Ground;
 
     if (targetBlockOptional.isEmpty()) {
       this.displayMessage("No block found.");
@@ -53,7 +53,7 @@ public final class SetRunEndCommand extends SubCommand {
     SplitBoxTriggerMode triggerMode;
 
     switch (mode) {
-      case Default -> {
+      case Ground -> {
         absoluteBB = absoluteBB.minY(absoluteBB.getMaxY());
         triggerMode = SplitBoxTriggerMode.IntersectXZSameY;
       }
@@ -69,12 +69,12 @@ public final class SetRunEndCommand extends SubCommand {
         absoluteBB = absoluteBB.inflate(-plateInset, 0, -plateInset);
         triggerMode = SplitBoxTriggerMode.Intersect;
       }
-      case GroundXYZ -> {
+      case BelowXYZ -> {
         absoluteBB = absoluteBB.inflate(-halfPlayerWidth, 0, -halfPlayerWidth);
         absoluteBB = absoluteBB.move(0, 1, 0);
         triggerMode = SplitBoxTriggerMode.Intersect;
       }
-      case GroundXZ -> {
+      case BelowXZ -> {
         absoluteBB = absoluteBB.inflate(-halfPlayerWidth, 0, -halfPlayerWidth);
         absoluteBB = absoluteBB.minY(absoluteBB.getMaxY());
         triggerMode = SplitBoxTriggerMode.IntersectXZAboveY;
@@ -83,7 +83,7 @@ public final class SetRunEndCommand extends SubCommand {
     }
 
     var split = new RunSplit("Finish", absoluteBB, triggerMode);
-    this.addon.runState().runEndSplit(split);
+    this.addon.runState().endSplit(split);
 
     this.addon.displayMessage(
         translatable(
@@ -98,10 +98,10 @@ public final class SetRunEndCommand extends SubCommand {
   }
 
   private enum Mode {
-    Default,
+    Ground,
     Plate,
     PlateOld,
-    GroundXZ,
-    GroundXYZ
+    BelowXZ,
+    BelowXYZ
   }
 }

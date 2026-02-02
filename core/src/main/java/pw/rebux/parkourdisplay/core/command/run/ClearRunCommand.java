@@ -20,9 +20,9 @@ public final class ClearRunCommand extends SubCommand {
     var runState = this.addon.runState();
 
     runState.reset();
-    runState.runSplits().clear();
-    runState.runStartPosition(null);
-    runState.runEndSplit(null);
+    runState.splits().clear();
+    runState.startPosition(null);
+    runState.endSplit(null);
 
     this.displayMessage(
         translatable(
