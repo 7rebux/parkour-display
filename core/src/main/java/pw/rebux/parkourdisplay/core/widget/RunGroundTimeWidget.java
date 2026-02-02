@@ -34,6 +34,6 @@ public final class RunGroundTimeWidget extends TextHudWidget<TextHudWidgetConfig
   @Override
   public boolean isVisibleInGame() {
     var run = this.addon.runState();
-    return run.runStartPosition() != null && run.runEndSplit() != null;
+    return run.startPosition() != null && run.endSplit() != null;
   }
 }

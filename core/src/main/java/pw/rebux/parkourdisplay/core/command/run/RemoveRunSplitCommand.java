@@ -17,7 +17,7 @@ public final class RemoveRunSplitCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    this.addon.runState().runSplits().removeLast();
+    this.addon.runState().splits().removeLast();
 
     this.displayMessage(
         translatable(

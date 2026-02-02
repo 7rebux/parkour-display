@@ -30,6 +30,7 @@ public class LandingBlockManager {
             blockState.bounds()));
   }
 
+  // TODO: Add quick explanation how this works and why we use lastTick
   public void checkOffsets(ClientPlayer player, TickPosition lastTick) {
     this.landingBlocks.forEach(landingBlock ->
         landingBlock.checkOffsets(addon, player, lastTick));

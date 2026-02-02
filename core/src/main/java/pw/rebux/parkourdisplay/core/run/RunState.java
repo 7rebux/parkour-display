@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
+import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.RunSplit;
@@ -22,9 +23,9 @@ public class RunState {
 
   private final ParkourDisplayAddon addon;
 
-  @Nullable private PositionOffset runStartPosition = null;
-  @Nullable private RunSplit runEndSplit = null;
-  private List<RunSplit> runSplits = new ArrayList<>();
+  @Nullable private DoubleVector3 startPosition = null;
+  @Nullable private RunSplit endSplit = null;
+  private List<RunSplit> splits = new ArrayList<>();
   private boolean runStarted = false;
   private boolean trackingEnabled = true;
 
@@ -43,6 +44,7 @@ public class RunState {
   public void processTick(RunTickState state) {
     var lastTick = tickStates.peekLast();
 
+    // TODO: This check would break if the run is longer than 5 minutes
     if (lastTick == null || lastTick.position().onGround() && state.position().onGround()) {
       runGroundTime++;
     }
@@ -60,11 +62,11 @@ public class RunState {
   }
 
   public void processFinish() {
-    if (runEndSplit == null) {
+    if (endSplit == null) {
       return;
     }
 
-    runEndSplit.updatePB(addon, timer);
+    endSplit.updatePB(addon, timer);
     runStarted = false;
 
     previousTickStates.clear();
@@ -72,7 +74,7 @@ public class RunState {
   }
 
   public void reset() {
-    this.runSplits.forEach(split -> split.passed(false));
+    this.splits.forEach(split -> split.passed(false));
     this.runStarted = false;
     this.timer = 0;
     this.runGroundTime = -1;

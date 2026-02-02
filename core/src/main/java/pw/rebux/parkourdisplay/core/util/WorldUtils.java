@@ -25,6 +25,7 @@ public final class WorldUtils {
     return inside.or(() -> below);
   }
 
+  // TODO: Maybe rely on RenderBlockSelectionBoxEvent?
   public static Optional<BlockState> getBlockLookingAt() {
     var hitResult = minecraft.getHitResult();
 

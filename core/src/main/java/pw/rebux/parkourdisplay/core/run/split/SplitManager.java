@@ -15,8 +15,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
+import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.run.PositionOffset;
 
 // TODO: We have to fix exports to support min and max y
 @RequiredArgsConstructor
@@ -47,16 +47,16 @@ public final class SplitManager {
 
     var rootObj = new JsonObject();
 
-    var startPos = runState.runStartPosition();
+    var startPos = runState.startPosition();
     var startPosObj = new JsonObject();
-    startPosObj.addProperty("x", startPos.posX());
-    startPosObj.addProperty("y", startPos.posY());
-    startPosObj.addProperty("z", startPos.posZ());
+    startPosObj.addProperty("x", startPos.getX());
+    startPosObj.addProperty("y", startPos.getY());
+    startPosObj.addProperty("z", startPos.getZ());
     rootObj.add("startPos", startPosObj);
-    rootObj.add("startDx", new JsonPrimitive(startPos.offsetX()));
-    rootObj.add("startDz", new JsonPrimitive(startPos.offsetZ()));
+    rootObj.add("startDx", new JsonPrimitive(0.1));
+    rootObj.add("startDz", new JsonPrimitive(0.1));
 
-    var endBox = runState.runEndSplit().boundingBox();
+    var endBox = runState.endSplit().boundingBox();
     var endPosObj = new JsonObject();
     endPosObj.addProperty("x", endBox.getCenter().getX());
     endPosObj.addProperty("y", endBox.getMinY());
@@ -64,9 +64,9 @@ public final class SplitManager {
     rootObj.add("endPos", endPosObj);
     rootObj.add("endDx", new JsonPrimitive(endBox.getXWidth()));
     rootObj.add("endDz", new JsonPrimitive(endBox.getZWidth()));
-    rootObj.add("pb", new JsonPrimitive(runState.runEndSplit().personalBest()));
+    rootObj.add("pb", new JsonPrimitive(runState.endSplit().personalBest()));
 
-    var splits = runState.runSplits();
+    var splits = runState.splits();
     var splitsArrayObj = new JsonArray();
     var splitDxArrayObj = new JsonArray();
     var splitDzArrayObj = new JsonArray();
@@ -110,14 +110,12 @@ public final class SplitManager {
     var rootObj = this.addon.gson().fromJson(new FileReader(file), JsonObject.class);
 
     var startPosObj = rootObj.getAsJsonObject("startPos");
-    this.addon.runState().runStartPosition(
-        PositionOffset.builder()
-            .posX(startPosObj.get("x").getAsDouble())
-            .posY(startPosObj.get("y").getAsDouble())
-            .posZ(startPosObj.get("z").getAsDouble())
-            .offsetX(rootObj.get("startDx").getAsDouble())
-            .offsetZ(rootObj.get("startDz").getAsDouble())
-            .build());
+    this.addon.runState().startPosition(
+        new DoubleVector3(
+            startPosObj.get("x").getAsDouble(),
+            startPosObj.get("y").getAsDouble(),
+            startPosObj.get("z").getAsDouble()
+        ));
 
     var endPosObj = rootObj.getAsJsonObject("endPos");
     var runEndSplit = new RunSplit(
@@ -131,14 +129,14 @@ public final class SplitManager {
             endPosObj.get("z").getAsDouble() + (rootObj.get("endDz").getAsDouble() / 2)),
         SplitBoxTriggerMode.IntersectXZSameY);
     runEndSplit.personalBest(rootObj.get("pb").getAsLong());
-    this.addon.runState().runEndSplit(runEndSplit);
+    this.addon.runState().endSplit(runEndSplit);
 
     var splitsArrayObj = rootObj.getAsJsonArray("splits");
     var splitDxArrayObj = rootObj.getAsJsonArray("splitDx");
     var splitDzArrayObj = rootObj.getAsJsonArray("splitDz");
     var bestSplitsArrayObj = rootObj.getAsJsonArray("bestSplits");
 
-    this.addon.runState().runSplits().clear();
+    this.addon.runState().splits().clear();
 
     for (var i = 0; i < rootObj.get("splitCount").getAsInt(); i++) {
       var splitObj = splitsArrayObj.get(i).getAsJsonObject();
@@ -154,7 +152,7 @@ public final class SplitManager {
           SplitBoxTriggerMode.IntersectXZSameY);
       split.personalBest(bestSplitsArrayObj.get(i).getAsLong());
 
-      this.addon.runState().runSplits().add(split);
+      this.addon.runState().splits().add(split);
     }
   }
 
