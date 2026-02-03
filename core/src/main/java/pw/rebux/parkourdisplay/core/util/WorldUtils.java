@@ -5,7 +5,7 @@ import java.util.Optional;
 import net.labymod.api.Laby;
 import net.labymod.api.client.Minecraft;
 import net.labymod.api.client.world.block.BlockState;
-import net.labymod.api.client.world.phys.hit.HitResult.HitType;
+import net.labymod.api.util.math.MathHelper;
 
 public final class WorldUtils {
 
@@ -25,14 +25,21 @@ public final class WorldUtils {
     return inside.or(() -> below);
   }
 
-  // TODO: Maybe rely on RenderBlockSelectionBoxEvent?
+  // TODO: Check this cameraentity getlookingat function for checking how we can check if we raytrace a hitbox from a run tick
   public static Optional<BlockState> getBlockLookingAt() {
-    var hitResult = minecraft.getHitResult();
+    var player = minecraft.getClientPlayer();
 
-    if (hitResult.type() != HitType.BLOCK) {
+    if (player == null) {
       return Optional.empty();
     }
 
-    return Optional.of(minecraft.clientWorld().getBlockState(hitResult.location()));
+    var targetVector = player.getTargetBlock(10, 1, minecraft.getPartialTicks());
+    var blockState = minecraft.clientWorld().getBlockState(
+        MathHelper.floor(targetVector.getX()),
+        MathHelper.floor(targetVector.getY()),
+        MathHelper.floor(targetVector.getZ())
+    );
+
+    return Optional.ofNullable(blockState);
   }
 }

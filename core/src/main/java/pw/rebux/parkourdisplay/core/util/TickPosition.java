@@ -14,7 +14,7 @@ public final class TickPosition {
   private float yaw = 0, pitch = 0;
   private boolean onGround = false;
 
-  public DoubleVector3 positionVector() {
+  public DoubleVector3 toVector() {
     return new DoubleVector3(x, y, z);
   }
 }

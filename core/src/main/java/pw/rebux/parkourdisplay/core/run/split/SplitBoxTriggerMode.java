@@ -4,7 +4,7 @@ public enum SplitBoxTriggerMode {
 
   /// Typically used for pressure plate finishes.
   ///
-  /// For example, HollowCube or 1.8 ModuleServer.
+  /// For example, HollowCube or ModuleServer.
   Intersect,
 
   /// Checks if the players hitbox is intersecting on the XZ plane.

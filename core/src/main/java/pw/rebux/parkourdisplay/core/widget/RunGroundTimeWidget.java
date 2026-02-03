@@ -28,7 +28,7 @@ public final class RunGroundTimeWidget extends TextHudWidget<TextHudWidgetConfig
 
   @Override
   public void onTick(boolean isEditorContext) {
-    this.textLine.updateAndFlush(this.addon.runState().runGroundTime());
+    this.textLine.updateAndFlush(this.addon.runState().groundTime());
   }
 
   @Override
