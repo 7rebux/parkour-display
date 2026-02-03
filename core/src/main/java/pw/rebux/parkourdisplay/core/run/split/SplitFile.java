@@ -5,4 +5,10 @@ public record SplitFile(
     String type,
     long lastModified
 ) {
+
+  // TODO
+  public enum Type {
+    ZortMod,
+    ParkourDisplay
+  }
 }

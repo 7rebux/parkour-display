@@ -33,7 +33,7 @@ public class RunState {
   private long timer = 0;
 
   /// Tracks the total ticks the player has been on the ground since the run started.
-  private long runGroundTime = -1;
+  private long groundTime = 0;
 
   /// Holds information for each passed tick in the run.
   private final LinkedList<RunTickState> tickStates = new LinkedList<>();
@@ -42,11 +42,10 @@ public class RunState {
   private final LinkedList<RunTickState> previousTickStates = new LinkedList<>();
 
   public void processTick(RunTickState state) {
-    var lastTick = tickStates.peekLast();
+    var lastTickOnGround = this.addon.playerState().lastTick().onGround();
 
-    // TODO: This check would break if the run is longer than 5 minutes
-    if (lastTick == null || lastTick.position().onGround() && state.position().onGround()) {
-      runGroundTime++;
+    if (lastTickOnGround && state.position().onGround()) {
+      this.groundTime++;
     }
 
     timer++;
@@ -77,7 +76,7 @@ public class RunState {
     this.splits.forEach(split -> split.passed(false));
     this.runStarted = false;
     this.timer = 0;
-    this.runGroundTime = -1;
+    this.groundTime = -1;
     this.trackingEnabled = true;
     this.tickStates.clear();
   }

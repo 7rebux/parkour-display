@@ -46,9 +46,9 @@ public final class RunListener {
     // TODO: In old versions (< 1.18) the first tick of a sneak tap would not send a move packet
     // TODO: Minimum movement must be 0.03
     var lastTickAtStart =
-        startPosition.distanceSquared(playerState.lastTick().positionVector()) == 0;
+        startPosition.distanceSquared(playerState.lastTick().toVector()) == 0;
     var currentTickAtStart =
-        startPosition.distanceSquared(playerState.currentTick().positionVector()) == 0;
+        startPosition.distanceSquared(playerState.currentTick().toVector()) == 0;
 
     // Handle reset
     if (currentTickAtStart) {
