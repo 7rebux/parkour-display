@@ -76,7 +76,7 @@ public class RunState {
     this.splits.forEach(split -> split.passed(false));
     this.runStarted = false;
     this.timer = 0;
-    this.groundTime = -1;
+    this.groundTime = 0;
     this.trackingEnabled = true;
     this.tickStates.clear();
   }

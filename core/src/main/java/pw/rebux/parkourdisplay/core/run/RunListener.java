@@ -20,6 +20,8 @@ public final class RunListener {
 
   private static final AxisAlignedBoundingBox playerAABB =
       new AxisAlignedBoundingBox(-0.3, 0, -0.3, 0.3, 1.8, 0.3);
+  // In old versions (< 1.18) the first tick of a sneak tap does not send a move packet.
+  private static final float minStartDistance = 0.03f;
 
   private final ParkourDisplayAddon addon;
 
@@ -43,12 +45,10 @@ public final class RunListener {
       return;
     }
 
-    // TODO: In old versions (< 1.18) the first tick of a sneak tap would not send a move packet
-    // TODO: Minimum movement must be 0.03
     var lastTickAtStart =
-        startPosition.distanceSquared(playerState.lastTick().toVector()) == 0;
+        startPosition.distance(playerState.lastTick().toVector()) <= minStartDistance;
     var currentTickAtStart =
-        startPosition.distanceSquared(playerState.currentTick().toVector()) == 0;
+        startPosition.distance(playerState.currentTick().toVector()) <= minStartDistance;
 
     // Handle reset
     if (currentTickAtStart) {
