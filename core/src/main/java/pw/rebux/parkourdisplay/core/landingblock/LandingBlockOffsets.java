@@ -34,7 +34,7 @@ public class LandingBlockOffsets {
       return;
     }
 
-    var format = "%%.%df".formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
+    var format = "%%.%df".formatted(addon.configuration().offsetDecimalPlaces().get());
     var formattedX = String.format(format, tempXOffset);
     var formattedZ = String.format(format, tempZOffset);
     var formattedTotal = String.format(format, tempTotalOffset);

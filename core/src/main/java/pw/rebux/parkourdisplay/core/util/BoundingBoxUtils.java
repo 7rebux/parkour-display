@@ -1,6 +1,7 @@
 package pw.rebux.parkourdisplay.core.util;
 
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
+import net.labymod.api.util.math.vector.DoubleVector3;
 
 public final class BoundingBoxUtils {
 
@@ -27,5 +28,21 @@ public final class BoundingBoxUtils {
       AxisAlignedBoundingBox b
   ) {
     return intersectsXZ(a, b) && a.getMaxY() == b.getMinY();
+  }
+
+  public static DoubleVector3 computeOverlap(
+      AxisAlignedBoundingBox a,
+      AxisAlignedBoundingBox b
+  ) {
+    return new DoubleVector3(
+        Math.min(a.getMaxX(), b.getMaxX()) -
+            Math.max(a.getMinX(), b.getMinX()),
+
+        Math.min(a.getMaxY(), b.getMaxY()) -
+            Math.max(a.getMinY(), b.getMinY()),
+
+        Math.min(a.getMaxZ(), b.getMaxZ()) -
+            Math.max(a.getMinZ(), b.getMinZ())
+    );
   }
 }

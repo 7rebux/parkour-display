@@ -148,8 +148,8 @@
       "showJumpDurations": {
         "name": "Show Jump Durations In Chat"
       },
-      "landingBlockOffsetDecimalPlaces": {
-        "name": "Landing Block Offset Digits After Comma"
+      "offsetDecimalPlaces": {
+        "name": "Offset Digits After Comma"
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -172,11 +172,14 @@
       "showRunSplitsInChat": {
         "name": "Show Run Splits In Chat"
       },
-      "formatRunSplits": {
-        "name": "Format Run Splits"
+      "formatTicks": {
+        "name": "Format Ticks In Chat"
       },
       "showPrevRunTickStates": {
         "name": "Show Previous Run Tick States"
+      },
+      "showRunFinishOffsets": {
+        "name": "Show Run Finish Offsets In Chat"
       },
       "unpressKeys": {
         "name": "Unpress Keys On Macro End"

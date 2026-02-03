@@ -46,7 +46,7 @@ public class LastLandingBlockOffsetsWidget extends TextHudWidget<LastLandingBloc
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var stringFormat = "%%.%df".formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
+    var stringFormat = "%%.%df".formatted(addon.configuration().offsetDecimalPlaces().get());
     var landingBlockManager = this.addon.landingBlockManager();
     var totalOffset = String.format(stringFormat, landingBlockManager.lastTotalLandingBlockOffset());
     var xOffset = String.format(stringFormat, landingBlockManager.lastLandingBlockOffsetX());
