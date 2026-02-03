@@ -20,7 +20,7 @@ public final class RunListener {
 
   private static final AxisAlignedBoundingBox playerAABB =
       new AxisAlignedBoundingBox(-0.3, 0, -0.3, 0.3, 1.8, 0.3);
-  // In old versions (< 1.18) the first tick of a sneak tap does not send a move packet.
+  // Before version 1.18, there is a minimum distance for move packets to update their position.
   private static final float minStartDistance = 0.03f;
 
   private final ParkourDisplayAddon addon;
@@ -103,7 +103,7 @@ public final class RunListener {
         RenderUtils.renderAbsoluteBoundingBox(
             event.camera().renderPosition(),
             playerAABB.move(run.startPosition()),
-            this.addon.configuration().runSplitOutlineThickness().get(),
+            0.01F,
             event.stack(),
             Color.GREEN.withAlpha(60).get(),
             Color.GREEN.withAlpha(80).get());
@@ -116,7 +116,7 @@ public final class RunListener {
           RenderUtils.renderAbsoluteBoundingBox(
               event.camera().renderPosition(),
               tickState.playerBB(),
-              this.addon.configuration().runSplitOutlineThickness().get(),
+              0.01F,
               event.stack(),
               color.withAlpha(60).get(),
               color.withAlpha(80).get());
@@ -132,7 +132,7 @@ public final class RunListener {
     RenderUtils.renderAbsoluteBoundingBox(
         event.camera().renderPosition(),
         split.boundingBox(),
-        this.addon.configuration().runSplitOutlineThickness().get(),
+        0.01F,
         event.stack(),
         color.withAlpha(60).get(),
         color.withAlpha(80).get()

@@ -169,20 +169,14 @@
       "highlightRunSplits": {
         "name": "Highlight Run Splits"
       },
-      "runSplitFillColor": {
-        "name": "Run Split Fill Color"
-      },
-      "runSplitOutlineColor": {
-        "name": "Run Split Outline Color"
-      },
-      "runSplitOutlineThickness": {
-        "name": "Run Split Outline Thickness"
-      },
       "showRunSplitsInChat": {
         "name": "Show Run Splits In Chat"
       },
       "formatRunSplits": {
         "name": "Format Run Splits"
+      },
+      "showPrevRunTickStates": {
+        "name": "Show Previous Run Tick States"
       },
       "unpressKeys": {
         "name": "Unpress Keys On Macro End"
