@@ -132,6 +132,9 @@
         "landingBlock": {
           "name": "Landing Blocks"
         },
+        "formatting": {
+          "name": "Formatting"
+        },
         "runSplit": {
           "name": "Run Splits"
         },
