@@ -12,11 +12,14 @@ public final class BoundingBoxUtils {
         a.getMinZ() < b.getMaxZ() && a.getMaxZ() > b.getMinZ();
   }
 
+  /// @param a First bounding box.
+  /// @param b Second bounding box.
+  /// @return true if the boxes intersect on the xz plane and b is above a.
   public static boolean intersectsXZAboveY(
       AxisAlignedBoundingBox a,
       AxisAlignedBoundingBox b
   ) {
-    return intersectsXZ(a, b) && a.getMaxY() >= b.getMinY();
+    return intersectsXZ(a, b) && b.getMinY() >= a.getMaxY();
   }
 
   public static boolean intersectsXZSameY(
