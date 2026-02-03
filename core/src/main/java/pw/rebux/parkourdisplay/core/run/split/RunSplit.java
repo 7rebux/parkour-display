@@ -51,10 +51,10 @@ public final class RunSplit {
     this.lastDelta = delta;
 
     if (addon.configuration().showRunSplitsInChat().get()) {
-      var formattedTicks = addon.configuration().formatRunSplits().get()
+      var formattedTicks = addon.configuration().formatTicks().get()
           ? TickFormatter.formatTicks(ticks)
           : String.valueOf(ticks);
-      var formattedDelta = addon.configuration().formatRunSplits().get()
+      var formattedDelta = addon.configuration().formatTicks().get()
           ? delta > 0 ? "+" + TickFormatter.formatTicks(delta) : TickFormatter.formatTicks(delta)
           : delta > 0 ? "+" + delta : String.valueOf(delta);
 

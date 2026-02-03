@@ -1,5 +1,8 @@
 package pw.rebux.parkourdisplay.core.run;
 
+import static net.labymod.api.client.component.Component.space;
+import static net.labymod.api.client.component.Component.text;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +14,8 @@ import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.RunSplit;
+import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
+import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
 @RequiredArgsConstructor
@@ -19,7 +24,7 @@ public class RunState {
   // Persisting a maximum of 6.000 ticks (5 minutes)
   private static final int MAX_RUN_TICKS = 5 * 60 * 20;
   private static final Component RUN_TOO_LONG_MESSAGE =
-      Component.text("Run too long, no longer tracking tick states.", NamedTextColor.RED);
+      text("Run too long, no longer tracking tick states.", NamedTextColor.RED);
 
   private final ParkourDisplayAddon addon;
 
@@ -48,28 +53,28 @@ public class RunState {
       this.groundTime++;
     }
 
-    timer++;
+    this.timer++;
 
-    if (trackingEnabled && tickStates.size() >= MAX_RUN_TICKS) {
+    if (this.trackingEnabled && this.tickStates.size() >= MAX_RUN_TICKS) {
       this.addon.displayMessage(RUN_TOO_LONG_MESSAGE);
-      trackingEnabled = false;
+      this.trackingEnabled = false;
     }
 
-    if (trackingEnabled) {
-      tickStates.addLast(state);
+    if (this.trackingEnabled) {
+      this.tickStates.addLast(state);
     }
   }
 
   public void processFinish() {
-    if (endSplit == null) {
-      return;
+    this.endSplit.updatePB(this.addon, this.timer);
+    this.runStarted = false;
+
+    this.previousTickStates.clear();
+    this.previousTickStates.addAll(this.tickStates);
+
+    if (this.addon.configuration().showRunFinishOffsets().get()) {
+      this.showFinishOffsets();
     }
-
-    endSplit.updatePB(addon, timer);
-    runStarted = false;
-
-    previousTickStates.clear();
-    previousTickStates.addAll(tickStates);
   }
 
   public void reset() {
@@ -79,5 +84,49 @@ public class RunState {
     this.groundTime = 0;
     this.trackingEnabled = true;
     this.tickStates.clear();
+  }
+
+  private void showFinishOffsets() {
+    var stringFormat = "%%.%df".formatted(this.addon.configuration().offsetDecimalPlaces().get());
+
+    // Finish offset
+    var lastTick = this.tickStates.getLast();
+    var overlap = BoundingBoxUtils.computeOverlap(lastTick.playerBB(), this.endSplit.boundingBox());
+
+    text("Finish offset: X", NamedTextColor.RED)
+        .append(space())
+        .append(text(stringFormat.formatted(overlap.getX()), NamedTextColor.DARK_RED))
+        .append(space())
+        .append(text(", Z:", NamedTextColor.RED))
+        .append(space())
+        .append(text(stringFormat.formatted(overlap.getZ()), NamedTextColor.DARK_RED));
+
+    // Missed tick offsets (3 max)
+    for (var i = 1; i <= 3 && i < this.tickStates.size(); i++) {
+      var tick = this.tickStates.get(this.tickStates.size() - 1 - i);
+      var offset = BoundingBoxUtils.computeOverlap(tick.playerBB(), this.endSplit.boundingBox());
+      var formattedTicks = this.addon.configuration().formatTicks().get()
+          ? TickFormatter.formatTicks(i)
+          : "%dt".formatted(i);
+
+      // Not possible
+      if (offset.getY() <= 0) {
+        break;
+      }
+
+      this.addon.displayMessage(
+          text("Lost", NamedTextColor.RED)
+              .append(space())
+              .append(text(formattedTicks, NamedTextColor.DARK_RED))
+              .append(space())
+              .append(text("by X:", NamedTextColor.RED))
+              .append(space())
+              .append(text(stringFormat.formatted(offset.getX()), NamedTextColor.DARK_RED))
+              .append(space())
+              .append(text(", Z:", NamedTextColor.RED))
+              .append(space())
+              .append(text(stringFormat.formatted(offset.getZ()), NamedTextColor.DARK_RED))
+      );
+    }
   }
 }

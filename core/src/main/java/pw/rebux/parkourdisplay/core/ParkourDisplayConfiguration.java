@@ -26,11 +26,14 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> showJumpDurations = new ConfigProperty<>(true);
 
-  @SettingSection("landingBlock")
+  @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
-  private final ConfigProperty<Integer> landingBlockOffsetDecimalPlaces =
-      new ConfigProperty<>(3);
+  private final ConfigProperty<Integer> offsetDecimalPlaces = new ConfigProperty<>(3);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> formatTicks = new ConfigProperty<>(true);
+
+  @SettingSection("landingBlock")
   @SwitchSetting
   private final ConfigProperty<Boolean> showLandingBlockOffsets =
       new ConfigProperty<>(false);
@@ -59,10 +62,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> showRunSplitsInChat = new ConfigProperty<>(true);
 
   @SwitchSetting
-  private final ConfigProperty<Boolean> formatRunSplits = new ConfigProperty<>(true);
+  private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(true);
 
   @SwitchSetting
-  private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(true);
+  private final ConfigProperty<Boolean> showRunFinishOffsets = new ConfigProperty<>(false);
 
   @SwitchSetting
   private final ConfigProperty<Boolean> showPrevRunTickStates = new ConfigProperty<>(false);
