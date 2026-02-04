@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
@@ -29,7 +27,7 @@ public final class SetRunEndCommand extends SubCommand {
     var targetBlockOptional = WorldUtils.getBlockLookingAt().or(WorldUtils::getBlockStandingOn);
     var mode = arguments.length > 0
         ? Arrays.stream(Mode.values())
-          .filter(v -> v.toString().toUpperCase().equalsIgnoreCase(arguments[0]))
+          .filter(v -> v.toString().equalsIgnoreCase(arguments[0]))
           .findFirst()
           .orElseGet(() -> {
             this.displayMessage("Invalid mode. Using ground.");
@@ -85,10 +83,7 @@ public final class SetRunEndCommand extends SubCommand {
     var split = new RunSplit("Finish", absoluteBB, triggerMode);
     this.addon.runState().endSplit(split);
 
-    this.addon.displayMessage(
-        translatable(
-            "parkourdisplay.commands.setend.messages.success",
-            NamedTextColor.GREEN));
+    this.displayTranslatable("success", NamedTextColor.GREEN);
 
     return true;
   }

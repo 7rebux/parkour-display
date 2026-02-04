@@ -2,7 +2,6 @@ package pw.rebux.parkourdisplay.core.command.macro;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
-import static net.labymod.api.client.component.Component.translatable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,10 +13,11 @@ public final class ListMacrosCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  private static final SimpleDateFormat DATE_FORMAT =
+      new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
   public ListMacrosCommand(ParkourDisplayAddon addon) {
-    super("listmacros", "listmacro", "lsmacros", "lsmacro");
+    super("listmacros", "lsmacros");
     this.addon = addon;
   }
 
@@ -26,10 +26,7 @@ public final class ListMacrosCommand extends SubCommand {
     var macros = this.addon.macroManager().listAvailableFiles();
 
     if (macros.isEmpty()) {
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.listmacros.messages.empty",
-              NamedTextColor.RED));
+      this.displayTranslatable("empty", NamedTextColor.RED);
       return true;
     }
 

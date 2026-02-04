@@ -47,7 +47,7 @@ public class LandingBlockOffsets {
       bestOffset = tempTotalOffset;
 
       // Always show new pb in chat
-      addon.displayMessage(
+      addon.displayMessageWithPrefix(
           text("New PB:", NamedTextColor.GREEN)
               .append(space())
               .append(text(formattedTotal, NamedTextColor.DARK_GREEN))
@@ -57,7 +57,7 @@ public class LandingBlockOffsets {
       TextColor primary = tempTotalOffset < 0 ? NamedTextColor.RED : NamedTextColor.AQUA;
       TextColor secondary = tempTotalOffset < 0 ? NamedTextColor.DARK_RED : NamedTextColor.DARK_AQUA;
 
-        addon.displayMessage(
+      addon.displayMessageWithPrefix(
           text("Offset X:", primary)
               .append(space())
               .append(text(formattedX, secondary))

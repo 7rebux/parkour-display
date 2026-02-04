@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.lb;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import org.spongepowered.include.com.google.common.primitives.Ints;
@@ -22,26 +20,17 @@ public final class RemoveLandingBlockCommand extends SubCommand {
 
     if (arguments.length == 0) {
       landingBlockManager.landingBlocks().clear();
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.removelb.messages.successAll",
-              NamedTextColor.GREEN));
+      this.displayTranslatable("successAll", NamedTextColor.GREEN);
     } else {
       var index = Ints.tryParse(arguments[0]);
 
       if (index == null || landingBlockManager.landingBlocks().size() <= index) {
-        this.displayMessage(
-            translatable(
-                "parkourdisplay.commands.removelb.messages.invalidIndex",
-                NamedTextColor.RED));
+        this.displayTranslatable("invalidIndex", NamedTextColor.RED);
         return true;
       }
 
       landingBlockManager.landingBlocks().remove(index.intValue());
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.removelb.messages.successSingle",
-              NamedTextColor.GREEN));
+      this.displayTranslatable("successSingle", NamedTextColor.GREEN);
     }
 
     return true;

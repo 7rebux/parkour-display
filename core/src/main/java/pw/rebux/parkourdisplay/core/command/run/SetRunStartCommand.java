@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import java.util.Objects;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
@@ -21,11 +19,7 @@ public final class SetRunStartCommand extends SubCommand {
     var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
 
     this.addon.runState().startPosition(player.position().toDoubleVector3());
-
-    this.addon.displayMessage(
-        translatable(
-            "parkourdisplay.commands.setstart.messages.success",
-            NamedTextColor.GREEN));
+    this.displayTranslatable("success", NamedTextColor.GREEN);
 
     return true;
   }

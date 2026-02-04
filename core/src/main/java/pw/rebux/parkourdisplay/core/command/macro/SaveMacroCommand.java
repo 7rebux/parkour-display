@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.macro;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import net.labymod.api.client.chat.command.SubCommand;
@@ -21,10 +19,7 @@ public final class SaveMacroCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.savemacro.messages.nameRequired",
-              NamedTextColor.RED));
+      this.displayTranslatable("nameRequired", NamedTextColor.RED);
       return true;
     }
 
@@ -45,16 +40,10 @@ public final class SaveMacroCommand extends SubCommand {
 
     try {
       this.addon.macroManager().saveMacro(macroTickStates, arguments[0]);
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.savemacro.messages.success",
-              NamedTextColor.GREEN));
+      this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (IOException e) {
       this.addon.logger().error("Could not save macro", e);
-      this.displayMessage(
-          translatable(
-            "parkourdisplay.commands.savemacro.messages.error",
-              NamedTextColor.RED));
+      this.displayTranslatable("error", NamedTextColor.RED);
     }
 
     return true;

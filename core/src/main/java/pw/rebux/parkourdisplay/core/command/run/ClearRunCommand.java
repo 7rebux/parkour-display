@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -24,10 +22,7 @@ public final class ClearRunCommand extends SubCommand {
     runState.startPosition(null);
     runState.endSplit(null);
 
-    this.displayMessage(
-        translatable(
-            "parkourdisplay.commands.clearrun.messages.success",
-            NamedTextColor.GREEN));
+    this.displayTranslatable("success", NamedTextColor.GREEN);
 
     return true;
   }

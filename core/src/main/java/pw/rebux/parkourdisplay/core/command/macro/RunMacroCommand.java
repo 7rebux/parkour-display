@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.macro;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import java.io.FileNotFoundException;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
@@ -21,15 +19,9 @@ public final class RunMacroCommand extends SubCommand {
     try {
       var macro = this.addon.macroManager().loadMacro(arguments[0]);
       this.addon.macroManager().runMacro(macro);
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.runmacro.messages.success",
-              NamedTextColor.GREEN));
+      this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (FileNotFoundException e) {
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.runmacro.messages.notFound",
-              NamedTextColor.RED));
+      this.displayTranslatable("notFound", NamedTextColor.RED);
     }
 
     return true;

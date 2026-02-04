@@ -67,7 +67,7 @@ public class MacroManager {
 
   public void runMacro(List<MacroTickState> tickInputs) {
     if (!this.isAllowed()) {
-      this.addon.displayMessage(
+      this.addon.displayMessageWithPrefix(
           text("Macros are disabled on this server.", NamedTextColor.RED));
       return;
     }

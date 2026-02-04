@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.chat;
 
+import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
 import static net.labymod.api.client.component.Component.translatable;
 
@@ -42,8 +43,8 @@ public final class ChatMoveTimeLogListener {
     var color = value > 0 ? NamedTextColor.RED : NamedTextColor.GREEN;
     this.addon.displayMessage(
         text("%dt".formatted(value), color)
-            .append(text(" "))
-            .append(translatable("parkourdisplay.labels.ground_time", NamedTextColor.GRAY)));
+          .append(space())
+          .append(translatable("parkourdisplay.labels.ground_time", NamedTextColor.GRAY)));
   }
 
   private void logAirTime(long value) {
@@ -51,9 +52,10 @@ public final class ChatMoveTimeLogListener {
       return;
     }
 
+    // TODO: Move args to translation string
     this.addon.displayMessage(
         text("%dt".formatted(value), NamedTextColor.GOLD)
-            .append(text(" "))
-            .append(translatable("parkourdisplay.labels.air_time", NamedTextColor.GRAY)));
+          .append(space())
+          .append(translatable("parkourdisplay.labels.air_time", NamedTextColor.GRAY)));
   }
 }

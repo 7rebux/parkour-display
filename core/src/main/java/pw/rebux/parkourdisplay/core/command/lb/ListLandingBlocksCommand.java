@@ -26,10 +26,7 @@ public final class ListLandingBlocksCommand extends SubCommand {
     var landingBlocks = this.addon.landingBlockManager().landingBlocks();
 
     if (landingBlocks.isEmpty()) {
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.listlb.messages.empty",
-              NamedTextColor.RED));
+      this.displayTranslatable("empty", NamedTextColor.RED);
       return true;
     }
 

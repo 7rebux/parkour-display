@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -25,10 +23,7 @@ public final class ResetRunSplitsCommand extends SubCommand {
 
     runState.splits().forEach(split -> split.personalBest(null));
 
-    this.displayMessage(
-        translatable(
-            "parkourdisplay.commands.resetsplits.messages.success",
-            NamedTextColor.GREEN));
+    this.displayTranslatable("success", NamedTextColor.GREEN);
 
     return true;
   }

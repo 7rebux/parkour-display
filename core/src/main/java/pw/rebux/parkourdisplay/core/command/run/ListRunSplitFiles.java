@@ -2,7 +2,6 @@ package pw.rebux.parkourdisplay.core.command.run;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
-import static net.labymod.api.client.component.Component.translatable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,10 +25,7 @@ public final class ListRunSplitFiles extends SubCommand {
       var files = this.addon.splitManager().listAvailableFiles();
 
       if (files.isEmpty()) {
-        this.displayMessage(
-            translatable(
-                "parkourdisplay.commands.listsplitfiles.messages.empty",
-                NamedTextColor.RED));
+        this.displayTranslatable("empty", NamedTextColor.RED);
         return true;
       }
 

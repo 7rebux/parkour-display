@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import lombok.Getter;
 import net.labymod.api.addon.LabyAddon;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
@@ -46,6 +48,10 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
   public static final String NAMESPACE = "parkourdisplay";
   public static final File DATA_DIR = new File("parkour-display");
+  public static final Component MESSAGE_PREFIX = Component.empty()
+      .append(Component.text("[", NamedTextColor.DARK_AQUA))
+      .append(Component.text("PD", NamedTextColor.AQUA))
+      .append(Component.text("]", NamedTextColor.DARK_AQUA));
 
   public static final String MACRO_PERMISSION = NAMESPACE + ".macro";
 
@@ -98,6 +104,18 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
+  }
+
+  public void displayMessageWithPrefix(String message) {
+    this.displayMessageWithPrefix(Component.text(message));
+  }
+
+  public void displayMessageWithPrefix(Component component) {
+    this.displayMessage(
+        Component.empty()
+            .append(MESSAGE_PREFIX)
+            .append(Component.space())
+            .append(component));
   }
 
   @Override

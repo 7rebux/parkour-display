@@ -93,14 +93,14 @@ public class RunState {
     var lastTick = this.tickStates.getLast();
     var overlap = BoundingBoxUtils.computeOverlap(lastTick.playerBB(), this.endSplit.boundingBox());
 
-    this.addon.displayMessage(
-        text("Finish offset: X", NamedTextColor.RED)
+    this.addon.displayMessageWithPrefix(
+        text("Finish offset: X", NamedTextColor.GREEN)
             .append(space())
-            .append(text(stringFormat.formatted(overlap.getX()), NamedTextColor.DARK_RED))
+            .append(text(stringFormat.formatted(overlap.getX()), NamedTextColor.DARK_GREEN))
             .append(space())
-            .append(text(", Z:", NamedTextColor.RED))
+            .append(text(", Z:", NamedTextColor.GREEN))
             .append(space())
-            .append(text(stringFormat.formatted(overlap.getZ()), NamedTextColor.DARK_RED)));
+            .append(text(stringFormat.formatted(overlap.getZ()), NamedTextColor.DARK_GREEN)));
 
     // Missed tick offsets (3 max)
     for (var i = 1; i <= 3 && i < this.tickStates.size(); i++) {
@@ -120,7 +120,7 @@ public class RunState {
         break;
       }
 
-      this.addon.displayMessage(
+      this.addon.displayMessageWithPrefix(
           text("Lost", NamedTextColor.RED)
               .append(space())
               .append(text(formattedTicks, NamedTextColor.DARK_RED))

@@ -1,8 +1,9 @@
 package pw.rebux.parkourdisplay.core.run.split;
 
+import static net.labymod.api.client.component.Component.text;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -58,8 +59,8 @@ public final class RunSplit {
           ? delta > 0 ? "+" + TickFormatter.formatTicks(delta) : TickFormatter.formatTicks(delta)
           : delta > 0 ? "+" + delta : String.valueOf(delta);
 
-      addon.displayMessage(
-          Component.text("%s: %s (%s)".formatted(label, formattedTicks, formattedDelta), color));
+      addon.displayMessageWithPrefix(
+          text("%s: %s (%s)".formatted(label, formattedTicks, formattedDelta), color));
     }
   }
 }

@@ -1,7 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.lb;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import org.spongepowered.include.com.google.common.primitives.Ints;
@@ -24,28 +22,19 @@ public final class ResetLandingBlockCommand extends SubCommand {
     if (arguments.length == 0) {
       landingBlockManager.landingBlocks().forEach(landingBlock ->
           landingBlock.offsets(new LandingBlockOffsets()));
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.resetlb.messages.successAll",
-              NamedTextColor.GREEN));
+      this.displayTranslatable("successAll", NamedTextColor.GREEN);
     } else {
       var index = Ints.tryParse(arguments[0]);
 
       if (index == null || landingBlockManager.landingBlocks().size() <= index) {
-        this.displayMessage(
-            translatable(
-                "parkourdisplay.commands.resetlb.messages.invalidIndex",
-                NamedTextColor.RED));
+        this.displayTranslatable("invalidIndex", NamedTextColor.RED);
         return true;
       }
 
       var landingBlock = landingBlockManager.landingBlocks().get(index);
 
       landingBlock.offsets(new LandingBlockOffsets());
-      this.displayMessage(
-          translatable(
-              "parkourdisplay.commands.resetlb.messages.successSingle",
-              NamedTextColor.GREEN));
+      this.displayTranslatable("successSingle", NamedTextColor.GREEN);
     }
 
     return true;
