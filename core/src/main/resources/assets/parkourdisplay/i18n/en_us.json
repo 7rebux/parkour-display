@@ -277,7 +277,6 @@
       "runmacro": {
         "description": "Executes a specific or the last run macro",
         "messages": {
-          "success": "Executing macro...",
           "notFound": "Macro not found."
         }
       },

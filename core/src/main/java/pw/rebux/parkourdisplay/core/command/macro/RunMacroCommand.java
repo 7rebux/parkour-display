@@ -19,7 +19,6 @@ public final class RunMacroCommand extends SubCommand {
     try {
       var macro = this.addon.macroManager().loadMacro(arguments[0]);
       this.addon.macroManager().runMacro(macro);
-      this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (FileNotFoundException e) {
       this.displayTranslatable("notFound", NamedTextColor.RED);
     }

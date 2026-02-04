@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 
 public final class SaveMacroCommand extends SubCommand {
@@ -22,6 +23,9 @@ public final class SaveMacroCommand extends SubCommand {
       this.displayTranslatable("nameRequired", NamedTextColor.RED);
       return true;
     }
+
+    var isAbsolute =
+        this.addon.configuration().rotationChange().get() == MacroRotationChange.Absolute;
 
     // TODO: Handle absolute vs relative mode
     var macroTickStates = new ArrayList<>(this.addon.runState().previousTickStates()).stream()

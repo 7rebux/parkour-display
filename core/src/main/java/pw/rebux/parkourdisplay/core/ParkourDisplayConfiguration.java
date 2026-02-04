@@ -76,5 +76,5 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
   @DropdownSetting
   private final ConfigProperty<MacroRotationChange> rotationChange =
-      new ConfigProperty<>(MacroRotationChange.Relative);
+      new ConfigProperty<>(MacroRotationChange.Absolute);
 }

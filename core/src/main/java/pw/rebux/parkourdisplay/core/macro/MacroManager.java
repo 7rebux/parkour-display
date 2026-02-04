@@ -72,6 +72,7 @@ public class MacroManager {
       return;
     }
 
+    this.addon.displayMessageWithPrefix(text("Running macro...", NamedTextColor.GREEN));
     this.activeMacro.clear();
     this.activeMacro.addAll(tickInputs);
   }
