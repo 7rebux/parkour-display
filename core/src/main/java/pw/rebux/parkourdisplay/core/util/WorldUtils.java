@@ -5,7 +5,7 @@ import java.util.Optional;
 import net.labymod.api.Laby;
 import net.labymod.api.client.Minecraft;
 import net.labymod.api.client.world.block.BlockState;
-import net.labymod.api.util.math.MathHelper;
+import net.labymod.api.client.world.phys.hit.BlockHitResult;
 
 public final class WorldUtils {
 
@@ -25,21 +25,19 @@ public final class WorldUtils {
     return inside.or(() -> below);
   }
 
-  // TODO: Check this cameraentity getlookingat function for checking how we can check if we raytrace a hitbox from a run tick
+  /**
+   * Retrieves the block that the player is currently looking at.
+   * The method uses Minecraft's current hit result and determines the block state
+   * present at the position of the targeted block.
+   *
+   * @return An {@code Optional} containing the {@code BlockState} of the block the player is
+   *         looking at, or an empty {@code Optional} if there is no block or if the block is air.
+   */
   public static Optional<BlockState> getBlockLookingAt() {
-    var player = minecraft.getClientPlayer();
+    var result = minecraft.getHitResult();
+    var blockResult = (BlockHitResult) result;
+    var blockState = minecraft.clientWorld().getBlockState(blockResult.getBlockPosition());
 
-    if (player == null) {
-      return Optional.empty();
-    }
-
-    var targetVector = player.getTargetBlock(10, 1, minecraft.getPartialTicks());
-    var blockState = minecraft.clientWorld().getBlockState(
-        MathHelper.floor(targetVector.getX()),
-        MathHelper.floor(targetVector.getY()),
-        MathHelper.floor(targetVector.getZ())
-    );
-
-    return Optional.ofNullable(blockState);
+    return Optional.of(blockState).filter(bs -> !bs.block().isAir());
   }
 }

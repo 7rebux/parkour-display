@@ -13,7 +13,7 @@ import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroManager;
-import pw.rebux.parkourdisplay.core.macro.TickInput;
+import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.run.split.SplitManager;
@@ -51,7 +51,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
   private final Gson gson = new GsonBuilder()
       .setPrettyPrinting()
-      .registerTypeAdapter(TickInput.class, new MacroTickStateAdapter())
+      .registerTypeAdapter(MacroTickState.class, new MacroTickStateAdapter())
       .create();
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
