@@ -4,7 +4,7 @@ import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.run.split.RunSplit;
+import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
 
 public final class AddRunSplitCommand extends SubCommand {
@@ -31,7 +31,7 @@ public final class AddRunSplitCommand extends SubCommand {
     );
 
     splits.add(
-        new RunSplit(
+        new Split(
             "Split %d".formatted(splits.size() + 1),
             absoluteBB,
             SplitBoxTriggerMode.IntersectXZSameY));

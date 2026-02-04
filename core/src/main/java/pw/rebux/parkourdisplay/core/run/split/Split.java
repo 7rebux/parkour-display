@@ -12,16 +12,17 @@ import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
 @RequiredArgsConstructor
-public final class RunSplit {
+public final class Split {
 
   private final String label;
   private final AxisAlignedBoundingBox boundingBox;
   private final SplitBoxTriggerMode triggerMode;
 
-  private boolean passed;
   private Long personalBest;
-  private Long lastTicks;
-  private Long lastDelta;
+
+  private transient boolean passed;
+  private transient Long lastTicks;
+  private transient Long lastDelta;
 
   public boolean intersects(AxisAlignedBoundingBox other) {
     return switch (this.triggerMode) {

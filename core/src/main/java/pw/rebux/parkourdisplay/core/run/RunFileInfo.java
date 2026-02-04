@@ -1,12 +1,10 @@
-package pw.rebux.parkourdisplay.core.run.split;
+package pw.rebux.parkourdisplay.core.run;
 
-public record SplitFile(
+public record RunFileInfo(
     String name,
-    String type,
+    Type type,
     long lastModified
 ) {
-
-  // TODO
   public enum Type {
     ZortMod,
     ParkourDisplay

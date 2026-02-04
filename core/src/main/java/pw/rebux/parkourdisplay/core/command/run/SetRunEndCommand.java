@@ -5,7 +5,7 @@ import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.world.block.BlockState;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.run.split.RunSplit;
+import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
@@ -80,7 +80,7 @@ public final class SetRunEndCommand extends SubCommand {
       default -> throw new IllegalStateException("Unexpected mode: " + mode);
     }
 
-    var split = new RunSplit("Finish", absoluteBB, triggerMode);
+    var split = new Split("Finish", absoluteBB, triggerMode);
     this.addon.runState().endSplit(split);
 
     this.displayTranslatable("success", NamedTextColor.GREEN);

@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.util.adapter;
+package pw.rebux.parkourdisplay.core.util.gson;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 
-public final class MacroTickStateAdapter extends TypeAdapter<MacroTickState> {
+public final class MacroTickStateTypeAdapter extends TypeAdapter<MacroTickState> {
 
   @Override
   public void write(JsonWriter out, MacroTickState value) throws IOException {

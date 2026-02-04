@@ -23,7 +23,7 @@ public final class SaveRunSplitsCommand extends SubCommand {
     }
 
     try {
-      this.addon.splitManager().saveCurrentSplits(arguments[0]);
+      this.addon.runManager().exportRun(this.addon.runState(), arguments[0]);
       this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (IOException e) {
       addon.logger().error("Failed to save splits.", e);

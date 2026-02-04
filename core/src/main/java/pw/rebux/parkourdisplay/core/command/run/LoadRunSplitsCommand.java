@@ -21,8 +21,15 @@ public final class LoadRunSplitsCommand extends SubCommand {
       return true;
     }
 
+    var isZM = arguments.length > 1 && arguments[1].equalsIgnoreCase("zm");
+
     try {
-      this.addon.splitManager().loadSplits(arguments[0]);
+      if (isZM) {
+        this.addon.runManager().loadFromZM(arguments[0]);
+      } else {
+        this.addon.runManager().load(arguments[0]);
+      }
+
       this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (FileNotFoundException e) {
       this.displayTranslatable("notFound", NamedTextColor.RED);

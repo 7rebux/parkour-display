@@ -13,7 +13,7 @@ import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.run.split.RunSplit;
+import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
@@ -29,8 +29,8 @@ public class RunState {
   private final ParkourDisplayAddon addon;
 
   @Nullable private DoubleVector3 startPosition = null;
-  @Nullable private RunSplit endSplit = null;
-  private List<RunSplit> splits = new ArrayList<>();
+  @Nullable private Split endSplit = null;
+  private List<Split> splits = new ArrayList<>();
   private boolean runStarted = false;
   private boolean trackingEnabled = true;
 
