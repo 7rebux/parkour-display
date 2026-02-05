@@ -19,7 +19,6 @@ public final class Split {
   private final SplitBoxTriggerMode triggerMode;
 
   private Long personalBest;
-
   private transient boolean passed;
   private transient Long lastTicks;
   private transient Long lastDelta;

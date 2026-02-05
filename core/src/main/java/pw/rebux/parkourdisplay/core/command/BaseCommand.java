@@ -18,11 +18,11 @@ import pw.rebux.parkourdisplay.core.command.macro.RunMacroCommand;
 import pw.rebux.parkourdisplay.core.command.macro.SaveMacroCommand;
 import pw.rebux.parkourdisplay.core.command.run.AddRunSplitCommand;
 import pw.rebux.parkourdisplay.core.command.run.ClearRunCommand;
-import pw.rebux.parkourdisplay.core.command.run.ListRunSplitFiles;
-import pw.rebux.parkourdisplay.core.command.run.LoadRunSplitsCommand;
+import pw.rebux.parkourdisplay.core.command.run.ListRunFiles;
+import pw.rebux.parkourdisplay.core.command.run.LoadRunCommand;
 import pw.rebux.parkourdisplay.core.command.run.RemoveRunSplitCommand;
 import pw.rebux.parkourdisplay.core.command.run.ResetRunSplitsCommand;
-import pw.rebux.parkourdisplay.core.command.run.SaveRunSplitsCommand;
+import pw.rebux.parkourdisplay.core.command.run.SaveRunCommand;
 import pw.rebux.parkourdisplay.core.command.run.SetRunEndCommand;
 import pw.rebux.parkourdisplay.core.command.run.SetRunStartCommand;
 
@@ -58,9 +58,9 @@ public class BaseCommand extends Command {
     this.addSubCommand(new AddRunSplitCommand(addon));
     this.addSubCommand(new RemoveRunSplitCommand(addon));
     this.addSubCommand(new ResetRunSplitsCommand(addon));
-    this.addSubCommand(new SaveRunSplitsCommand(addon));
-    this.addSubCommand(new LoadRunSplitsCommand(addon));
-    this.addSubCommand(new ListRunSplitFiles(addon));
+    this.addSubCommand(new SaveRunCommand(addon));
+    this.addSubCommand(new LoadRunCommand(addon));
+    this.addSubCommand(new ListRunFiles(addon));
     this.addSubCommand(new ClearRunCommand(addon));
   }
 

@@ -17,20 +17,20 @@ public final class ListMacrosCommand extends SubCommand {
       new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
   public ListMacrosCommand(ParkourDisplayAddon addon) {
-    super("listmacros", "lsmacros");
+    super("listmacros", "lsmacros", "lsmacro");
     this.addon = addon;
   }
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var macros = this.addon.macroManager().listAvailableFiles();
+    var files = this.addon.macroFileManager().availableFiles();
 
-    if (macros.isEmpty()) {
+    if (files.isEmpty()) {
       this.displayTranslatable("empty", NamedTextColor.RED);
       return true;
     }
 
-    macros.forEach(file -> {
+    files.forEach(file -> {
       var formattedDate = DATE_FORMAT.format(new Date(file.lastModified()));
       this.displayMessage(
           text("-", NamedTextColor.GRAY)

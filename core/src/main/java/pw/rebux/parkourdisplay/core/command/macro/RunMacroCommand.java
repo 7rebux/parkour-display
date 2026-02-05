@@ -17,8 +17,8 @@ public final class RunMacroCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     try {
-      var macro = this.addon.macroManager().loadMacro(arguments[0]);
-      this.addon.macroManager().runMacro(macro);
+      var macro = this.addon.macroFileManager().load((arguments[0]));
+      this.addon.macroRunner().execute(macro);
     } catch (FileNotFoundException e) {
       this.displayTranslatable("notFound", NamedTextColor.RED);
     }

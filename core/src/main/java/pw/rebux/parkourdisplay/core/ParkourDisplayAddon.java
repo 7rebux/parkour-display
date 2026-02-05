@@ -13,11 +13,12 @@ import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
+import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
-import pw.rebux.parkourdisplay.core.macro.MacroManager;
+import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
+import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
-import pw.rebux.parkourdisplay.core.run.RunManager;
 import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
@@ -61,8 +62,9 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
       .create();
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
-  private final MacroManager macroManager = new MacroManager(this);
-  private final RunManager runManager = new RunManager(this);
+  private final MacroRunner macroRunner = new MacroRunner(this);
+  private final MacroFileManager macroFileManager = new MacroFileManager(this);
+  private final RunFileManager runFileManager = new RunFileManager(this);
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
 
@@ -104,10 +106,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
-  }
-
-  public void displayMessageWithPrefix(String message) {
-    this.displayMessageWithPrefix(Component.text(message));
   }
 
   public void displayMessageWithPrefix(Component component) {

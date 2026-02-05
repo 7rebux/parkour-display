@@ -9,12 +9,11 @@ import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import net.labymod.api.util.Color;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.macro.TickInput;
+import pw.rebux.parkourdisplay.core.run.RunTickState.KeyboardInput;
 import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
-// TODO: BB hat coole funktionen die ich vllt benutzen kann für LB auch
 @RequiredArgsConstructor
 public final class RunListener {
 
@@ -145,7 +144,7 @@ public final class RunListener {
   /// @return A [RunTickState] object containing the player's input, position, and bounding box.
   private RunTickState buildTickState(ClientPlayer player) {
     var inputUtil = this.addon.minecraftInputUtil();
-    var tickInput = new TickInput(
+    var input = new KeyboardInput(
         inputUtil.forwardKey().isDown(),
         inputUtil.leftKey().isDown(),
         inputUtil.backKey().isDown(),
@@ -154,7 +153,7 @@ public final class RunListener {
         inputUtil.sprintKey().isDown(),
         inputUtil.sneakKey().isDown()
     );
-    var tickPosition = new TickPosition(
+    var position = new TickPosition(
         player.position().getX(),
         player.position().getY(),
         player.position().getZ(),
@@ -164,6 +163,6 @@ public final class RunListener {
     );
     var boundingBox = player.axisAlignedBoundingBox().move(0, 0, 0);
 
-    return new RunTickState(tickInput, tickPosition, boundingBox);
+    return new RunTickState(input, position, boundingBox);
   }
 }

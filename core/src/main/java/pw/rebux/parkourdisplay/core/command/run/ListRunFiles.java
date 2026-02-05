@@ -9,20 +9,21 @@ import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public final class ListRunSplitFiles extends SubCommand {
+public final class ListRunFiles extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  private static final SimpleDateFormat DATE_FORMAT =
+      new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-  public ListRunSplitFiles(ParkourDisplayAddon addon) {
-    super("listsplitfiles");
+  public ListRunFiles(ParkourDisplayAddon addon) {
+    super("listsplitfiles", "listrunfiles", "lsrun");
     this.addon = addon;
   }
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-      var files = this.addon.runManager().listAvailableFiles();
+      var files = this.addon.runFileManager().availableFiles();
 
       if (files.isEmpty()) {
         this.displayTranslatable("empty", NamedTextColor.RED);

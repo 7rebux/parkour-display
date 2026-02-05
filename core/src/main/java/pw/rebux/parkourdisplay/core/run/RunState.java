@@ -28,8 +28,12 @@ public class RunState {
 
   private final ParkourDisplayAddon addon;
 
-  @Nullable private DoubleVector3 startPosition = null;
-  @Nullable private Split endSplit = null;
+  @Nullable
+  private DoubleVector3 startPosition = null;
+
+  @Nullable
+  private Split endSplit = null;
+
   private List<Split> splits = new ArrayList<>();
   private boolean runStarted = false;
   private boolean trackingEnabled = true;

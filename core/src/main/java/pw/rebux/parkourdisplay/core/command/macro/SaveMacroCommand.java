@@ -2,11 +2,13 @@ package pw.rebux.parkourdisplay.core.command.macro;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
+import pw.rebux.parkourdisplay.core.run.RunTickState;
 
 public final class SaveMacroCommand extends SubCommand {
 
@@ -24,26 +26,11 @@ public final class SaveMacroCommand extends SubCommand {
       return true;
     }
 
-    var isAbsolute =
-        this.addon.configuration().rotationChange().get() == MacroRotationChange.Absolute;
-
-    // TODO: Handle absolute vs relative mode
-    var macroTickStates = new ArrayList<>(this.addon.runState().previousTickStates()).stream()
-        .map(state -> new MacroTickState(
-            state.input().w(),
-            state.input().a(),
-            state.input().s(),
-            state.input().d(),
-            state.input().jump(),
-            state.input().sprint(),
-            state.input().sneak(),
-            state.position().yaw(),
-            state.position().pitch()
-        ))
-        .toList();
+    var inputs = accumulateInputs(this.addon.runState().previousTickStates());
+    var name = arguments[0];
 
     try {
-      this.addon.macroManager().saveMacro(macroTickStates, arguments[0]);
+      this.addon.macroFileManager().save(inputs, name);
       this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (IOException e) {
       this.addon.logger().error("Could not save macro", e);
@@ -51,5 +38,38 @@ public final class SaveMacroCommand extends SubCommand {
     }
 
     return true;
+  }
+
+  private ArrayList<MacroTickState> accumulateInputs(
+      List<RunTickState> tickStates
+  ) {
+    var rotationChange = this.addon.configuration().rotationChange().get();
+    var inputs = new ArrayList<MacroTickState>();
+    float prevYaw = 0, prevPitch = 0;
+
+    for (var entry : tickStates) {
+      inputs.add(
+          new MacroTickState(
+              entry.input().w(),
+              entry.input().a(),
+              entry.input().s(),
+              entry.input().d(),
+              entry.input().jump(),
+              entry.input().sprint(),
+              entry.input().sneak(),
+              rotationChange == MacroRotationChange.Absolute
+                  ? entry.position().yaw()
+                  : entry.position().yaw() - prevYaw,
+              rotationChange == MacroRotationChange.Absolute
+                  ? entry.position().pitch()
+                  : entry.position().pitch() - prevPitch
+          )
+      );
+
+      prevYaw = entry.position().yaw();
+      prevPitch = entry.position().pitch();
+    }
+
+    return inputs;
   }
 }

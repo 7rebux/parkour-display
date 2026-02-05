@@ -9,7 +9,7 @@ import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @RequiredArgsConstructor
-public class MacroListener {
+public final class MacroListener {
 
   private final ParkourDisplayAddon addon;
 
@@ -18,7 +18,7 @@ public class MacroListener {
   @Subscribe(Priority.LATE)
   public void onGameTick(GameTickEvent event) {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
-    var activeMacro = this.addon.macroManager().activeMacro();
+    var activeMacro = this.addon.macroRunner().activeMacro();
     var inputUtil = this.addon.minecraftInputUtil();
 
     if (macroFinished && this.addon.configuration().unpressKeys().get()) {
