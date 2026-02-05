@@ -16,6 +16,7 @@ public final class PlayerStateListener {
   private final ParkourDisplayAddon addon;
 
   // This listener must always run before all other listeners.
+  // Because subsequent listeners depend on the state that is computed here.
   @Subscribe(Priority.FIRST)
   public void onGameTickFirst(GameTickEvent event) {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
@@ -46,8 +47,7 @@ public final class PlayerStateListener {
       state.groundTime(state.groundTime() + 1);
     }
 
-    // Player landed in this tick
-    if (!state.lastTick().onGround() && state.currentTick().onGround()) {
+    if (!state.isLandTick()) {
       state.groundTime(0);
     }
   }

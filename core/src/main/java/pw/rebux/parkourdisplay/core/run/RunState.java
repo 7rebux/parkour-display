@@ -19,7 +19,7 @@ import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
 @RequiredArgsConstructor
-public class RunState {
+public final class RunState {
 
   // Persisting a maximum of 6.000 ticks (5 minutes)
   private static final int MAX_RUN_TICKS = 5 * 60 * 20;

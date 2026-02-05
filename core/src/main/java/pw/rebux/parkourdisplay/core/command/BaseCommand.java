@@ -26,7 +26,7 @@ import pw.rebux.parkourdisplay.core.command.run.SaveRunCommand;
 import pw.rebux.parkourdisplay.core.command.run.SetRunEndCommand;
 import pw.rebux.parkourdisplay.core.command.run.SetRunStartCommand;
 
-public class BaseCommand extends Command {
+public final class BaseCommand extends Command {
 
   private static final String translationKeyBase = "parkourdisplay.commands.%s.messages";
 

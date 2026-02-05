@@ -43,8 +43,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
 
     this.updateLastTiming(state);
 
-    // Player landed in this tick
-    if (state.currentTick().onGround() && !state.lastTick().onGround()) {
+    if (state.isLandTick()) {
       this.groundMoveTime = 0;
     }
 
@@ -76,10 +75,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     }
 
     // Jumping
-    if (inputUtil.jumpKey().isDown()
-        && state.lastTick().onGround()
-        && !state.currentTick().onGround()
-    ) {
+    if (inputUtil.jumpKey().isDown() && state.isJumpTick()) {
       jumpTime = 0;
 
       if (moveTime == 0) {

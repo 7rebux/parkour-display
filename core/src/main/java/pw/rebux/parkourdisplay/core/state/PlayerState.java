@@ -4,7 +4,7 @@ import lombok.Data;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 @Data
-public final class PlayerState {
+public class PlayerState {
 
   /**
    * Position data computed at the start of the current tick.
@@ -37,5 +37,15 @@ public final class PlayerState {
 
   public double yawTurn() {
     return this.currentTick.yaw() - this.lastTick.yaw();
+  }
+
+  /// @return if the player initiated a jump in this tick.
+  public boolean isJumpTick() {
+    return lastTick.onGround() && !currentTick().onGround();
+  }
+
+  /// @return if the player landed in this tick.
+  public boolean isLandTick() {
+    return !lastTick.onGround() && currentTick().onGround();
   }
 }

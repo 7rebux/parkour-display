@@ -12,7 +12,7 @@ import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
 @RequiredArgsConstructor
-public final class Split {
+public class Split {
 
   private final String label;
   private final AxisAlignedBoundingBox boundingBox;

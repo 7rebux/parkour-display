@@ -12,6 +12,7 @@ import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.widget.LastFortyFiveWidget.LastFortyFiveWidgetConfig;
 
+/// [45 Strafe - MCPK Wiki](https://www.mcpk.wiki/wiki/45_Strafe)
 public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
@@ -48,6 +49,7 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
     var movingForward = player.getForwardMovingSpeed() != 0;
     var movingSideways = tryGetMovingSideways(player);
 
+    // TODO: This could also check if in the last tick a jump was initiated.
     // Player attempted 45 degree strafe
     if (this.lastTickMovingForward
         && !this.lastTickMovingSideways
@@ -63,6 +65,7 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
     this.lastTickMovingSideways = movingSideways;
   }
 
+  // TODO: This is somehow still broken in version 1.21.4
   private boolean tryGetMovingSideways(ClientPlayer player) {
     try {
       return player.getStrafeMovingSpeed() != 0;

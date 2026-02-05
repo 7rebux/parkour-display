@@ -23,7 +23,11 @@ public class LandingBlock {
   @Setter
   private LandingBlockOffsets offsets = new LandingBlockOffsets();
 
-  public void checkOffsets(ParkourDisplayAddon addon, ClientPlayer player, TickPosition lastTick) {
+  public void checkOffsets(
+      ParkourDisplayAddon addon,
+      ClientPlayer player,
+      TickPosition tickPosition
+  ) {
     var position = player.position();
     var minecraft = Laby.labyAPI().minecraft();
     var blockState = minecraft.clientWorld().getBlockState(blockPosition);
@@ -37,7 +41,7 @@ public class LandingBlock {
 
     for (var box : collisions) {
       // Check for landing tick
-      if (!(position.getY() <= box.getMaxY() && lastTick.y() > box.getMaxY())) {
+      if (!(position.getY() <= box.getMaxY() && tickPosition.y() > box.getMaxY())) {
         continue;
       }
 
@@ -46,7 +50,7 @@ public class LandingBlock {
         continue;
       }
 
-      offsets.compute(player, box, lastTick.x(), lastTick.z());
+      offsets.compute(player, box, tickPosition.x(), tickPosition.z());
     }
 
     offsets.update(addon);

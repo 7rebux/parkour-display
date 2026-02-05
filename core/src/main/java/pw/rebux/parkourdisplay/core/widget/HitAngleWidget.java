@@ -37,8 +37,7 @@ public class HitAngleWidget extends TextHudWidget<HitAngleWidgetConfig> {
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
 
-    // Make sure the player landed in this tick
-    if (!state.currentTick().onGround() || state.lastTick().onGround()) {
+    if (!state.isLandTick()) {
       return;
     }
 

@@ -33,9 +33,8 @@ public class GroundTimeWidget extends TextHudWidget<GroundTimeWidgetConfig> {
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-    var initiatedJump = state.lastTick().onGround() && !state.currentTick().onGround();
 
-    if (this.config.incremental().get() || initiatedJump) {
+    if (this.config.incremental().get() || state.isJumpTick()) {
       this.textLine.updateAndFlush(state.groundTime());
     }
   }

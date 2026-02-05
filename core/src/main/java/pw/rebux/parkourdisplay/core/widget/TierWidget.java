@@ -7,6 +7,7 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
+/// [Tiers - MCPK Wiki](https://www.mcpk.wiki/wiki/Tiers)
 public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
@@ -31,7 +32,6 @@ public class TierWidget extends TextHudWidget<TextHudWidgetConfig> {
     var state = this.addon.playerState();
 
     if (state.airTime() > 0) {
-      // https://www.mcpk.wiki/wiki/Tiers
       this.textLine.updateAndFlush(12 - state.airTime());
     }
   }

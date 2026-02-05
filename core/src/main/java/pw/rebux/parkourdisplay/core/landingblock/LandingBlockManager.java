@@ -17,8 +17,13 @@ public class LandingBlockManager {
   private final ParkourDisplayAddon addon;
   private final ArrayList<LandingBlock> landingBlocks = new ArrayList<>();
 
-  @Getter @Setter private double lastTotalLandingBlockOffset = 0;
-  @Getter @Setter private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
+  @Getter
+  @Setter
+  private double lastTotalLandingBlockOffset = 0;
+
+  @Getter
+  @Setter
+  private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
   public void register(BlockState blockState) {
     var pos = blockState.position();
@@ -30,9 +35,11 @@ public class LandingBlockManager {
             blockState.bounds()));
   }
 
-  // TODO: Add quick explanation how this works and why we use lastTick
-  public void checkOffsets(ClientPlayer player, TickPosition lastTick) {
+  // TODO: Add quick explanation how this works
+  // TODO: Refactor all of this logic using AABB calculations
+  // TODO: Add hit mode, z neo mode
+  public void checkOffsets(ClientPlayer player, TickPosition tickPosition) {
     this.landingBlocks.forEach(landingBlock ->
-        landingBlock.checkOffsets(addon, player, lastTick));
+        landingBlock.checkOffsets(addon, player, tickPosition));
   }
 }

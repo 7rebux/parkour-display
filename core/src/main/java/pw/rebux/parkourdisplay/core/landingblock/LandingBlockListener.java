@@ -25,6 +25,7 @@ public final class LandingBlockListener {
 
     // Player is falling
     if (state.vy() < 0 && state.airTime() > 1) {
+      // The last tick is the possible landing tick in this case.
       addon.landingBlockManager().checkOffsets(player, state.lastTick());
     }
   }

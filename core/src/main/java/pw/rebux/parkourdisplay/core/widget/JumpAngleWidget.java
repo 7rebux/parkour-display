@@ -37,8 +37,7 @@ public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
 
-    // Make sure the player initiated a jump
-    if (!state.lastTick().onGround() || state.currentTick().onGround()) {
+    if (!state.isJumpTick()) {
       return;
     }
 

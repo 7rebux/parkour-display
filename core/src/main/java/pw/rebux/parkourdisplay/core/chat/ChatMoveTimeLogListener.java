@@ -18,28 +18,24 @@ public final class ChatMoveTimeLogListener {
 
   @Subscribe
   public void onGameTick(GameTickEvent event) {
-    var state = this.addon.playerState();
-
     if (event.phase() != Phase.POST) {
       return;
     }
 
-    // Player jumped in this tick
-    if (state.lastTick().onGround() && !state.currentTick().onGround()) {
+    var state = this.addon.playerState();
+    var showGroundDurations = this.addon.configuration().showGroundDurations().get();
+    var showJumpDurations = this.addon.configuration().showJumpDurations().get();
+
+    if (showGroundDurations && state.isJumpTick()) {
       this.logGroundTime(state.groundTime());
     }
 
-    // Player landed in this tick
-    if (state.currentTick().onGround() && !state.lastTick().onGround()) {
+    if (showJumpDurations && state.isLandTick()) {
       this.logAirTime(state.airTime());
     }
   }
 
   private void logGroundTime(long value) {
-    if (!this.addon.configuration().showGroundDurations().get()) {
-      return;
-    }
-
     var color = value > 0 ? NamedTextColor.RED : NamedTextColor.GREEN;
     this.addon.displayMessage(
         text("%dt".formatted(value), color)
@@ -47,12 +43,8 @@ public final class ChatMoveTimeLogListener {
           .append(translatable("parkourdisplay.labels.ground_time", NamedTextColor.GRAY)));
   }
 
+  // TODO: Move args to translation string
   private void logAirTime(long value) {
-    if (!this.addon.configuration().showJumpDurations().get()) {
-      return;
-    }
-
-    // TODO: Move args to translation string
     this.addon.displayMessage(
         text("%dt".formatted(value), NamedTextColor.GOLD)
           .append(space())
