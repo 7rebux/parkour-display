@@ -19,6 +19,7 @@ public class LandingBlock {
   private final Block block;
   private final IntVector3 blockPosition;
   private final AxisAlignedBoundingBox boundingBox;
+  private final LandingBlockMode mode = LandingBlockMode.Land;
 
   @Setter
   private LandingBlockOffsets offsets = new LandingBlockOffsets();
