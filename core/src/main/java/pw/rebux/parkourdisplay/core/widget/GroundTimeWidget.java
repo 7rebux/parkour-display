@@ -46,6 +46,6 @@ public class GroundTimeWidget extends TextHudWidget<GroundTimeWidgetConfig> {
      * Whether to update the label continuously while on ground.
      */
     @SwitchSetting
-    private final ConfigProperty<Boolean> incremental = new ConfigProperty<>(false);
+    private final ConfigProperty<Boolean> incremental = new ConfigProperty<>(true);
   }
 }
