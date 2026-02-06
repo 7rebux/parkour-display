@@ -102,10 +102,10 @@ public final class RunListener {
         RenderUtils.renderAbsoluteBoundingBox(
             event.camera().renderPosition(),
             playerAABB.move(run.startPosition()),
-            0.01F,
+            0.005F,
             event.stack(),
-            Color.GREEN.withAlpha(60).get(),
-            Color.GREEN.withAlpha(80).get());
+            Color.GREEN.withAlpha(30).get(),
+            Color.GREEN.get());
 
         for (var tickState : run.previousTickStates()) {
           var color = tickState.position().onGround()
@@ -115,10 +115,10 @@ public final class RunListener {
           RenderUtils.renderAbsoluteBoundingBox(
               event.camera().renderPosition(),
               tickState.playerBB(),
-              0.01F,
+              0.005F,
               event.stack(),
-              color.withAlpha(60).get(),
-              color.withAlpha(80).get());
+              color.withAlpha(30).get(),
+              color.get());
         }
       }
     }
@@ -131,10 +131,10 @@ public final class RunListener {
     RenderUtils.renderAbsoluteBoundingBox(
         event.camera().renderPosition(),
         split.boundingBox(),
-        0.01F,
+        0.005F,
         event.stack(),
-        color.withAlpha(60).get(),
-        color.withAlpha(80).get()
+        color.withAlpha(30).get(),
+        color.get()
     );
   }
 

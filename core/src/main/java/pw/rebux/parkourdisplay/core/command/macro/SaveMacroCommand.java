@@ -45,7 +45,8 @@ public final class SaveMacroCommand extends SubCommand {
   ) {
     var rotationChange = this.addon.configuration().rotationChange().get();
     var inputs = new ArrayList<MacroTickState>();
-    float prevYaw = 0, prevPitch = 0;
+    var prevYaw = tickStates.getFirst().position().yaw();
+    var prevPitch = tickStates.getFirst().position().pitch();
 
     for (var entry : tickStates) {
       inputs.add(

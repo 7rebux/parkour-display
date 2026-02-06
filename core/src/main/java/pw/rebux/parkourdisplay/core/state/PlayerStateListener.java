@@ -43,11 +43,12 @@ public final class PlayerStateListener {
       state.airTime(state.airTime() + 1);
     }
 
+    // If the player is still on ground, we increase the ground time
     if (state.lastTick().onGround() && state.currentTick().onGround()) {
       state.groundTime(state.groundTime() + 1);
     }
 
-    if (!state.isLandTick()) {
+    if (state.isLandTick()) {
       state.groundTime(0);
     }
   }
