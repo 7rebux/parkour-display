@@ -3,7 +3,6 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -47,11 +46,11 @@ public class LastLandingBlockOffsetsWidget extends TextHudWidget<LastLandingBloc
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var stringFormat = "%%.%df".formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
-    var parkourState = this.addon.playerParkourState();
-    var totalOffset = String.format(stringFormat, parkourState.lastTotalLandingBlockOffset());
-    var xOffset = String.format(stringFormat, parkourState.lastLandingBlockOffsetX());
-    var zOffset = String.format(stringFormat, parkourState.lastLandingBlockOffsetZ());
+    var stringFormat = "%%.%df".formatted(addon.configuration().offsetDecimalPlaces().get());
+    var landingBlockManager = this.addon.landingBlockManager();
+    var totalOffset = String.format(stringFormat, landingBlockManager.lastTotalLandingBlockOffset());
+    var xOffset = String.format(stringFormat, landingBlockManager.lastLandingBlockOffsetX());
+    var zOffset = String.format(stringFormat, landingBlockManager.lastLandingBlockOffsetZ());
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s %s %s".formatted(totalOffset, xOffset, zOffset));
@@ -62,7 +61,6 @@ public class LastLandingBlockOffsetsWidget extends TextHudWidget<LastLandingBloc
     }
   }
 
-  @Accessors(fluent = true)
   @Getter
   public static class LastLandingBlockOffsetsWidgetConfig extends TextHudWidgetConfig {
 

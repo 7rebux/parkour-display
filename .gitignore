@@ -68,7 +68,7 @@ gradle-app.setting
 docs/generated/
 
 # Project
-run/
+/run/
 
 # LabyGradle | Addon Plugin
 build-data.txt

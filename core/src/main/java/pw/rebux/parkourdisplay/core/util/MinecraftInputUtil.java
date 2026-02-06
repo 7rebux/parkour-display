@@ -1,13 +1,11 @@
 package pw.rebux.parkourdisplay.core.util;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.options.MinecraftInputMapping;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @Getter
-@Accessors(fluent = true)
-public class MinecraftInputUtil {
+public final class MinecraftInputUtil {
 
   private final MinecraftInputMapping forwardKey;
   private final MinecraftInputMapping backKey;
@@ -29,7 +27,25 @@ public class MinecraftInputUtil {
     this.jumpKey = options.getInputMapping("key.jump");
   }
 
+  public void setPressed(MinecraftInputMapping input, boolean pressed) {
+    if (pressed) {
+      input.press();
+    } else {
+      input.unpress();
+    }
+  }
+
   public boolean isMoving() {
     return forwardKey.isDown() || backKey.isDown() || leftKey.isDown() || rightKey.isDown();
+  }
+
+  public void unpressAll() {
+    setPressed(forwardKey, false);
+    setPressed(backKey, false);
+    setPressed(leftKey, false);
+    setPressed(rightKey, false);
+    setPressed(sprintKey, false);
+    setPressed(sneakKey, false);
+    setPressed(jumpKey, false);
   }
 }

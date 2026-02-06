@@ -34,20 +34,20 @@ public class LandingBlockOffsets {
       return;
     }
 
-    var format = "%%.%df".formatted(addon.configuration().landingBlockOffsetDecimalPlaces().get());
+    var format = "%%.%df".formatted(addon.configuration().offsetDecimalPlaces().get());
     var formattedX = String.format(format, tempXOffset);
     var formattedZ = String.format(format, tempZOffset);
     var formattedTotal = String.format(format, tempTotalOffset);
 
-    addon.playerParkourState().lastTotalLandingBlockOffset(tempTotalOffset);
-    addon.playerParkourState().lastLandingBlockOffsetX(tempXOffset);
-    addon.playerParkourState().lastLandingBlockOffsetZ(tempZOffset);
+    addon.landingBlockManager().lastTotalLandingBlockOffset(tempTotalOffset);
+    addon.landingBlockManager().lastLandingBlockOffsetX(tempXOffset);
+    addon.landingBlockManager().lastLandingBlockOffsetZ(tempZOffset);
 
     if (bestOffset == null || tempTotalOffset > bestOffset) {
       bestOffset = tempTotalOffset;
 
       // Always show new pb in chat
-      addon.displayMessage(
+      addon.displayMessageWithPrefix(
           text("New PB:", NamedTextColor.GREEN)
               .append(space())
               .append(text(formattedTotal, NamedTextColor.DARK_GREEN))
@@ -57,7 +57,7 @@ public class LandingBlockOffsets {
       TextColor primary = tempTotalOffset < 0 ? NamedTextColor.RED : NamedTextColor.AQUA;
       TextColor secondary = tempTotalOffset < 0 ? NamedTextColor.DARK_RED : NamedTextColor.DARK_AQUA;
 
-        addon.displayMessage(
+      addon.displayMessageWithPrefix(
           text("Offset X:", primary)
               .append(space())
               .append(text(formattedX, secondary))

@@ -4,17 +4,15 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import net.labymod.api.Laby;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.IntVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.state.TickPosition;
+import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 @Getter
-@Accessors(fluent = true)
 @RequiredArgsConstructor
 public class LandingBlock {
 
@@ -25,7 +23,11 @@ public class LandingBlock {
   @Setter
   private LandingBlockOffsets offsets = new LandingBlockOffsets();
 
-  public void checkOffsets(ParkourDisplayAddon addon, ClientPlayer player, TickPosition lastTick) {
+  public void checkOffsets(
+      ParkourDisplayAddon addon,
+      ClientPlayer player,
+      TickPosition tickPosition
+  ) {
     var position = player.position();
     var minecraft = Laby.labyAPI().minecraft();
     var blockState = minecraft.clientWorld().getBlockState(blockPosition);
@@ -39,7 +41,7 @@ public class LandingBlock {
 
     for (var box : collisions) {
       // Check for landing tick
-      if (!(position.getY() <= box.getMaxY() && lastTick.y() > box.getMaxY())) {
+      if (!(position.getY() <= box.getMaxY() && tickPosition.y() > box.getMaxY())) {
         continue;
       }
 
@@ -48,7 +50,7 @@ public class LandingBlock {
         continue;
       }
 
-      offsets.compute(player, box, lastTick.x(), lastTick.z());
+      offsets.compute(player, box, tickPosition.x(), tickPosition.z());
     }
 
     offsets.update(addon);

@@ -3,7 +3,6 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -35,13 +34,15 @@ public class LastTurnWidget extends TextHudWidget<LastTurnWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var lastTurn = String.format(this.stringFormat, this.addon.playerParkourState().lastTurn());
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(lastTurn);
+    if (state.currentTick().yaw() != state.lastTick().yaw()) {
+      var lastTurn = String.format(this.stringFormat, state.yawTurn());
+      this.textLine.updateAndFlush(lastTurn);
+    }
   }
 
   @Getter
-  @Accessors(fluent = true)
   public static class LastTurnWidgetConfig extends TextHudWidgetConfig {
 
     @SliderSetting(min = 0, max = 10)

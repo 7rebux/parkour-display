@@ -3,14 +3,13 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SliderWidget.SliderSetting;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.util.MathsUtil;
+import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.widget.JumpAngleWidget.JumpAngleWidgetConfig;
 
 public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
@@ -36,13 +35,16 @@ public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var jumpYaw = this.addon.playerParkourState().jumpYaw();
-    var facing = String.format(this.stringFormat, MathsUtil.formatYaw(jumpYaw));
+    var state = this.addon.playerState();
 
-    this.textLine.updateAndFlush(facing);
+    if (!state.isJumpTick()) {
+      return;
+    }
+
+    var yaw = String.format(this.stringFormat, MathHelper.formatYaw(state.currentTick().yaw()));
+    this.textLine.updateAndFlush(yaw);
   }
 
-  @Accessors(fluent = true)
   @Getter
   public static class JumpAngleWidgetConfig extends TextHudWidgetConfig {
 

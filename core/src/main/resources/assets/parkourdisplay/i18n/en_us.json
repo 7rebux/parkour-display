@@ -26,10 +26,18 @@
         }
       },
       "air_time": {
-        "name": "Airtime"
+        "name": "Air Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while airborne."
+        }
       },
       "ground_time": {
-        "name": "Ground Time"
+        "name": "Ground Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while on ground."
+        }
       },
       "tier": {
         "name": "Tier"
@@ -105,12 +113,33 @@
         "singleLine": {
           "name": "Single Line"
         }
+      },
+      "run_ground_time": {
+        "name": "Run Ground Time"
+      },
+      "run_splits": {
+        "name": "Run Splits",
+        "formatTicks": {
+          "name": "Format Ticks"
+        },
+        "backgroundColor": {
+          "name": "Background Color"
+        }
       }
     },
     "settings": {
       "header": {
         "landingBlock": {
           "name": "Landing Blocks"
+        },
+        "formatting": {
+          "name": "Formatting"
+        },
+        "runSplit": {
+          "name": "Run Splits"
+        },
+        "macro": {
+          "name": "Macros"
         }
       },
       "enabled": {
@@ -122,8 +151,8 @@
       "showJumpDurations": {
         "name": "Show Jump Durations In Chat"
       },
-      "landingBlockOffsetDecimalPlaces": {
-        "name": "Landing Block Offset Digits After Comma"
+      "offsetDecimalPlaces": {
+        "name": "Offset Digits After Comma"
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -139,6 +168,27 @@
       },
       "landingBlockOutlineThickness": {
         "name": "Block Outline Thickness"
+      },
+      "highlightRunSplits": {
+        "name": "Highlight Run Splits"
+      },
+      "showRunSplitsInChat": {
+        "name": "Show Run Splits In Chat"
+      },
+      "formatTicks": {
+        "name": "Format Ticks In Chat"
+      },
+      "showPrevRunTickStates": {
+        "name": "Show Previous Run Tick States"
+      },
+      "showRunFinishOffsets": {
+        "name": "Show Run Finish Offsets In Chat"
+      },
+      "unpressKeys": {
+        "name": "Unpress Keys On Macro End"
+      },
+      "rotationChange": {
+        "name": "Rotation Change"
       }
     },
     "labels": {
@@ -190,7 +240,9 @@
         "total": "LB Offset Total",
         "x": "LB Offset X",
         "z": "LB Offset Z"
-      }
+      },
+      "run_ground_time": "Run Ground Time",
+      "run_splits": "Run Splits"
     },
     "commands": {
       "addlb": {
@@ -215,11 +267,85 @@
         }
       },
       "resetlb": {
-        "description": "Reset the personal best offsets for all or a single landing block.",
+        "description": "Reset the personal best offsets for all or a single landing block",
         "messages": {
           "invalidIndex": "Please provide a valid index.",
           "successSingle": "Successfully reset landing block offsets.",
           "successAll": "Successfully reset offsets of all landing blocks."
+        }
+      },
+      "runmacro": {
+        "description": "Executes a specific or the last run macro",
+        "messages": {
+          "notFound": "Macro not found."
+        }
+      },
+      "listmacros": {
+        "description": "Lists all loaded macros",
+        "messages": {
+          "empty": "No macros found."
+        }
+      },
+      "savemacro": {
+        "description": "Saves a macro with a given name",
+        "messages": {
+          "nameRequired": "Please provide a name for the macro.",
+          "success": "Successfully saved macro.",
+          "error": "Could not save macro. Check console for more information."
+        }
+      },
+      "setstart": {
+        "description": "Sets the run start position",
+        "messages": {
+          "success": "Successfully set run start position."
+        }
+      },
+      "setend": {
+        "description": "Sets the run end position",
+        "messages": {
+          "success": "Successfully set run end position."
+        }
+      },
+      "addsplit": {
+        "description": "Adds a new run split",
+        "messages": {
+          "success": "Successfully added split."
+        }
+      },
+      "listsplitfiles": {
+        "description": "Lists all available run split files"
+      },
+      "loadsplits": {
+        "description": "Loads a run split file",
+        "messages": {
+          "notFound": "File not found.",
+          "nameRequired": "Please provide a name for the file.",
+          "success": "Successfully loaded splits."
+        }
+      },
+      "removesplit": {
+        "description": "Removes the latest run split",
+        "messages": {
+          "success": "Successfully removed split."
+        }
+      },
+      "resetsplits": {
+        "description": "Resets the personal bests for all run splits",
+        "messages": {
+          "success": "Successfully reset splits."
+        }
+      },
+      "savesplits": {
+        "description": "Saves the current run splits to a file",
+        "messages": {
+          "nameRequired": "Please provide a name for the file.",
+          "success": "Successfully saved splits."
+        }
+      },
+      "clearrun": {
+        "description": "Resets run start, end and split data.",
+        "messages": {
+          "success": "Successfully cleared run data."
         }
       }
     }

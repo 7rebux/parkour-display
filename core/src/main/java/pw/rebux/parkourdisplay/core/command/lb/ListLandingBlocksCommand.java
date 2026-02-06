@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command;
+package pw.rebux.parkourdisplay.core.command.lb;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
@@ -12,7 +12,7 @@ import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.vector.IntVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
-public class ListLandingBlocksCommand extends SubCommand {
+public final class ListLandingBlocksCommand extends SubCommand {
 
   private final ParkourDisplayAddon addon;
 
@@ -23,11 +23,10 @@ public class ListLandingBlocksCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var landingBlocks = this.addon.landingBlockManager().getLandingBlocks();
+    var landingBlocks = this.addon.landingBlockManager().landingBlocks();
 
     if (landingBlocks.isEmpty()) {
-      this.displayMessage(
-          translatable("parkourdisplay.commands.listlb.messages.empty", NamedTextColor.RED));
+      this.displayTranslatable("empty", NamedTextColor.RED);
       return true;
     }
 
@@ -55,6 +54,7 @@ public class ListLandingBlocksCommand extends SubCommand {
         .append(text(position.getZ()));
   }
 
+  // TODO: This is not working
   private TranslatableComponent blockDisplayName(Block block) {
     return translatable("block.minecraft.%s".formatted(block.id().getPath()));
   }

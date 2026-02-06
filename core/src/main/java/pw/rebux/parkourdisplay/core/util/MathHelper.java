@@ -1,6 +1,6 @@
 package pw.rebux.parkourdisplay.core.util;
 
-public final class MathsUtil {
+public final class MathHelper {
 
   public static float formatYaw(float yaw) {
     float facing = yaw % 360;

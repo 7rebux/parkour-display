@@ -1,10 +1,13 @@
 # ParkourDisplay
 
-A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhance gameplay with parkour-related features.
+A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to 
+enhance gameplay with parkour-related features.
 
 ## Features
 
 - Set multiple landing blocks and calculate their landing offsets
+- Macro recorder & runner
+- Splits system
 - Command system (`/parkourdisplay`, `/pd`)
 
 ## Labels / Widgets
@@ -24,3 +27,5 @@ A Minecraft LabyMod addon, inspired by MPK Mod and Cyv Client, designed to enhan
 - Airtime
 - Ground Time
 - Landing Block Offsets
+- Run Ground Time
+- Run Splits

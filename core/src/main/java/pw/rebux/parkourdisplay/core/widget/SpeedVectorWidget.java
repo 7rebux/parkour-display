@@ -3,7 +3,6 @@ package pw.rebux.parkourdisplay.core.widget;
 import static net.labymod.api.client.component.Component.translatable;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
@@ -44,12 +43,9 @@ public class SpeedVectorWidget extends TextHudWidget<SpeedVectorWidgetConfig> {
 
   @Override
   public void onTick(boolean isEditorContext) {
-    var parkourState = this.addon.playerParkourState();
-    var vx = parkourState.velocityX();
-    var vz = parkourState.velocityZ();
-
-    var speed = Math.hypot(vx, vz);
-    var angle = Math.toDegrees(Math.atan2(vx == 0 ? 0 : -vx, vz));
+    var state = this.addon.playerState();
+    var speed = Math.hypot(state.vx(), state.vz());
+    var angle = Math.toDegrees(Math.atan2(state.vx() == 0 ? 0 : -state.vx(), state.vz()));
 
     if (this.config.singleLine().get()) {
       this.textLines[0].updateAndFlush("%s / %s".formatted(speed, angle));
@@ -60,7 +56,6 @@ public class SpeedVectorWidget extends TextHudWidget<SpeedVectorWidgetConfig> {
   }
 
   @Getter
-  @Accessors(fluent = true)
   public static class SpeedVectorWidgetConfig extends TextHudWidgetConfig {
 
     @SwitchSetting
