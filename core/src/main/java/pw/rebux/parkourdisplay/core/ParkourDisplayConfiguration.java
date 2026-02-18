@@ -68,6 +68,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> showRunFinishOffsets = new ConfigProperty<>(false);
 
   @SwitchSetting
+  private final ConfigProperty<Boolean> importLandingBlocks = new ConfigProperty<>(true);
+
+  @SwitchSetting
   private final ConfigProperty<Boolean> showPrevRunTickStates = new ConfigProperty<>(false);
 
   @SettingSection("macro")

@@ -17,6 +17,7 @@ public final class LoadRunCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     var runState = this.addon.runState();
+    var landingBlockRegistry = this.addon.landingBlockRegistry();
 
     if (arguments.length == 0) {
       this.displayTranslatable("nameRequired", NamedTextColor.RED);
@@ -35,6 +36,10 @@ public final class LoadRunCommand extends SubCommand {
       runState.startPosition(data.start());
       runState.endSplit(data.end());
       runState.splits(data.splits());
+
+      if (this.addon.configuration().importLandingBlocks().get()) {
+        landingBlockRegistry.landingBlocks().addAll(data.landingBlocks());
+      }
 
       this.displayTranslatable("success", NamedTextColor.GREEN);
     } catch (FileNotFoundException e) {

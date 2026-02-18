@@ -1,12 +1,8 @@
 package pw.rebux.parkourdisplay.core.landingblock;
 
-import static net.labymod.api.client.component.Component.translatable;
-
 import java.util.ArrayList;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.component.TranslatableComponent;
-import net.labymod.api.client.world.block.Block;
 import net.labymod.api.client.world.block.BlockState;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
@@ -24,12 +20,6 @@ public class LandingBlockRegistry {
     var world = this.addon.labyAPI().minecraft().clientWorld();
     var collisions = world.getBlockCollisions(blockState.bounds().move(blockState.position()));
 
-    this.landingBlocks.add(
-        new LandingBlock(blockDisplayName(blockState.block()), mode, collisions));
-  }
-
-  // TODO: This is not working
-  private TranslatableComponent blockDisplayName(Block block) {
-    return translatable("block.minecraft.%s".formatted(block.id().getPath()));
+    this.landingBlocks.add(new LandingBlock(blockState.block().id().getPath(), mode, collisions));
   }
 }

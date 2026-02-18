@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,7 +40,8 @@ public final class RunFileManager {
     var export = new RunExport(
         run.startPosition(),
         run.endSplit(),
-        run.splits()
+        run.splits(),
+        this.addon.landingBlockRegistry().landingBlocks()
     );
 
     try (FileWriter writer = new FileWriter(file)) {
@@ -102,7 +104,8 @@ public final class RunFileManager {
     return new RunExport(
         startPosition,
         runEndSplit,
-        splits
+        splits,
+        Collections.emptyList()
     );
   }
 

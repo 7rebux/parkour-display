@@ -184,6 +184,9 @@
       "showRunFinishOffsets": {
         "name": "Show Run Finish Offsets In Chat"
       },
+      "importLandingBlocks": {
+        "name": "Import Landing Blocks From Run Files"
+      },
       "unpressKeys": {
         "name": "Unpress Keys On Macro End"
       },

@@ -32,7 +32,7 @@ public final class ListLandingBlocksCommand extends SubCommand {
           text()
               .append(text("#%d:".formatted(i), NamedTextColor.GRAY))
               .append(space())
-              .append(landingBlock.label().color(NamedTextColor.YELLOW))
+              .append(text(landingBlock.label(), NamedTextColor.YELLOW))
               .append(space())
               .append(text(landingBlock.mode().name(), NamedTextColor.GOLD))
               .build());
