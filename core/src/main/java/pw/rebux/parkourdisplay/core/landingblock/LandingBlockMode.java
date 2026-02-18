@@ -10,10 +10,4 @@ public enum LandingBlockMode {
   /// Will use the player hitbox of the hit tick, which is one tick after the landing tick.
   /// You will want this, for example, when trying to bounce on slime.
   Hit,
-
-  /// Will use the hitbox of the tick before the landing tick.
-  /// You will want this when trying to land a Z-facing Neo (In old versions).
-  /// Or when trying to pass a blockage in the direction with less velocity for 1.14+.
-  // TODO: Not sure if this is worth implementing.
-  ZNeo;
 }

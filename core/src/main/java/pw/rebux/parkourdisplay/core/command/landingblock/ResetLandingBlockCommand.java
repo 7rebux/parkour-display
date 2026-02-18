@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command.lb;
+package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;

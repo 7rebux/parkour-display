@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command.lb;
+package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;

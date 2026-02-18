@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command.lb;
+package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;

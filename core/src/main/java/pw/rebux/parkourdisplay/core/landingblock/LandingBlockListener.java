@@ -35,11 +35,11 @@ public final class LandingBlockListener {
       DoubleVector3 currentBest = null;
 
       for (var box : landingBlock.blockCollisions()) {
-        // TODO: This is not working for hit mode
-        var isLandingTick = player.position().getY() <= box.getMaxY() && tickPosition.y() > box.getMaxY();
+        var isTryingToLandOn = state.currentTick().playerBoundingBox().getMinY() <= box.getMaxY()
+            && state.lastTick().playerBoundingBox().getMinY() > box.getMaxY();
         var isInRange = box.getCenter().distanceSquared(player.position().toDoubleVector3()) <= maxCheckDistance;
 
-        if (!isLandingTick || !isInRange) {
+        if (!isTryingToLandOn || !isInRange) {
           return;
         }
 
