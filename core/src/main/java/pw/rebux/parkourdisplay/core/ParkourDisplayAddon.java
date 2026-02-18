@@ -9,10 +9,11 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
+import net.labymod.api.util.I18n;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
-import pw.rebux.parkourdisplay.core.landingblock.LandingBlockManager;
+import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
 import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
@@ -61,7 +62,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
       .registerTypeAdapter(MacroTickState.class, new MacroTickStateTypeAdapter())
       .create();
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
-  private final LandingBlockManager landingBlockManager = new LandingBlockManager(this);
+  private final LandingBlockRegistry landingBlockRegistry = new LandingBlockRegistry(this);
   private final MacroRunner macroRunner = new MacroRunner(this);
   private final MacroFileManager macroFileManager = new MacroFileManager(this);
   private final RunFileManager runFileManager = new RunFileManager(this);
@@ -114,6 +115,20 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
             .append(MESSAGE_PREFIX)
             .append(Component.space())
             .append(component));
+  }
+
+  public void displayTranslatableWithPrefix(String key, Object... arguments) {
+    String message = I18n.translate("%s.%s".formatted(NAMESPACE, key), arguments);
+    this.displayMessageWithPrefix(Component.text(message));
+  }
+
+  public void displayTranslatable(String key, Object... arguments) {
+    String message = I18n.translate(key, arguments);
+    this.displayMessage(Component.text(message));
+  }
+
+  public String decimalFormat() {
+    return "%%.%df".formatted(configuration().offsetDecimalPlaces().get());
   }
 
   @Override

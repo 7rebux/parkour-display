@@ -248,8 +248,8 @@
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {
-          "invalidBlock": "Please stand on a valid block.",
-          "success": "Successfully added landing block."
+          "invalidBlock": "§cPlease stand on a valid block.",
+          "success": "§aSuccessfully added landing block (Mode = %s)."
         }
       },
       "listlb": {
@@ -347,6 +347,13 @@
         "messages": {
           "success": "Successfully cleared run data."
         }
+      }
+    },
+    "messages": {
+      "lb": {
+        "newPB": "§aNew PB: §2%s §7(X: %s, Z: %s)",
+        "offsetsMiss": "§cOffset X: §4%s§c, Z: §4%s",
+        "offsetsHit": "§bOffset X: §3%s§b, Z: §3%s"
       }
     }
   }

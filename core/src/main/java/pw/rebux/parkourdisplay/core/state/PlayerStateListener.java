@@ -36,6 +36,8 @@ public final class PlayerStateListener {
     currentTick.z(player.position().getZ());
     currentTick.yaw(player.getRotationYaw());
     currentTick.pitch(player.getRotationPitch());
+    // TODO: I dont like this being inline 2 times
+    currentTick.playerBoundingBox(player.axisAlignedBoundingBox().move(0, 0, 0));
     currentTick.onGround(player.isOnGround());
 
     // If the player landed this tick or is still airborne, we increase the air time
@@ -73,6 +75,7 @@ public final class PlayerStateListener {
     lastTick.z(player.position().getZ());
     lastTick.yaw(player.getRotationYaw());
     lastTick.pitch(player.getRotationPitch());
+    lastTick.playerBoundingBox(player.axisAlignedBoundingBox().move(0, 0, 0));
     lastTick.onGround(player.isOnGround());
 
     if (player.isOnGround()) {

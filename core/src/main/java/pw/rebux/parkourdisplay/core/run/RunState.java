@@ -95,7 +95,9 @@ public final class RunState {
 
     // Finish offset
     var lastTick = this.tickStates.getLast();
-    var overlap = BoundingBoxUtils.computeOverlap(lastTick.playerBB(), this.endSplit.boundingBox());
+    var overlap = BoundingBoxUtils.computeOverlap(
+        lastTick.position().playerBoundingBox(),
+        this.endSplit.boundingBox());
 
     this.addon.displayMessageWithPrefix(
         text("Finish offset: X", NamedTextColor.GREEN)
@@ -109,7 +111,9 @@ public final class RunState {
     // Missed tick offsets (3 max)
     for (var i = 1; i <= 3 && i < this.tickStates.size(); i++) {
       var tick = this.tickStates.get(this.tickStates.size() - 1 - i);
-      var offset = BoundingBoxUtils.computeOverlap(tick.playerBB(), this.endSplit.boundingBox());
+      var offset = BoundingBoxUtils.computeOverlap(
+          tick.position().playerBoundingBox(),
+          this.endSplit.boundingBox());
       var formattedTicks = this.addon.configuration().formatTicks().get()
           ? TickFormatter.formatTicks(i)
           : "%dt".formatted(i);
@@ -117,7 +121,7 @@ public final class RunState {
       // Checks the y-offset and assuming that there is a block below the end split box,
       // so the player has to be above it to not collide.
       var possible = offset.getY() > 0
-          && tick.playerBB().getMinY() >= this.endSplit.boundingBox().getMinY();
+          && tick.position().playerBoundingBox().getMinY() >= this.endSplit.boundingBox().getMinY();
 
       // Not possible
       if (!possible) {

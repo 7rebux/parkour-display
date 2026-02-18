@@ -14,5 +14,6 @@ public enum LandingBlockMode {
   /// Will use the hitbox of the tick before the landing tick.
   /// You will want this when trying to land a Z-facing Neo (In old versions).
   /// Or when trying to pass a blockage in the direction with less velocity for 1.14+.
+  // TODO: Not sure if this is worth implementing.
   ZNeo;
 }
