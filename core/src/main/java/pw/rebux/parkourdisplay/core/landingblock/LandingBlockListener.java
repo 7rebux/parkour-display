@@ -27,6 +27,11 @@ public final class LandingBlockListener {
       return;
     }
 
+    // TODO: Somehow doesn't work for blocks that consist of multiple collision boxes
+    // TODO: Stairs are also buggy for some reason
+    // TODO: Also doesn't really make sense for some blocks to compare multiple bounding boxes
+    //       since their height and position can differ. Depending on which one the player tries
+    //       to land on, it might be better to only specify one bounding box in the landing block.
     for (LandingBlock landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
       var tickPosition = landingBlock.mode() == LandingBlockMode.Land
           ? this.addon.playerState().lastTick()
