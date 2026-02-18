@@ -8,6 +8,7 @@ import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
@@ -93,11 +94,15 @@ public final class LandingBlockListener {
     var newBest = landingBlock.bestDistance() == null || distance > landingBlock.bestDistance();
 
     if (newBest) {
-      this.addon.displayTranslatableWithPrefix("messages.lb.newPB", formattedTotal, formattedX, formattedZ);
       landingBlock.bestDistance(distance);
+      ChatMessage.ofTranslatable("messages.lb.newPB")
+          .withArgs(formattedTotal, formattedX, formattedZ)
+          .send();
     } else if (this.addon.configuration().showLandingBlockOffsets().get()) {
-      var translatableKey = distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss";
-      this.addon.displayTranslatableWithPrefix(translatableKey, formattedX, formattedZ);
+      ChatMessage
+          .ofTranslatable(distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss")
+          .withArgs(formattedX, formattedZ)
+          .send();
     }
 
     landingBlockRegistry.lastTotalLandingBlockOffset(distance);

@@ -1,13 +1,12 @@
 package pw.rebux.parkourdisplay.core.run.split;
 
-import static net.labymod.api.client.component.Component.text;
-
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
@@ -52,15 +51,13 @@ public class Split {
     this.lastDelta = delta;
 
     if (addon.configuration().showRunSplitsInChat().get()) {
-      var formattedTicks = addon.configuration().formatTicks().get()
-          ? TickFormatter.formatTicks(ticks)
-          : String.valueOf(ticks);
-      var formattedDelta = addon.configuration().formatTicks().get()
-          ? delta > 0 ? "+" + TickFormatter.formatTicks(delta) : TickFormatter.formatTicks(delta)
-          : delta > 0 ? "+" + delta : String.valueOf(delta);
+      var formattedTicks = TickFormatter.format(ticks, addon.configuration().formatTicks().get());
+      var formattedDelta = TickFormatter.format(delta, addon.configuration().formatTicks().get());
 
-      addon.displayMessageWithPrefix(
-          text("%s: %s (%s)".formatted(label, formattedTicks, formattedDelta), color));
+      ChatMessage.ofTranslatable("messages.run.splitHit")
+          .withArgs(label, formattedTicks, delta > 0 ? "+" + formattedDelta : formattedDelta)
+          .withColor(color)
+          .send();
     }
   }
 }

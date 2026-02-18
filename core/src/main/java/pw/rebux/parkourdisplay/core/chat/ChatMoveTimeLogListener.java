@@ -1,15 +1,13 @@
 package pw.rebux.parkourdisplay.core.chat;
 
-import static net.labymod.api.client.component.Component.space;
-import static net.labymod.api.client.component.Component.text;
-import static net.labymod.api.client.component.Component.translatable;
-
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
+import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @RequiredArgsConstructor
 public final class ChatMoveTimeLogListener {
@@ -23,31 +21,23 @@ public final class ChatMoveTimeLogListener {
     }
 
     var state = this.addon.playerState();
+    var formatTicks = this.addon.configuration().formatTicks().get();
     var showGroundDurations = this.addon.configuration().showGroundDurations().get();
     var showJumpDurations = this.addon.configuration().showJumpDurations().get();
 
-    if (showGroundDurations && state.isJumpTick()) {
-      this.logGroundTime(state.groundTime());
-    }
-
     if (showJumpDurations && state.isLandTick()) {
-      this.logAirTime(state.airTime());
+      ChatMessage.ofTranslatable("messages.moveTime.air")
+          .withArgs(TickFormatter.format(state.airTime(), formatTicks))
+          .withPrefix(false)
+          .send();
     }
-  }
 
-  private void logGroundTime(long value) {
-    var color = value > 0 ? NamedTextColor.RED : NamedTextColor.GREEN;
-    this.addon.displayMessage(
-        text("%dt".formatted(value), color)
-          .append(space())
-          .append(translatable("parkourdisplay.labels.ground_time", NamedTextColor.GRAY)));
-  }
-
-  // TODO: Move args to translation string
-  private void logAirTime(long value) {
-    this.addon.displayMessage(
-        text("%dt".formatted(value), NamedTextColor.GOLD)
-          .append(space())
-          .append(translatable("parkourdisplay.labels.air_time", NamedTextColor.GRAY)));
+    if (showGroundDurations && state.isJumpTick()) {
+      ChatMessage.ofTranslatable("messages.moveTime.ground")
+          .withArgs(TickFormatter.format(state.groundTime(), formatTicks))
+          .withPrefix(false)
+          .withColor(state.groundTime() > 0 ? NamedTextColor.RED : NamedTextColor.GREEN)
+          .send();
+    }
   }
 }

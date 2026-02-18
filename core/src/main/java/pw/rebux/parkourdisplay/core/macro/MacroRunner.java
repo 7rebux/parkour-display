@@ -1,13 +1,11 @@
 package pw.rebux.parkourdisplay.core.macro;
 
-import static net.labymod.api.client.component.Component.text;
-
 import java.util.ArrayDeque;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
 @RequiredArgsConstructor
 public final class MacroRunner {
@@ -19,12 +17,11 @@ public final class MacroRunner {
 
   public void execute(List<MacroTickState> inputs) {
     if (!this.isAllowed()) {
-      this.addon.displayMessageWithPrefix(
-          text("Macros are disabled on this server.", NamedTextColor.RED));
+      ChatMessage.ofTranslatable("messages.macros.disabled").send();
       return;
     }
 
-    this.addon.displayMessageWithPrefix(text("Running macro...", NamedTextColor.GREEN));
+    ChatMessage.ofTranslatable("messages.macros.running").send();
     this.activeMacro.clear();
     this.activeMacro.addAll(inputs);
   }

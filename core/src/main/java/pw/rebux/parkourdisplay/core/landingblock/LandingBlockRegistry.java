@@ -20,6 +20,7 @@ public class LandingBlockRegistry {
     var world = this.addon.labyAPI().minecraft().clientWorld();
     var collisions = world.getBlockCollisions(blockState.bounds().move(blockState.position()));
 
+    // TODO: Laby.labyAPI().minecraft().getTranslation()
     this.landingBlocks.add(new LandingBlock(blockState.block().id().getPath(), mode, collisions));
   }
 }

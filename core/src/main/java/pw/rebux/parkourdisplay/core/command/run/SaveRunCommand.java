@@ -2,8 +2,8 @@ package pw.rebux.parkourdisplay.core.command.run;
 
 import java.io.IOException;
 import net.labymod.api.client.chat.command.SubCommand;
-import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
 public final class SaveRunCommand extends SubCommand {
 
@@ -17,17 +17,16 @@ public final class SaveRunCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-
-      this.displayTranslatable("nameRequired", NamedTextColor.RED);
+      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "nameRequired")).send();
       return true;
     }
 
     try {
       this.addon.runFileManager().save(this.addon.runState(), arguments[0]);
-      this.displayTranslatable("success", NamedTextColor.GREEN);
+      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
     } catch (IOException e) {
       addon.logger().error("Failed to save splits.", e);
-      this.displayMessage("Failed to save splits. Check console for more info.");
+      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "error")).send();
     }
 
     return true;

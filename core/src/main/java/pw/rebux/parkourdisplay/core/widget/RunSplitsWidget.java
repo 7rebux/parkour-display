@@ -154,10 +154,7 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
   }
 
   private String formatTicks(long ticks) {
-    if (!this.config.formatTicks().get()) {
-      return String.valueOf(ticks);
-    }
-    return TickFormatter.formatTicks(ticks);
+    return TickFormatter.format(ticks, this.config.formatTicks().get());
   }
 
   @Getter
