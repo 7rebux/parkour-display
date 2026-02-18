@@ -153,16 +153,7 @@ public final class RunListener {
         inputUtil.sprintKey().isDown(),
         inputUtil.sneakKey().isDown()
     );
-    var position = new TickPosition(
-        player.position().getX(),
-        player.position().getY(),
-        player.position().getZ(),
-        player.getRotationYaw(),
-        player.getRotationPitch(),
-        player.axisAlignedBoundingBox().move(0, 0, 0),
-        player.isOnGround()
-    );
 
-    return new RunTickState(input, position);
+    return new RunTickState(input, TickPosition.of(player));
   }
 }

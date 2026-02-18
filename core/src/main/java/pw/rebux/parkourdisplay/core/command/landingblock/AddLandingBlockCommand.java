@@ -29,7 +29,7 @@ public final class AddLandingBlockCommand extends SubCommand {
           .orElse(LandingBlockMode.Land)
         : LandingBlockMode.Land;
 
-    if (blockState.isEmpty()) {
+    if (blockState.isEmpty() || !blockState.get().hasCollision()) {
       this.displayTranslatable("invalidBlock", Style.EMPTY);
       return true;
     }
