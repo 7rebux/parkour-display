@@ -1,15 +1,10 @@
-package pw.rebux.parkourdisplay.core.command.lb;
+package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import static net.labymod.api.client.component.Component.space;
 import static net.labymod.api.client.component.Component.text;
-import static net.labymod.api.client.component.Component.translatable;
 
 import net.labymod.api.client.chat.command.SubCommand;
-import net.labymod.api.client.component.TextComponent;
-import net.labymod.api.client.component.TranslatableComponent;
 import net.labymod.api.client.component.format.NamedTextColor;
-import net.labymod.api.client.world.block.Block;
-import net.labymod.api.util.math.vector.IntVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 public final class ListLandingBlocksCommand extends SubCommand {
@@ -23,7 +18,7 @@ public final class ListLandingBlocksCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var landingBlocks = this.addon.landingBlockManager().landingBlocks();
+    var landingBlocks = this.addon.landingBlockRegistry().landingBlocks();
 
     if (landingBlocks.isEmpty()) {
       this.displayTranslatable("empty", NamedTextColor.RED);
@@ -37,25 +32,12 @@ public final class ListLandingBlocksCommand extends SubCommand {
           text()
               .append(text("#%d:".formatted(i), NamedTextColor.GRAY))
               .append(space())
-              .append(blockDisplayName(landingBlock.block()).color(NamedTextColor.YELLOW))
+              .append(text(landingBlock.label(), NamedTextColor.YELLOW))
               .append(space())
-              .append(fromIntVector3(landingBlock.blockPosition()).color(NamedTextColor.GOLD))
+              .append(text(landingBlock.mode().name(), NamedTextColor.GOLD))
               .build());
     }
 
     return true;
-  }
-
-  private TextComponent fromIntVector3(IntVector3 position) {
-    return text(position.getX())
-        .append(text(", "))
-        .append(text(position.getY()))
-        .append(text(", "))
-        .append(text(position.getZ()));
-  }
-
-  // TODO: This is not working
-  private TranslatableComponent blockDisplayName(Block block) {
-    return translatable("block.minecraft.%s".formatted(block.id().getPath()));
   }
 }

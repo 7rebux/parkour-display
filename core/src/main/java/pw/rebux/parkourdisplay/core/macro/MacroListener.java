@@ -36,6 +36,7 @@ public final class MacroListener {
     }
 
     // Cancel macro execution if the game is paused
+    // TODO: This only works in singleplayer
     if (this.addon.labyAPI().minecraft().isPaused()) {
       activeMacro.clear();
       macroFinished = true;

@@ -1,10 +1,9 @@
-package pw.rebux.parkourdisplay.core.command.lb;
+package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import org.spongepowered.include.com.google.common.primitives.Ints;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.landingblock.LandingBlockOffsets;
 
 public final class ResetLandingBlockCommand extends SubCommand {
 
@@ -17,23 +16,23 @@ public final class ResetLandingBlockCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var landingBlockManager = this.addon.landingBlockManager();
+    var landingBlockRegistry = this.addon.landingBlockRegistry();
 
     if (arguments.length == 0) {
-      landingBlockManager.landingBlocks().forEach(landingBlock ->
-          landingBlock.offsets(new LandingBlockOffsets()));
+      landingBlockRegistry.landingBlocks().forEach(landingBlock ->
+          landingBlock.bestDistance(null));
       this.displayTranslatable("successAll", NamedTextColor.GREEN);
     } else {
       var index = Ints.tryParse(arguments[0]);
 
-      if (index == null || landingBlockManager.landingBlocks().size() <= index) {
+      if (index == null || landingBlockRegistry.landingBlocks().size() <= index) {
         this.displayTranslatable("invalidIndex", NamedTextColor.RED);
         return true;
       }
 
-      var landingBlock = landingBlockManager.landingBlocks().get(index);
+      var landingBlock = landingBlockRegistry.landingBlocks().get(index);
 
-      landingBlock.offsets(new LandingBlockOffsets());
+      landingBlock.bestDistance(null);
       this.displayTranslatable("successSingle", NamedTextColor.GREEN);
     }
 

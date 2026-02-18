@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.core.command.lb;
+package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
@@ -16,20 +16,20 @@ public final class RemoveLandingBlockCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
-    var landingBlockManager = this.addon.landingBlockManager();
+    var landingBlockRegistry = this.addon.landingBlockRegistry();
 
     if (arguments.length == 0) {
-      landingBlockManager.landingBlocks().clear();
+      landingBlockRegistry.landingBlocks().clear();
       this.displayTranslatable("successAll", NamedTextColor.GREEN);
     } else {
       var index = Ints.tryParse(arguments[0]);
 
-      if (index == null || landingBlockManager.landingBlocks().size() <= index) {
+      if (index == null || landingBlockRegistry.landingBlocks().size() <= index) {
         this.displayTranslatable("invalidIndex", NamedTextColor.RED);
         return true;
       }
 
-      landingBlockManager.landingBlocks().remove(index.intValue());
+      landingBlockRegistry.landingBlocks().remove(index.intValue());
       this.displayTranslatable("successSingle", NamedTextColor.GREEN);
     }
 

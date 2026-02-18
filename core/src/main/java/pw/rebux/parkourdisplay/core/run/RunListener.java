@@ -114,7 +114,7 @@ public final class RunListener {
 
           RenderUtils.renderAbsoluteBoundingBox(
               event.camera().renderPosition(),
-              tickState.playerBB(),
+              tickState.position().playerBoundingBox(),
               0.005F,
               event.stack(),
               color.withAlpha(30).get(),
@@ -153,16 +153,7 @@ public final class RunListener {
         inputUtil.sprintKey().isDown(),
         inputUtil.sneakKey().isDown()
     );
-    var position = new TickPosition(
-        player.position().getX(),
-        player.position().getY(),
-        player.position().getZ(),
-        player.getRotationYaw(),
-        player.getRotationPitch(),
-        player.isOnGround()
-    );
-    var boundingBox = player.axisAlignedBoundingBox().move(0, 0, 0);
 
-    return new RunTickState(input, position, boundingBox);
+    return new RunTickState(input, TickPosition.of(player));
   }
 }
