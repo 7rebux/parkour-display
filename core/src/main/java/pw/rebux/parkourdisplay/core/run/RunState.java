@@ -14,6 +14,7 @@ import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.Split;
+import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
@@ -118,10 +119,13 @@ public final class RunState {
           ? TickFormatter.formatTicks(i)
           : "%dt".formatted(i);
 
-      // Checks the y-offset and assuming that there is a block below the end split box,
-      // so the player has to be above it to not collide.
-      var possible = offset.getY() > 0
-          && tick.position().playerBoundingBox().getMinY() >= this.endSplit.boundingBox().getMinY();
+      // Assuming that there is a block below the box, so the player must be above it to not collide.
+      var isAboveBlock =
+          tick.position().playerBoundingBox().getMinY() >= this.endSplit.boundingBox().getMinY();
+      var possible = this.endSplit.triggerMode() == SplitBoxTriggerMode.IntersectXZAboveY
+          ? isAboveBlock
+          // Also check that we hit the split box if it is treated as a limited height.
+          : isAboveBlock && offset.getY() > 0;
 
       // Not possible
       if (!possible) {
