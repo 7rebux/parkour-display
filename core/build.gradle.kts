@@ -1,7 +1,7 @@
 import net.labymod.labygradle.common.extension.LabyModAnnotationProcessorExtension.ReferenceType
 
 plugins {
-    id("io.freefair.lombok") version "8.13.1"
+    id("io.freefair.lombok") version "9.2.0"
 }
 
 dependencies {
