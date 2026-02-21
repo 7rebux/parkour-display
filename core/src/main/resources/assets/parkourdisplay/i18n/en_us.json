@@ -2,8 +2,10 @@
   "parkourdisplay": {
     "prefix": "§3[§bPD§3]",
     "permissions": {
-      "macro": {
-        "name": "Run Macros"
+      "parkourdisplay": {
+        "macro": {
+          "name": "Run Macros"
+        }
       }
     },
     "hudWidgetCategory": {

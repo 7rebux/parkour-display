@@ -9,11 +9,11 @@ public class PlayerState {
   /**
    * Position data computed at the start of the current tick.
    */
-  private TickPosition currentTick = new TickPosition();
+  private TickPosition currentTick = TickPosition.INITIAL;
   /**
    * Position data computed at the end of the current tick.
    */
-  private TickPosition lastTick = new TickPosition();
+  private TickPosition lastTick = TickPosition.INITIAL;
   /**
    * Amount of ticks the player has been continuously in the air.
    */

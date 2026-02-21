@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
@@ -12,15 +11,14 @@ import net.labymod.api.util.math.vector.DoubleVector3;
 @Data
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor
 public final class TickPosition {
 
-  private double x = 0, y = 0, z = 0;
-  private float yaw = 0, pitch = 0;
+  private double x, y, z;
+  private float yaw, pitch;
   // We could work with a constant bounding box for the player, but there are states in which
   // the size can change, e.g., when the player is crouching or swimming.
-  private AxisAlignedBoundingBox playerBoundingBox = new AxisAlignedBoundingBox();
-  private boolean onGround = false;
+  private AxisAlignedBoundingBox playerBoundingBox;
+  private boolean onGround;
 
   public DoubleVector3 toVector() {
     return new DoubleVector3(x, y, z);
@@ -38,4 +36,14 @@ public final class TickPosition {
         .onGround(player.isOnGround())
         .build();
   }
+
+  public static TickPosition INITIAL = TickPosition.builder()
+      .x(0)
+      .y(0)
+      .z(0)
+      .yaw(0)
+      .pitch(0)
+      .playerBoundingBox(new AxisAlignedBoundingBox())
+      .onGround(false)
+      .build();
 }
