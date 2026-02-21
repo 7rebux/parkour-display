@@ -4,7 +4,7 @@
     "permissions": {
       "parkourdisplay": {
         "macro": {
-          "name": "Run Macros"
+          "name": "Macros"
         }
       }
     },
@@ -267,7 +267,7 @@
         "description": "Lists all registered landing blocks",
         "messages": {
           "empty": "§cNo landing blocks registered.",
-          "entry": "§7#%d §e%s §6%s"
+          "entry": "§7#%s §e%s §6%s"
         }
       },
       "removelb": {
@@ -386,8 +386,8 @@
         "tooLong": "§cRun too long, no longer tracking tick states."
       },
       "moveTime": {
-        "air": "§6%dt Airtime",
-        "ground": "%dt Ground Time"
+        "air": "§6%s Airtime",
+        "ground": "%s Ground Time"
       }
     }
   }
