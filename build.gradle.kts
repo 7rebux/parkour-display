@@ -36,6 +36,21 @@ subprojects {
     plugins.apply("net.labymod.labygradle")
     plugins.apply("net.labymod.labygradle.addon")
 
+    // Temporary fix for missing macos-natives-patch classifier
+    val isMacOS = System.getProperty("os.name").lowercase().contains("mac")
+
+    configurations.all {
+        if (isMacOS) {
+            exclude(group = "org.lwjgl", module = "lwjgl-freetype")
+        }
+    }
+
+    dependencies {
+        if (isMacOS) {
+            runtimeOnly("org.lwjgl:lwjgl-freetype:3.4.1:natives-macos-arm64")
+        }
+    }
+
     group = rootProject.group
     version = rootProject.version
 
