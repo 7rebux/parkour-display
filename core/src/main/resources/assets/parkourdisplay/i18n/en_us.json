@@ -1,8 +1,10 @@
 {
   "parkourdisplay": {
     "permissions": {
-      "macro": {
-        "name": "Run Macros"
+      "parkourdisplay": {
+        "macro": {
+          "name": "Run Macros"
+        }
       }
     },
     "hudWidgetCategory": {
