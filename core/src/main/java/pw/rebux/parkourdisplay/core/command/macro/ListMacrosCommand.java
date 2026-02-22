@@ -18,12 +18,12 @@ public final class ListMacrosCommand extends SubCommand {
     var files = this.addon.macroFileManager().availableFiles();
 
     if (files.isEmpty()) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "empty")).send();
+      ChatMessage.of(this, "empty").send();
       return true;
     }
 
     files.forEach(file -> {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "entry"))
+      ChatMessage.of(this, "entry")
           .withArgs(file.name(), file.lastModified())
           .send();
     });

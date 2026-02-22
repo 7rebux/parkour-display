@@ -11,6 +11,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -53,7 +54,7 @@ public final class MacroFileManager {
             .map(f ->
                 new MacroFileInfo(
                     f.getName().replace(".json", ""),
-                    f.lastModified()))
+                    new Date(f.lastModified())))
             .sorted(Comparator.comparing(MacroFileInfo::lastModified))
             .toList();
   }

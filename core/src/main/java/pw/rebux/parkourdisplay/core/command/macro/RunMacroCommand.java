@@ -20,7 +20,7 @@ public final class RunMacroCommand extends SubCommand {
       var macro = this.addon.macroFileManager().load((arguments[0]));
       this.addon.macroRunner().execute(macro);
     } catch (FileNotFoundException e) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "notFound")).send();
+      ChatMessage.of(this, "notFound").send();
     }
 
     return true;

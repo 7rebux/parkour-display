@@ -22,7 +22,7 @@ public final class ClearRunCommand extends SubCommand {
     runState.startPosition(null);
     runState.endSplit(null);
 
-    ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
+    ChatMessage.of(this, "success").send();
 
     return true;
   }

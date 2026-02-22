@@ -26,16 +26,16 @@ public final class ChatMoveTimeLogListener {
     var showJumpDurations = this.addon.configuration().showJumpDurations().get();
 
     if (showJumpDurations && state.isLandTick()) {
-      ChatMessage.ofTranslatable("messages.moveTime.air")
+      ChatMessage.of("messages.moveTime.air")
           .withArgs(TickFormatter.format(state.airTime(), formatTicks))
-          .withPrefix(false)
+          .prefix(false)
           .send();
     }
 
     if (showGroundDurations && state.isJumpTick()) {
-      ChatMessage.ofTranslatable("messages.moveTime.ground")
+      ChatMessage.of("messages.moveTime.ground")
           .withArgs(TickFormatter.format(state.groundTime(), formatTicks))
-          .withPrefix(false)
+          .prefix(false)
           .withColor(state.groundTime() > 0 ? NamedTextColor.RED : NamedTextColor.GREEN)
           .send();
     }

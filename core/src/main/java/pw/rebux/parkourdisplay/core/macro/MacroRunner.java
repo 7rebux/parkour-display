@@ -17,11 +17,11 @@ public final class MacroRunner {
 
   public void execute(List<MacroTickState> inputs) {
     if (!this.isAllowed()) {
-      ChatMessage.ofTranslatable("messages.macros.disabled").send();
+      ChatMessage.of("messages.macros.disabled").send();
       return;
     }
 
-    ChatMessage.ofTranslatable("messages.macros.running").send();
+    ChatMessage.of("messages.macros.running").send();
     this.activeMacro.clear();
     this.activeMacro.addAll(inputs);
   }

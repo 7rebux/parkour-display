@@ -3,6 +3,7 @@ package pw.rebux.parkourdisplay.core.util;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
 import net.labymod.api.client.chat.ChatExecutor;
 import net.labymod.api.client.chat.command.Command;
@@ -11,42 +12,40 @@ import net.labymod.api.client.component.format.TextColor;
 import net.labymod.api.util.I18n;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
+@RequiredArgsConstructor
 public class ChatMessage {
 
+  private static final ChatExecutor chatExecutor = Laby.labyAPI().minecraft().chatExecutor();
+  private static final String commandMessageKey = "commands.%s.messages.%s";
   private static final Component messagePrefix =
       Component.translatable("%s.prefix".formatted(ParkourDisplayAddon.NAMESPACE));
-  private static final ChatExecutor chatExecutor = Laby.labyAPI().minecraft().chatExecutor();
 
   // Argument transformers
   private static final SimpleDateFormat dateFormat =
       new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-  private final String message;
   private final String translationKey;
+
+  private boolean prefix = true;
   private Object[] args = new Object[] { };
   private TextColor textColor;
-  private boolean withPrefix = true;
 
-  public ChatMessage(String message, String translationKey) {
-    this.message = message;
-    this.translationKey = translationKey;
+  public static ChatMessage of(String translationKey) {
+    return new ChatMessage(translationKey);
   }
 
-  public static ChatMessage of(String message) {
-    return new ChatMessage(message, null);
+  public static ChatMessage of(Command command, String key) {
+    var translationKey = commandMessageKey.formatted(command.getPrefix(), key);
+    return new ChatMessage(translationKey);
   }
 
-  public static ChatMessage ofTranslatable(String key) {
-    return new ChatMessage(null, key);
+  public ChatMessage prefix(boolean prefix) {
+    this.prefix = prefix;
+    return this;
   }
 
   public ChatMessage withArgs(Object... args) {
     this.args = args;
-    return this;
-  }
-
-  public ChatMessage withPrefix(boolean withPrefix) {
-    this.withPrefix = withPrefix;
     return this;
   }
 
@@ -56,16 +55,12 @@ public class ChatMessage {
   }
 
   public void send() {
-    Component base = withPrefix ? messagePrefix.append(Component.space()) : Component.empty();
-    Component message = translationKey != null
-        ? Component.text(processTranslatable(translationKey, args))
-        : Component.text(this.message);
+    var base = prefix
+        ? Component.empty().append(messagePrefix).append(Component.space())
+        : Component.empty();
+    var message = Component.text(processTranslatable(translationKey, args));
 
     chatExecutor.displayClientMessage(base.append(message.color(textColor)));
-  }
-
-  public static String commandKey(Command command, String key) {
-    return "commands.%s.messages.%s".formatted(command.getPrefix(), key);
   }
 
   private String processTranslatable(String key, Object... args) {

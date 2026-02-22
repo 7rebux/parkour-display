@@ -18,14 +18,14 @@ public final class ListLandingBlocksCommand extends SubCommand {
     var landingBlocks = this.addon.landingBlockRegistry().landingBlocks();
 
     if (landingBlocks.isEmpty()) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "empty")).send();
+      ChatMessage.of(this, "empty").send();
       return true;
     }
 
     for (int i = 0; i < landingBlocks.size(); i++) {
       var landingBlock = landingBlocks.get(i);
 
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "entry"))
+      ChatMessage.of(this, "entry")
           .withArgs(i, landingBlock.label(), landingBlock.mode().name())
           .send();
     }

@@ -29,14 +29,12 @@ public final class AddLandingBlockCommand extends SubCommand {
         : LandingBlockMode.Land;
 
     if (blockState.isEmpty() || !blockState.get().hasCollision()) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "invalidBlock")).send();
+      ChatMessage.of(this, "invalidBlock").send();
       return true;
     }
 
     this.addon.landingBlockRegistry().register(blockState.get(), mode);
-    ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success"))
-        .withArgs(mode.name())
-        .send();
+    ChatMessage.of(this, "success").withArgs(mode.name()).send();
 
     return true;
   }

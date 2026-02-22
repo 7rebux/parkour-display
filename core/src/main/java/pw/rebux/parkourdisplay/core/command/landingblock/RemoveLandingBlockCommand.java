@@ -20,17 +20,17 @@ public final class RemoveLandingBlockCommand extends SubCommand {
 
     if (arguments.length == 0) {
       landingBlockRegistry.landingBlocks().clear();
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "successAll")).send();
+      ChatMessage.of(this, "successAll").send();
     } else {
       var index = Ints.tryParse(arguments[0]);
 
       if (index == null || landingBlockRegistry.landingBlocks().size() <= index) {
-        ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "invalidIndex")).send();
+        ChatMessage.of(this, "invalidIndex").send();
         return true;
       }
 
       landingBlockRegistry.landingBlocks().remove(index.intValue());
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "successSingle")).send();
+      ChatMessage.of(this, "successSingle").send();
     }
 
     return true;

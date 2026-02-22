@@ -22,7 +22,7 @@ public final class ResetRunSplitsCommand extends SubCommand {
     }
 
     runState.splits().forEach(split -> split.personalBest(null));
-    ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
+    ChatMessage.of(this, "success").send();
 
     return true;
   }

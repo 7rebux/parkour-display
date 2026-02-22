@@ -19,7 +19,7 @@ public final class SetRunStartCommand extends SubCommand {
     var player = Objects.requireNonNull(this.addon.labyAPI().minecraft().getClientPlayer());
 
     this.addon.runState().startPosition(player.position().toDoubleVector3());
-    ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
+    ChatMessage.of(this, "success").send();
 
     return true;
   }

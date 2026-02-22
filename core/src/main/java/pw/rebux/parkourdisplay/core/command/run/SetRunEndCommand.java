@@ -33,14 +33,14 @@ public final class SetRunEndCommand extends SubCommand {
         : Mode.Ground;
 
     if (targetBlockOptional.isEmpty()) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "invalidBlock")).send();
+      ChatMessage.of(this, "invalidBlock").send();
       return true;
     }
 
     var targetBlock = targetBlockOptional.get();
 
     if (!isPressurePlate(targetBlock) && (mode == Mode.Plate || mode == Mode.PlateOld)) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "notAPlate")).send();
+      ChatMessage.of(this, "notAPlate").send();
       return true;
     }
 
@@ -80,9 +80,7 @@ public final class SetRunEndCommand extends SubCommand {
     var split = new Split("Finish", absoluteBB, triggerMode);
     this.addon.runState().endSplit(split);
 
-    ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success"))
-        .withArgs(mode.name())
-        .send();
+    ChatMessage.of(this, "success").withArgs(mode.name()).send();
 
     return true;
   }

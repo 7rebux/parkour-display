@@ -55,7 +55,7 @@ public final class RunState {
     this.timer++;
 
     if (this.trackingEnabled && this.tickStates.size() >= MAX_RUN_TICKS) {
-      ChatMessage.ofTranslatable("messages.run.tooLong").send();
+      ChatMessage.of("messages.run.tooLong").send();
       this.trackingEnabled = false;
     }
 
@@ -94,7 +94,7 @@ public final class RunState {
         lastTick.position().playerBoundingBox(),
         this.endSplit.boundingBox());
 
-    ChatMessage.ofTranslatable("messages.run.finishOffsetHit")
+    ChatMessage.of("messages.run.finishOffsetHit")
         .withArgs(stringFormat.formatted(overlap.getX()), stringFormat.formatted(overlap.getZ()))
         .send();
 
@@ -119,8 +119,12 @@ public final class RunState {
         break;
       }
 
-      ChatMessage.ofTranslatable("messages.run.finishOffsetMiss")
-          .withArgs(formattedTicks, stringFormat.formatted(offset.getX()), stringFormat.formatted(offset.getZ()))
+      ChatMessage.of("messages.run.finishOffsetMiss")
+          .withArgs(
+              formattedTicks,
+              stringFormat.formatted(offset.getX()),
+              stringFormat.formatted(offset.getZ())
+          )
           .send();
     }
   }

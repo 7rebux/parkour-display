@@ -22,7 +22,7 @@ public final class SaveMacroCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "nameRequired")).send();
+      ChatMessage.of(this, "nameRequired").send();
       return true;
     }
 
@@ -31,10 +31,10 @@ public final class SaveMacroCommand extends SubCommand {
 
     try {
       this.addon.macroFileManager().save(inputs, name);
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
+      ChatMessage.of(this, "success").send();
     } catch (IOException e) {
       this.addon.logger().error("Could not save macro", e);
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "error")).send();
+      ChatMessage.of(this, "error").send();
     }
 
     return true;

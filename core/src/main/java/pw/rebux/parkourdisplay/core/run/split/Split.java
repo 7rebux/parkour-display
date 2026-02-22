@@ -54,7 +54,7 @@ public class Split {
       var formattedTicks = TickFormatter.format(ticks, addon.configuration().formatTicks().get());
       var formattedDelta = TickFormatter.format(delta, addon.configuration().formatTicks().get());
 
-      ChatMessage.ofTranslatable("messages.run.splitHit")
+      ChatMessage.of("messages.run.splitHit")
           .withArgs(label, formattedTicks, delta > 0 ? "+" + formattedDelta : formattedDelta)
           .withColor(color)
           .send();

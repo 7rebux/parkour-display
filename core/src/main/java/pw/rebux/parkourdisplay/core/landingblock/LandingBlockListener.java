@@ -28,7 +28,6 @@ public final class LandingBlockListener {
       return;
     }
 
-    // TODO: Stairs are also buggy for some reason
     // TODO: Also doesn't really make sense for some blocks to compare multiple bounding boxes
     //       since their height and position can differ. Depending on which one the player tries
     //       to land on, it might be better to only specify one bounding box in the landing block.
@@ -94,12 +93,11 @@ public final class LandingBlockListener {
 
     if (newBest) {
       landingBlock.bestDistance(distance);
-      ChatMessage.ofTranslatable("messages.lb.newPB")
+      ChatMessage.of("messages.lb.newPB")
           .withArgs(formattedTotal, formattedX, formattedZ)
           .send();
     } else if (this.addon.configuration().showLandingBlockOffsets().get()) {
-      ChatMessage
-          .ofTranslatable(distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss")
+      ChatMessage.of(distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss")
           .withArgs(formattedX, formattedZ)
           .send();
     }

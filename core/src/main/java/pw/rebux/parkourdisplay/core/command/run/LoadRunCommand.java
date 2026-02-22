@@ -20,7 +20,7 @@ public final class LoadRunCommand extends SubCommand {
     var landingBlockRegistry = this.addon.landingBlockRegistry();
 
     if (arguments.length == 0) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "nameRequired")).send();
+      ChatMessage.of(this, "nameRequired").send();
       return true;
     }
 
@@ -41,9 +41,9 @@ public final class LoadRunCommand extends SubCommand {
         landingBlockRegistry.landingBlocks().addAll(data.landingBlocks());
       }
 
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
+      ChatMessage.of(this, "success").send();
     } catch (FileNotFoundException e) {
-      ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "notFound")).send();
+      ChatMessage.of(this, "notFound").send();
     }
 
     return true;

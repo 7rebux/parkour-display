@@ -36,7 +36,7 @@ public final class AddRunSplitCommand extends SubCommand {
             absoluteBB,
             SplitBoxTriggerMode.IntersectXZSameY));
 
-    ChatMessage.ofTranslatable(ChatMessage.commandKey(this, "success")).send();
+    ChatMessage.of(this, "success").send();
 
     return true;
   }

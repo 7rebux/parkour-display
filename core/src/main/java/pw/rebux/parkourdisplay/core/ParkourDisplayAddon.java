@@ -101,6 +101,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new RunSplitsWidget(this));
   }
 
+  // TODO
   public String decimalFormat() {
     return "%%.%df".formatted(configuration().offsetDecimalPlaces().get());
   }
