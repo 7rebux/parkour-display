@@ -180,6 +180,9 @@
       "highlightRunSplits": {
         "name": "Highlight Run Splits"
       },
+      "highlightRunEnd": {
+        "name": "Highlight Run End"
+      },
       "showRunSplitsInChat": {
         "name": "Show Run Splits In Chat"
       },

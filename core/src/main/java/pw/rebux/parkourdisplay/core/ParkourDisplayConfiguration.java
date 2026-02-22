@@ -62,7 +62,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> showRunSplitsInChat = new ConfigProperty<>(true);
 
   @SwitchSetting
-  private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(true);
+  private final ConfigProperty<Boolean> highlightRunSplits = new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> highlightRunEnd = new ConfigProperty<>(true);
 
   @SwitchSetting
   private final ConfigProperty<Boolean> showRunFinishOffsets = new ConfigProperty<>(false);
