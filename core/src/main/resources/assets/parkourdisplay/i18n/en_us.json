@@ -1,9 +1,10 @@
 {
   "parkourdisplay": {
+    "prefix": "§3[§bPD§3]",
     "permissions": {
       "parkourdisplay": {
         "macro": {
-          "name": "Run Macros"
+          "name": "Macros"
         }
       }
     },
@@ -179,6 +180,9 @@
       "highlightRunSplits": {
         "name": "Highlight Run Splits"
       },
+      "highlightRunEnd": {
+        "name": "Highlight Run End"
+      },
       "showRunSplitsInChat": {
         "name": "Show Run Splits In Chat"
       },
@@ -265,105 +269,128 @@
       "listlb": {
         "description": "Lists all registered landing blocks",
         "messages": {
-          "empty": "No landing blocks registered."
+          "empty": "§cNo landing blocks registered.",
+          "entry": "§7#%s §e%s §6%s"
         }
       },
       "removelb": {
         "description": "Remove all or a single landing block",
         "messages": {
-          "invalidIndex": "Please provide a valid index.",
-          "successSingle": "Successfully removed landing block.",
-          "successAll": "Successfully removed all landing blocks."
+          "invalidIndex": "§cPlease provide a valid index.",
+          "successSingle": "§aSuccessfully removed landing block.",
+          "successAll": "§aSuccessfully removed all landing blocks."
         }
       },
       "resetlb": {
         "description": "Reset the personal best offsets for all or a single landing block",
         "messages": {
-          "invalidIndex": "Please provide a valid index.",
-          "successSingle": "Successfully reset landing block offsets.",
-          "successAll": "Successfully reset offsets of all landing blocks."
+          "invalidIndex": "§cPlease provide a valid index.",
+          "successSingle": "§aSuccessfully reset landing block offsets.",
+          "successAll": "§aSuccessfully reset offsets of all landing blocks."
         }
       },
       "runmacro": {
         "description": "Executes a specific or the last run macro",
         "messages": {
-          "notFound": "Macro not found."
+          "notFound": "§cMacro not found."
         }
       },
       "listmacros": {
         "description": "Lists all loaded macros",
         "messages": {
-          "empty": "No macros found."
+          "empty": "§cNo macros found.",
+          "entry": "§7- §e%s §7[%s]"
         }
       },
       "savemacro": {
         "description": "Saves a macro with a given name",
         "messages": {
-          "nameRequired": "Please provide a name for the macro.",
-          "success": "Successfully saved macro.",
-          "error": "Could not save macro. Check console for more information."
+          "nameRequired": "§cPlease provide a name for the macro.",
+          "success": "§aSuccessfully saved macro.",
+          "error": "§cCould not save macro. Check console for more information."
         }
       },
       "setstart": {
         "description": "Sets the run start position",
         "messages": {
-          "success": "Successfully set run start position."
+          "success": "§aSuccessfully set run start position."
         }
       },
       "setend": {
         "description": "Sets the run end position",
         "messages": {
-          "success": "Successfully set run end position."
+          "success": "§aSuccessfully set run end position (Mode = %s).",
+          "notAPlate": "§cBlock is not a pressure plate.",
+          "invalidBlock": "§cInvalid block."
         }
       },
       "addsplit": {
         "description": "Adds a new run split",
         "messages": {
-          "success": "Successfully added split."
+          "success": "§aSuccessfully added split."
         }
       },
       "listsplitfiles": {
-        "description": "Lists all available run split files"
+        "description": "Lists all available run split files",
+        "messages": {
+          "empty": "§cNo run split files found.",
+          "entry": "§7- §e%s §d(%s) §7[%s]"
+        }
       },
       "loadsplits": {
         "description": "Loads a run split file",
         "messages": {
-          "notFound": "File not found.",
-          "nameRequired": "Please provide a name for the file.",
-          "success": "Successfully loaded splits."
+          "notFound": "§cFile not found.",
+          "nameRequired": "§cPlease provide a name for the file.",
+          "success": "§aSuccessfully loaded splits."
         }
       },
       "removesplit": {
         "description": "Removes the latest run split",
         "messages": {
-          "success": "Successfully removed split."
+          "success": "§aSuccessfully removed split."
         }
       },
       "resetsplits": {
         "description": "Resets the personal bests for all run splits",
         "messages": {
-          "success": "Successfully reset splits."
+          "success": "§aSuccessfully reset splits."
         }
       },
       "savesplits": {
         "description": "Saves the current run splits to a file",
         "messages": {
-          "nameRequired": "Please provide a name for the file.",
-          "success": "Successfully saved splits."
+          "nameRequired": "§cPlease provide a name for the file.",
+          "success": "§aSuccessfully saved splits.",
+          "error": "§cFailed to save splits. Check console for more info."
         }
       },
       "clearrun": {
         "description": "Resets run start, end and split data.",
         "messages": {
-          "success": "Successfully cleared run data."
+          "success": "§aSuccessfully cleared run data."
         }
       }
     },
     "messages": {
+      "macros": {
+        "disabled": "§cMacros are disabled on this server.",
+        "running": "§aRunning macro..."
+      },
       "lb": {
         "newPB": "§aNew PB: §2%s §7(X: %s, Z: %s)",
         "offsetsMiss": "§cOffset X: §4%s§c, Z: §4%s",
         "offsetsHit": "§bOffset X: §3%s§b, Z: §3%s"
+      },
+      "run": {
+        "splitHit": "%s: %s (%s)",
+        "finishOffsetHit": "§aFinish offset X: §2%s§a, Z: §2%s",
+        "finishOffsetMiss": "§cLost §4%s §aby X: §4%s §a, Z: §4%s",
+        "tooLong": "§cRun too long, no longer tracking tick states."
+      },
+      "moveTime": {
+        "air": "§6%s Airtime",
+        "ground": "%s Ground Time"
       }
     }
   }

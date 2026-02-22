@@ -1,11 +1,11 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
 import net.labymod.api.client.chat.command.SubCommand;
-import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
 public final class AddRunSplitCommand extends SubCommand {
 
@@ -36,7 +36,7 @@ public final class AddRunSplitCommand extends SubCommand {
             absoluteBB,
             SplitBoxTriggerMode.IntersectXZSameY));
 
-    this.displayTranslatable("success", NamedTextColor.GREEN);
+    ChatMessage.of(this, "success").send();
 
     return true;
   }

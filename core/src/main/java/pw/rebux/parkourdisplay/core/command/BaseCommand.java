@@ -6,7 +6,6 @@ import static net.labymod.api.client.component.Component.translatable;
 
 import java.util.List;
 import net.labymod.api.client.chat.command.Command;
-import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.command.landingblock.AddLandingBlockCommand;
@@ -28,8 +27,6 @@ import pw.rebux.parkourdisplay.core.command.run.SetRunStartCommand;
 
 public final class BaseCommand extends Command {
 
-  private static final String translationKeyBase = "parkourdisplay.commands.%s.messages";
-
   private final ParkourDisplayAddon addon;
 
   public BaseCommand(ParkourDisplayAddon addon) {
@@ -39,29 +36,27 @@ public final class BaseCommand extends Command {
 
     this.addon = addon;
 
-    this.messagePrefix(ParkourDisplayAddon.MESSAGE_PREFIX);
-
     // Landing block commands
-    this.addSubCommand(new AddLandingBlockCommand(addon));
-    this.addSubCommand(new ListLandingBlocksCommand(addon));
-    this.addSubCommand(new RemoveLandingBlockCommand(addon));
-    this.addSubCommand(new ResetLandingBlockCommand(addon));
+    this.withSubCommand(new AddLandingBlockCommand(addon));
+    this.withSubCommand(new ListLandingBlocksCommand(addon));
+    this.withSubCommand(new RemoveLandingBlockCommand(addon));
+    this.withSubCommand(new ResetLandingBlockCommand(addon));
 
     // Macro commands
-    this.addSubCommand(new ListMacrosCommand(addon));
-    this.addSubCommand(new RunMacroCommand(addon));
-    this.addSubCommand(new SaveMacroCommand(addon));
+    this.withSubCommand(new ListMacrosCommand(addon));
+    this.withSubCommand(new RunMacroCommand(addon));
+    this.withSubCommand(new SaveMacroCommand(addon));
 
     // Run commands
-    this.addSubCommand(new SetRunStartCommand(addon));
-    this.addSubCommand(new SetRunEndCommand(addon));
-    this.addSubCommand(new AddRunSplitCommand(addon));
-    this.addSubCommand(new RemoveRunSplitCommand(addon));
-    this.addSubCommand(new ResetRunSplitsCommand(addon));
-    this.addSubCommand(new SaveRunCommand(addon));
-    this.addSubCommand(new LoadRunCommand(addon));
-    this.addSubCommand(new ListRunFiles(addon));
-    this.addSubCommand(new ClearRunCommand(addon));
+    this.withSubCommand(new SetRunStartCommand(addon));
+    this.withSubCommand(new SetRunEndCommand(addon));
+    this.withSubCommand(new AddRunSplitCommand(addon));
+    this.withSubCommand(new RemoveRunSplitCommand(addon));
+    this.withSubCommand(new ResetRunSplitsCommand(addon));
+    this.withSubCommand(new SaveRunCommand(addon));
+    this.withSubCommand(new LoadRunCommand(addon));
+    this.withSubCommand(new ListRunFiles(addon));
+    this.withSubCommand(new ClearRunCommand(addon));
   }
 
   @Override
@@ -102,12 +97,5 @@ public final class BaseCommand extends Command {
     }
 
     return super.complete(arguments);
-  }
-
-  private void addSubCommand(SubCommand command) {
-    this.withSubCommand(
-        command
-            .messagePrefix(ParkourDisplayAddon.MESSAGE_PREFIX)
-            .translationKey(translationKeyBase.formatted(command.getPrefix())));
   }
 }

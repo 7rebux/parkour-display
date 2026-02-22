@@ -2,10 +2,9 @@ package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;
-import net.labymod.api.client.component.format.NamedTextColor;
-import net.labymod.api.client.component.format.Style;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockMode;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
 public final class AddLandingBlockCommand extends SubCommand {
@@ -30,12 +29,12 @@ public final class AddLandingBlockCommand extends SubCommand {
         : LandingBlockMode.Land;
 
     if (blockState.isEmpty() || !blockState.get().hasCollision()) {
-      this.displayTranslatable("invalidBlock", Style.EMPTY);
+      ChatMessage.of(this, "invalidBlock").send();
       return true;
     }
 
     this.addon.landingBlockRegistry().register(blockState.get(), mode);
-    this.displayTranslatable("success", NamedTextColor.WHITE, mode.name());
+    ChatMessage.of(this, "success").withArgs(mode.name()).send();
 
     return true;
   }

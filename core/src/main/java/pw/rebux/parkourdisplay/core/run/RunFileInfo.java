@@ -1,9 +1,11 @@
 package pw.rebux.parkourdisplay.core.run;
 
+import java.util.Date;
+
 public record RunFileInfo(
     String name,
     Type type,
-    long lastModified
+    Date lastModified
 ) {
   public enum Type {
     ZortMod,

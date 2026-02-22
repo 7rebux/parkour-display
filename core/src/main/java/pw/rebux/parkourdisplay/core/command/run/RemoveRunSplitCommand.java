@@ -1,8 +1,8 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
 import net.labymod.api.client.chat.command.SubCommand;
-import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
 public final class RemoveRunSplitCommand extends SubCommand {
 
@@ -16,9 +16,7 @@ public final class RemoveRunSplitCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     this.addon.runState().splits().removeLast();
-
-    this.displayTranslatable("success", NamedTextColor.GREEN);
-
+    ChatMessage.of(this, "success").send();
     return true;
   }
 }

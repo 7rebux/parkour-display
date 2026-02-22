@@ -1,21 +1,17 @@
 package pw.rebux.parkourdisplay.core.run;
 
-import static net.labymod.api.client.component.Component.space;
-import static net.labymod.api.client.component.Component.text;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.component.Component;
-import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
 
 @Data
@@ -24,8 +20,6 @@ public final class RunState {
 
   // Persisting a maximum of 6.000 ticks (5 minutes)
   private static final int MAX_RUN_TICKS = 5 * 60 * 20;
-  private static final Component RUN_TOO_LONG_MESSAGE =
-      text("Run too long, no longer tracking tick states.", NamedTextColor.RED);
 
   private final ParkourDisplayAddon addon;
 
@@ -61,7 +55,7 @@ public final class RunState {
     this.timer++;
 
     if (this.trackingEnabled && this.tickStates.size() >= MAX_RUN_TICKS) {
-      this.addon.displayMessage(RUN_TOO_LONG_MESSAGE);
+      ChatMessage.of("messages.run.tooLong").send();
       this.trackingEnabled = false;
     }
 
@@ -100,14 +94,9 @@ public final class RunState {
         lastTick.position().playerBoundingBox(),
         this.endSplit.boundingBox());
 
-    this.addon.displayMessageWithPrefix(
-        text("Finish offset: X", NamedTextColor.GREEN)
-            .append(space())
-            .append(text(stringFormat.formatted(overlap.getX()), NamedTextColor.DARK_GREEN))
-            .append(space())
-            .append(text(", Z:", NamedTextColor.GREEN))
-            .append(space())
-            .append(text(stringFormat.formatted(overlap.getZ()), NamedTextColor.DARK_GREEN)));
+    ChatMessage.of("messages.run.finishOffsetHit")
+        .withArgs(stringFormat.formatted(overlap.getX()), stringFormat.formatted(overlap.getZ()))
+        .send();
 
     // Missed tick offsets (3 max)
     for (var i = 1; i <= 3 && i < this.tickStates.size(); i++) {
@@ -115,9 +104,7 @@ public final class RunState {
       var offset = BoundingBoxUtils.computeOverlap(
           tick.position().playerBoundingBox(),
           this.endSplit.boundingBox());
-      var formattedTicks = this.addon.configuration().formatTicks().get()
-          ? TickFormatter.formatTicks(i)
-          : "%dt".formatted(i);
+      var formattedTicks = TickFormatter.format(i, this.addon.configuration().formatTicks().get());
 
       // Assuming that there is a block below the box, so the player must be above it to not collide.
       var isAboveBlock =
@@ -132,18 +119,13 @@ public final class RunState {
         break;
       }
 
-      this.addon.displayMessageWithPrefix(
-          text("Lost", NamedTextColor.RED)
-              .append(space())
-              .append(text(formattedTicks, NamedTextColor.DARK_RED))
-              .append(space())
-              .append(text("by X:", NamedTextColor.RED))
-              .append(space())
-              .append(text(stringFormat.formatted(offset.getX()), NamedTextColor.DARK_RED))
-              .append(space())
-              .append(text(", Z:", NamedTextColor.RED))
-              .append(space())
-              .append(text(stringFormat.formatted(offset.getZ()), NamedTextColor.DARK_RED)));
+      ChatMessage.of("messages.run.finishOffsetMiss")
+          .withArgs(
+              formattedTicks,
+              stringFormat.formatted(offset.getX()),
+              stringFormat.formatted(offset.getZ())
+          )
+          .send();
     }
   }
 }

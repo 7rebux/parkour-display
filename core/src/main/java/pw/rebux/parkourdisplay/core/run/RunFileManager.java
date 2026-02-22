@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -126,6 +127,6 @@ public final class RunFileManager {
             new RunFileInfo(
                 f.getName().split(".json")[0],
                 type,
-                f.lastModified()));
+                new Date((f.lastModified()))));
   }
 }

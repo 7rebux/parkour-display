@@ -2,11 +2,11 @@ package pw.rebux.parkourdisplay.core.command.run;
 
 import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;
-import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.world.block.BlockState;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
 public final class SetRunEndCommand extends SubCommand {
@@ -29,21 +29,18 @@ public final class SetRunEndCommand extends SubCommand {
         ? Arrays.stream(Mode.values())
           .filter(v -> v.toString().equalsIgnoreCase(arguments[0]))
           .findFirst()
-          .orElseGet(() -> {
-            this.displayMessage("Invalid mode. Using ground.");
-            return Mode.Ground;
-          })
+          .orElse(Mode.Ground)
         : Mode.Ground;
 
     if (targetBlockOptional.isEmpty()) {
-      this.displayMessage("No block found.");
+      ChatMessage.of(this, "invalidBlock").send();
       return true;
     }
 
     var targetBlock = targetBlockOptional.get();
 
     if (!isPressurePlate(targetBlock) && (mode == Mode.Plate || mode == Mode.PlateOld)) {
-      this.displayMessage("Target block is not a pressure plate.");
+      ChatMessage.of(this, "notAPlate").send();
       return true;
     }
 
@@ -83,7 +80,7 @@ public final class SetRunEndCommand extends SubCommand {
     var split = new Split("Finish", absoluteBB, triggerMode);
     this.addon.runState().endSplit(split);
 
-    this.displayTranslatable("success", NamedTextColor.GREEN);
+    ChatMessage.of(this, "success").withArgs(mode.name()).send();
 
     return true;
   }

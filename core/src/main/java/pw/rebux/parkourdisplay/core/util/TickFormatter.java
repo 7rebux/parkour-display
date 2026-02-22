@@ -4,7 +4,10 @@ import java.util.concurrent.TimeUnit;
 
 public final class TickFormatter {
 
-  public static String formatTicks(long ticks) {
+  // TODO: We could also let ChatMessage handle this by wrapping the ticks in a value class
+  public static String format(long ticks, boolean readable) {
+    if (!readable) return "%dt".formatted(ticks);
+
     var negative = ticks < 0;
     var total = Math.abs(ticks * 1000 / 20);
     var minutes = total / 60000;

@@ -94,6 +94,9 @@ public final class RunListener {
       for (var split : run.splits()) {
         this.renderSplit(event, player, split);
       }
+    }
+
+    if (addon.configuration().highlightRunEnd().get()) {
       this.renderSplit(event, player, run.endSplit());
     }
 

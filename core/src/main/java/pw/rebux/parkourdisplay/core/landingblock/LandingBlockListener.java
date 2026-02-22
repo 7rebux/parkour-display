@@ -8,6 +8,7 @@ import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
+import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
@@ -27,7 +28,6 @@ public final class LandingBlockListener {
       return;
     }
 
-    // TODO: Stairs are also buggy for some reason
     // TODO: Also doesn't really make sense for some blocks to compare multiple bounding boxes
     //       since their height and position can differ. Depending on which one the player tries
     //       to land on, it might be better to only specify one bounding box in the landing block.
@@ -92,11 +92,14 @@ public final class LandingBlockListener {
     var newBest = landingBlock.bestDistance() == null || distance > landingBlock.bestDistance();
 
     if (newBest) {
-      this.addon.displayTranslatableWithPrefix("messages.lb.newPB", formattedTotal, formattedX, formattedZ);
       landingBlock.bestDistance(distance);
+      ChatMessage.of("messages.lb.newPB")
+          .withArgs(formattedTotal, formattedX, formattedZ)
+          .send();
     } else if (this.addon.configuration().showLandingBlockOffsets().get()) {
-      var translatableKey = distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss";
-      this.addon.displayTranslatableWithPrefix(translatableKey, formattedX, formattedZ);
+      ChatMessage.of(distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss")
+          .withArgs(formattedX, formattedZ)
+          .send();
     }
 
     landingBlockRegistry.lastTotalLandingBlockOffset(distance);
