@@ -3,6 +3,7 @@ package pw.rebux.parkourdisplay.core.landingblock;
 import java.util.ArrayList;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.Laby;
 import net.labymod.api.client.world.block.BlockState;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
@@ -19,8 +20,9 @@ public class LandingBlockRegistry {
   public void register(BlockState blockState, LandingBlockMode mode) {
     var world = this.addon.labyAPI().minecraft().clientWorld();
     var collisions = world.getBlockCollisions(blockState.bounds().move(blockState.position()));
+    var label = Laby.labyAPI().minecraft().getTranslation(
+        "block.minecraft.%s".formatted(blockState.block().id().getPath()));
 
-    // TODO: Laby.labyAPI().minecraft().getTranslation()
-    this.landingBlocks.add(new LandingBlock(blockState.block().id().getPath(), mode, collisions));
+    this.landingBlocks.add(new LandingBlock(label, mode, collisions));
   }
 }
