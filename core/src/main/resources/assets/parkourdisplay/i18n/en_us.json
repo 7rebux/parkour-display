@@ -54,6 +54,13 @@
           "description": "Whether to hide the widget if the value is zero."
         }
       },
+      "climb_time": {
+        "name": "Climb Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while climbing."
+        }
+      },
       "tier": {
         "name": "Tier"
       },
@@ -200,6 +207,9 @@
         "name": "Show Grinds In Chat",
         "description": "Whether to show ceiling jump cancels in the chat."
       },
+      "showClimbDurations": {
+        "name": "Show Climb Durations In Chat"
+      },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
       },
@@ -296,6 +306,7 @@
     },
     "labels": {
       "air_time": "Airtime",
+      "climb_time": "Climb Time",
       "ground_time": "Ground Time",
       "hit_coordinates": {
         "single": "Hit XYZ",
@@ -483,7 +494,8 @@
       },
       "moveTime": {
         "air": "%s Airtime",
-        "ground": "%s Ground Time"
+        "ground": "%s Ground Time",
+        "climbable": "§5%s Climb Time"
       },
       "movement": {
         "grind": "§9Grind"

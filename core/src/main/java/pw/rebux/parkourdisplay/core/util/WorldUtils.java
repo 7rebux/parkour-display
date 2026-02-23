@@ -7,6 +7,7 @@ import java.util.Set;
 import net.labymod.api.Laby;
 import net.labymod.api.client.Minecraft;
 import net.labymod.api.client.entity.player.ClientPlayer;
+import net.labymod.api.client.entity.player.GameMode;
 import net.labymod.api.client.world.block.BlockState;
 import net.labymod.api.client.world.item.VanillaItems;
 import net.labymod.api.client.world.phys.hit.BlockHitResult;
@@ -51,27 +52,15 @@ public final class WorldUtils {
     return minecraft.clientWorld().getBlockState(player.position().toDoubleVector3());
   }
 
-  //  public boolean onClimbable() {
-  //    if (this.isSpectator()) {
-  //      return false;
-  //    } else {
-  //      BlockPos ladderCheckPos = this.blockPosition();
-  //      BlockState state = this.getInBlockState();
-  //      if (this.isFallFlying() && state.is(BlockTags.CAN_GLIDE_THROUGH)) {
-  //        return false;
-  //      } else if (state.is(BlockTags.CLIMBABLE)) {
-  //        this.lastClimbablePos = Optional.of(ladderCheckPos);
-  //        return true;
-  //      } else if (state.getBlock() instanceof TrapDoorBlock && this.trapdoorUsableAsLadder(ladderCheckPos, state)) {
-  //        this.lastClimbablePos = Optional.of(ladderCheckPos);
-  //        return true;
-  //      } else {
-  //        return false;
-  //      }
-  //    }
-  //  }
-
   public static boolean onClimbable(ClientPlayer player) {
+    if (player.gameMode() == GameMode.SPECTATOR) {
+      return false;
+    }
+
+    if (player.isAbilitiesFlying()) {
+      return false;
+    }
+
     var state = getInBlockState(player);
     return isClimbable(state);
   }
