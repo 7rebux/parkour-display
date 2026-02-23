@@ -25,6 +25,7 @@ import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.gson.MacroTickStateTypeAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
+import pw.rebux.parkourdisplay.core.widget.ClimbTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -87,6 +88,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.categoryRegistry().register(this.category);
     hudWidgetRegistry.register(new AirTimeWidget(this));
     hudWidgetRegistry.register(new GroundTimeWidget(this));
+    hudWidgetRegistry.register(new ClimbTimeWidget(this));
     hudWidgetRegistry.register(new TierWidget(this));
     hudWidgetRegistry.register(new VelocityWidget(this));
     hudWidgetRegistry.register(new SpeedVectorWidget(this));
