@@ -20,14 +20,14 @@ public class LadderBox {
       return boundingBox
           .minX(boundingBox.getMinX() + 0.3)
           .maxX(boundingBox.getMaxX() - 0.3)
-          .maxZ(boundingBox.getMinZ() + 0.7)
-          .minZ(boundingBox.getMinZ() + 0.2);
+          .minZ(boundingBox.getMaxZ())
+          .maxZ(boundingBox.getMinZ() + 0.7);
     } else {
       return boundingBox
           .minZ(boundingBox.getMinZ() + 0.3)
           .maxZ(boundingBox.getMaxZ() - 0.3)
-          .maxX(boundingBox.getMinX() + 0.7)
-          .minX(boundingBox.getMinX() + 0.2);
+          .minX(boundingBox.getMaxX())
+          .maxX(boundingBox.getMinX() + 0.7);
     }
   }
 }

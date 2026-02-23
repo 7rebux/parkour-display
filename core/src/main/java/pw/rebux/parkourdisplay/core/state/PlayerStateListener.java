@@ -7,6 +7,7 @@ import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
+import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
 /**
  * Computes reusable player state which is shared across the addon.
@@ -71,6 +72,10 @@ public final class PlayerStateListener {
 
     if (player.isOnGround()) {
       state.airTime(0);
+    }
+
+    // TODO: Actually first statement should be omitted?
+    if (player.isOnGround() || !WorldUtils.onClimbable(player)) {
       state.climbTime(0);
     }
   }
