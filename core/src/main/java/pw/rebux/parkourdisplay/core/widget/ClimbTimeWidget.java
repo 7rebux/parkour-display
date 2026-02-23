@@ -33,7 +33,7 @@ public class ClimbTimeWidget extends TextHudWidget<ClimbTimeWidgetConfig> {
   @Override
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
-    var shouldUpdate = this.config.incremental().get() || state.currentTick().onGround();
+    var shouldUpdate = this.config.incremental().get() || !state.currentTick().onClimbable();
 
     if (state.climbTime() > 0 && shouldUpdate) {
       this.textLine.updateAndFlush(state.climbTime());
