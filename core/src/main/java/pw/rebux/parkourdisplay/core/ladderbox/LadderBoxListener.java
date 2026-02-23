@@ -42,8 +42,9 @@ public final class LadderBoxListener {
           this.addon.configuration().landingBlockOutlineColor().get().get()
       );
 
+      // TODO: Should be touching or intersecting
       var intersecting = ladderBox.intersectionBox().intersects(
-          player.axisAlignedBoundingBox().move(0, -player.axisAlignedBoundingBox().getHeight(), 0));
+          player.axisAlignedBoundingBox().maxY(player.axisAlignedBoundingBox().getMinY()));
       var color = intersecting ? Color.GREEN : Color.RED;
 
       RenderUtils.renderAbsoluteBoundingBox(

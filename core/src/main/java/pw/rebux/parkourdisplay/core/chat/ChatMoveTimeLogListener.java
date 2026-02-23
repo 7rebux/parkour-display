@@ -33,7 +33,7 @@ public final class ChatMoveTimeLogListener {
           .send();
     }
 
-    if (showClimbDurations && state.isLandTick() && state.climbTime() > 0) {
+    if (showClimbDurations && state.lastTick().onClimbable() && !state.currentTick().onClimbable()) {
       ChatMessage.of("messages.moveTime.climbable")
           .withArgs(TickFormatter.format(state.climbTime(), formatTicks))
           .prefix(false)
