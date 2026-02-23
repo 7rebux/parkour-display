@@ -30,6 +30,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> showGrinds = new ConfigProperty<>(false);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showClimbDurations = new ConfigProperty<>(false);
+
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
   private final ConfigProperty<Integer> chatDecimalPlaces = new ConfigProperty<>(3);
