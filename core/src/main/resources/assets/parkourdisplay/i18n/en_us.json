@@ -47,6 +47,13 @@
           "description": "Whether to update the label continuously while on ground."
         }
       },
+      "climb_time": {
+        "name": "Climb Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while climbing."
+        }
+      },
       "tier": {
         "name": "Tier"
       },
@@ -159,6 +166,9 @@
       "showJumpDurations": {
         "name": "Show Jump Durations In Chat"
       },
+      "showClimbDurations": {
+        "name": "Show Climb Durations In Chat"
+      },
       "offsetDecimalPlaces": {
         "name": "Offset Digits After Comma"
       },
@@ -207,6 +217,7 @@
     },
     "labels": {
       "air_time": "Airtime",
+      "climb_time": "Climb Time",
       "ground_time": "Ground Time",
       "hit_coordinates": {
         "single": "Hit XYZ",
@@ -389,8 +400,9 @@
         "tooLong": "§cRun too long, no longer tracking tick states."
       },
       "moveTime": {
-        "air": "§6%s Airtime",
-        "ground": "%s Ground Time"
+        "air": "§6%s Air Time",
+        "ground": "%s Ground Time",
+        "climbable": "§5%s Climb Time"
       }
     }
   }

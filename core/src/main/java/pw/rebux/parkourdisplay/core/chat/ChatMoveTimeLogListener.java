@@ -23,11 +23,19 @@ public final class ChatMoveTimeLogListener {
     var state = this.addon.playerState();
     var formatTicks = this.addon.configuration().formatTicks().get();
     var showGroundDurations = this.addon.configuration().showGroundDurations().get();
+    var showClimbDurations = this.addon.configuration().showClimbDurations().get();
     var showJumpDurations = this.addon.configuration().showJumpDurations().get();
 
     if (showJumpDurations && state.isLandTick()) {
       ChatMessage.of("messages.moveTime.air")
           .withArgs(TickFormatter.format(state.airTime(), formatTicks))
+          .prefix(false)
+          .send();
+    }
+
+    if (showClimbDurations && state.lastTick().onClimbable() && !state.currentTick().onClimbable()) {
+      ChatMessage.of("messages.moveTime.climbable")
+          .withArgs(TickFormatter.format(state.climbTime(), formatTicks))
           .prefix(false)
           .send();
     }

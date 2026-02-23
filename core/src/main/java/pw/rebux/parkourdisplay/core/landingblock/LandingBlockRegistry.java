@@ -9,7 +9,7 @@ import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @Data
 @RequiredArgsConstructor
-public class LandingBlockRegistry {
+public final class LandingBlockRegistry {
 
   private final ParkourDisplayAddon addon;
   private final ArrayList<LandingBlock> landingBlocks = new ArrayList<>();
