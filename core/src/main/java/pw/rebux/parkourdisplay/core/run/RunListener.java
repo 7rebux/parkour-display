@@ -111,9 +111,7 @@ public final class RunListener {
             Color.GREEN.get());
 
         for (var tickState : run.previousTickStates()) {
-          var color = tickState.position().onGround()
-              ? Color.YELLOW
-              : Color.RED;
+          var color = this.getTickStateColor(tickState);
 
           RenderUtils.renderAbsoluteBoundingBox(
               event.camera().renderPosition(),
@@ -121,9 +119,20 @@ public final class RunListener {
               0.005F,
               event.stack(),
               color.withAlpha(30).get(),
-              color.get());
+              color.get()
+          );
         }
       }
+    }
+  }
+
+  private Color getTickStateColor(RunTickState tickState) {
+    if (tickState.position().onClimbable()) {
+      return Color.BLUE;
+    } else if (tickState.position().onGround()) {
+      return Color.YELLOW;
+    } else {
+      return Color.RED;
     }
   }
 

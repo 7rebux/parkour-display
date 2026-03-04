@@ -24,7 +24,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> showGroundDurations = new ConfigProperty<>(false);
 
   @SwitchSetting
-  private final ConfigProperty<Boolean> showJumpDurations = new ConfigProperty<>(true);
+  private final ConfigProperty<Boolean> showJumpDurations = new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showClimbDurations = new ConfigProperty<>(false);
 
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)

@@ -9,6 +9,8 @@ import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
+import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxListener;
+import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxRegistry;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
 import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
@@ -23,6 +25,7 @@ import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.gson.MacroTickStateTypeAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
+import pw.rebux.parkourdisplay.core.widget.ClimbTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -55,6 +58,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
       .create();
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockRegistry landingBlockRegistry = new LandingBlockRegistry(this);
+  private final LadderBoxRegistry ladderBoxRegistry = new LadderBoxRegistry(this);
   private final MacroRunner macroRunner = new MacroRunner(this);
   private final MacroFileManager macroFileManager = new MacroFileManager(this);
   private final RunFileManager runFileManager = new RunFileManager(this);
@@ -74,6 +78,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new PlayerStateListener(this));
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new LandingBlockListener(this));
+    this.registerListener(new LadderBoxListener(this));
     this.registerListener(new RunListener(this));
     this.registerListener(new MacroListener(this));
 
@@ -83,6 +88,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.categoryRegistry().register(this.category);
     hudWidgetRegistry.register(new AirTimeWidget(this));
     hudWidgetRegistry.register(new GroundTimeWidget(this));
+    hudWidgetRegistry.register(new ClimbTimeWidget(this));
     hudWidgetRegistry.register(new TierWidget(this));
     hudWidgetRegistry.register(new VelocityWidget(this));
     hudWidgetRegistry.register(new SpeedVectorWidget(this));
