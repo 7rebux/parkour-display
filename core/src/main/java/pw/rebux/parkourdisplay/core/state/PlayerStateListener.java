@@ -39,6 +39,7 @@ public final class PlayerStateListener {
     if (!state.lastTick().onGround() || !player.isOnGround()) {
       state.airTime(state.airTime() + 1);
 
+      // TODO: Ich glaube das sollte nicht im onGround check mit drin sein
       if (state.currentTick().onClimbable()) {
         state.climbTime(state.climbTime() + 1);
       }
