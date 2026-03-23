@@ -1,6 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.landingblock;
 
-import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -22,12 +21,16 @@ public final class AddLandingBlockCommand extends SubCommand {
     var useTargetBlock = arguments.length > 0 && arguments[0].equalsIgnoreCase("target");
     var blockState = useTargetBlock ? WorldUtils.getBlockLookingAt() : WorldUtils.getBlockStandingOn();
     var modeArgIndex = useTargetBlock ? 1 : 0;
-    var mode = arguments.length > modeArgIndex
-        ? Arrays.stream(LandingBlockMode.values())
-          .filter(v -> v.toString().equalsIgnoreCase(arguments[modeArgIndex]))
-          .findFirst()
-          .orElse(LandingBlockMode.Land)
-        : LandingBlockMode.Land;
+    var mode = LandingBlockMode.Land;
+
+    if (arguments.length > modeArgIndex) {
+      for (LandingBlockMode value : LandingBlockMode.values()) {
+        if (value.name().equalsIgnoreCase(arguments[modeArgIndex])) {
+          mode = value;
+          break;
+        }
+      }
+    }
 
     if (blockState.isEmpty() || !blockState.get().hasCollision()) {
       ChatMessage.of(this, "invalidBlock")

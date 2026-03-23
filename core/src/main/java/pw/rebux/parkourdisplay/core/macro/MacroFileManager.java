@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -48,14 +47,24 @@ public final class MacroFileManager {
 
   public List<MacroFileInfo> availableFiles() {
     var files = MACROS_DIR.listFiles(f -> f.getName().endsWith(".json"));
-    return files == null
-        ? List.of()
-        : Arrays.stream(files)
-            .map(f ->
-                new MacroFileInfo(
-                    f.getName().replace(".json", ""),
-                    new Date(f.lastModified())))
-            .sorted(Comparator.comparing(MacroFileInfo::lastModified))
-            .toList();
+
+    if (files == null) {
+      return List.of();
+    }
+
+    var result = new ArrayList<MacroFileInfo>(files.length);
+
+    for (var f : files) {
+      result.add(
+          new MacroFileInfo(
+              f.getName().replace(".json", ""),
+              new Date(f.lastModified())
+          )
+      );
+    }
+
+    result.sort(Comparator.comparing(MacroFileInfo::lastModified));
+
+    return result;
   }
 }

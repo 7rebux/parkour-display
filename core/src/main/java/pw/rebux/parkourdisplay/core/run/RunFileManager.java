@@ -7,12 +7,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
@@ -111,22 +109,30 @@ public final class RunFileManager {
   }
 
   public List<RunFileInfo> availableFiles() {
-    return Stream
-        .concat(
-            listJsonFiles(EXPORTS_DIR, Type.ParkourDisplay),
-            listJsonFiles(ZORTMOD_DATA_DIR, Type.ZortMod))
-        .sorted(Comparator.comparing(RunFileInfo::lastModified))
-        .toList();
+    var result = new ArrayList<RunFileInfo>();
+
+    listJsonFiles(result, EXPORTS_DIR, Type.ParkourDisplay);
+    listJsonFiles(result, ZORTMOD_DATA_DIR, Type.ZortMod);
+    result.sort(Comparator.comparing(RunFileInfo::lastModified));
+
+    return result;
   }
 
-  private Stream<RunFileInfo> listJsonFiles(File dir, Type type) {
+  private void listJsonFiles(List<RunFileInfo> result, File dir, Type type) {
     var files = dir.listFiles(f -> f.getName().endsWith(".json"));
-    return files == null
-        ? Stream.empty()
-        : Arrays.stream(files).map(f ->
-            new RunFileInfo(
-                f.getName().split(".json")[0],
-                type,
-                new Date((f.lastModified()))));
+
+    if (files == null) {
+      return;
+    }
+
+    for (var f : files) {
+      result.add(
+          new RunFileInfo(
+            f.getName().split("\\.json")[0],
+            type,
+            new Date(f.lastModified())
+        )
+      );
+    }
   }
 }

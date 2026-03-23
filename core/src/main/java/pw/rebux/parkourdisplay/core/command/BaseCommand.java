@@ -88,13 +88,12 @@ public final class BaseCommand extends Command {
     return true;
   }
 
-  // Not working yet as stated on https://dev.labymod.net/pages/addon/features/commands/
-  // Sad :(
+  // TODO: Not working yet as stated on https://dev.labymod.net/pages/addon/features/commands/
   @Override
   public List<String> complete(String[] arguments) {
-    if (arguments.length == 1) {
-      return this.getSubCommands().stream().map(Command::getPrefix).toList();
-    }
+//    if (arguments.length == 1) {
+//      return this.getSubCommands().stream().map(Command::getPrefix).toList();
+//    }
 
     return super.complete(arguments);
   }

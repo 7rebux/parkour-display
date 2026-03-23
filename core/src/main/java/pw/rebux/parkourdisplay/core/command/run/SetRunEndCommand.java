@@ -1,6 +1,5 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
-import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.world.block.BlockState;
@@ -26,12 +25,16 @@ public final class SetRunEndCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     var targetBlockOptional = WorldUtils.getBlockLookingAt().or(WorldUtils::getBlockStandingOn);
-    var mode = arguments.length > 0
-        ? Arrays.stream(Mode.values())
-          .filter(v -> v.toString().equalsIgnoreCase(arguments[0]))
-          .findFirst()
-          .orElse(Mode.Ground)
-        : Mode.Ground;
+    var mode = Mode.Ground;
+
+    if (arguments.length > 0) {
+      for (Mode value : Mode.values()) {
+        if (value.name().equalsIgnoreCase(arguments[0])) {
+          mode = value;
+          break;
+        }
+      }
+    }
 
     if (targetBlockOptional.isEmpty()) {
       ChatMessage.of(this, "invalidBlock")

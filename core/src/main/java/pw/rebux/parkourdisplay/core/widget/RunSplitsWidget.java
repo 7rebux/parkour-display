@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.widget;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import lombok.Getter;
 import net.labymod.api.client.component.Component;
@@ -49,40 +50,39 @@ public final class RunSplitsWidget extends SimpleHudWidget<RunSplitsWidgetConfig
     var titleComponent = RenderableComponent.of(SPLITS_TITLE_COMPONENT);
 
     // Split components
-    var splitRows = splits.stream()
-        .map(split -> {
-          // Label
-          var label = RenderableComponent.of(Component.text(split.label(), NamedTextColor.WHITE));
+    var splitRows = new ArrayList<SplitRow>();
+    for (var split : splits) {
+      // Label
+      var label = RenderableComponent.of(Component.text(split.label(), NamedTextColor.WHITE));
 
-          // Time
-          var timeColor = split.passed()
-              ? NamedTextColor.WHITE
-              : NamedTextColor.GRAY;
-          var timeText = split.passed()
-              ? formatTicks(split.lastTicks())
-              : split.personalBest() == null
-                  ? "N/A"
-                  : formatTicks(split.personalBest());
-          var time = RenderableComponent.of(Component.text(timeText, timeColor));
+      // Time
+      var timeColor = split.passed()
+          ? NamedTextColor.WHITE
+          : NamedTextColor.GRAY;
+      var timeText = split.passed()
+          ? formatTicks(split.lastTicks())
+          : split.personalBest() == null
+              ? "N/A"
+              : formatTicks(split.personalBest());
+      var time = RenderableComponent.of(Component.text(timeText, timeColor));
 
-          // Optional delta
-          Optional<RenderableComponent> delta = Optional.empty();
+      // Optional delta
+      Optional<RenderableComponent> delta = Optional.empty();
 
-          if (split.passed()) {
-            long ticks = split.lastDelta();
-            var color = ticks < 0
-                ? NamedTextColor.GREEN
-                : ticks > 0
-                    ? NamedTextColor.RED
-                    : NamedTextColor.GRAY;
-            var text = (ticks >= 0 ? "+" : "") + Math.abs(ticks);
+      if (split.passed()) {
+        long ticks = split.lastDelta();
+        var color = ticks < 0
+            ? NamedTextColor.GREEN
+            : ticks > 0
+                ? NamedTextColor.RED
+                : NamedTextColor.GRAY;
+        var text = (ticks >= 0 ? "+" : "") + Math.abs(ticks);
 
-            delta = Optional.of(RenderableComponent.of(Component.text(text, color)));
-          }
+        delta = Optional.of(RenderableComponent.of(Component.text(text, color)));
+      }
 
-          return new SplitRow(label, delta, time);
-        })
-        .toList();
+      splitRows.add(new SplitRow(label, delta, time));
+    }
 
     // Timer component
     var timerTicks = this.addon.runState().timer();
