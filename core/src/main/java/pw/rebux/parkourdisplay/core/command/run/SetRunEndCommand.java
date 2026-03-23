@@ -2,6 +2,7 @@ package pw.rebux.parkourdisplay.core.command.run;
 
 import java.util.Arrays;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.world.block.BlockState;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.Split;
@@ -33,14 +34,18 @@ public final class SetRunEndCommand extends SubCommand {
         : Mode.Ground;
 
     if (targetBlockOptional.isEmpty()) {
-      ChatMessage.of(this, "invalidBlock").send();
+      ChatMessage.of(this, "invalidBlock")
+          .withColor(NamedTextColor.RED)
+          .send();
       return true;
     }
 
     var targetBlock = targetBlockOptional.get();
 
     if (!isPressurePlate(targetBlock) && (mode == Mode.Plate || mode == Mode.PlateOld)) {
-      ChatMessage.of(this, "notAPlate").send();
+      ChatMessage.of(this, "notAPlate")
+          .withColor(NamedTextColor.RED)
+          .send();
       return true;
     }
 
@@ -80,7 +85,10 @@ public final class SetRunEndCommand extends SubCommand {
     var split = new Split("Finish", absoluteBB, triggerMode);
     this.addon.runState().endSplit(split);
 
-    ChatMessage.of(this, "success").withArgs(mode.name()).send();
+    ChatMessage.of(this, "success")
+        .withColor(NamedTextColor.GREEN)
+        .withArgs(mode.name())
+        .send();
 
     return true;
   }

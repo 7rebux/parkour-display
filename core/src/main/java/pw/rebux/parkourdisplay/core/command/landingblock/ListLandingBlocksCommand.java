@@ -1,6 +1,8 @@
 package pw.rebux.parkourdisplay.core.command.landingblock;
 
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
@@ -18,7 +20,9 @@ public final class ListLandingBlocksCommand extends SubCommand {
     var landingBlocks = this.addon.landingBlockRegistry().landingBlocks();
 
     if (landingBlocks.isEmpty()) {
-      ChatMessage.of(this, "empty").send();
+      ChatMessage.of(this, "empty")
+          .withColor(NamedTextColor.RED)
+          .send();
       return true;
     }
 
@@ -26,7 +30,12 @@ public final class ListLandingBlocksCommand extends SubCommand {
       var landingBlock = landingBlocks.get(i);
 
       ChatMessage.of(this, "entry")
-          .withArgs(i, landingBlock.label(), landingBlock.mode().name())
+          .withColor(NamedTextColor.GRAY)
+          .withArgs(
+              i,
+              Component.text(landingBlock.label(), NamedTextColor.YELLOW),
+              Component.text(landingBlock.mode().name(), NamedTextColor.GOLD)
+          )
           .send();
     }
 

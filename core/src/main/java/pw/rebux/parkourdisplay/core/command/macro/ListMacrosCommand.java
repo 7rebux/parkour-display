@@ -1,6 +1,8 @@
 package pw.rebux.parkourdisplay.core.command.macro;
 
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
@@ -18,13 +20,19 @@ public final class ListMacrosCommand extends SubCommand {
     var files = this.addon.macroFileManager().availableFiles();
 
     if (files.isEmpty()) {
-      ChatMessage.of(this, "empty").send();
+      ChatMessage.of(this, "empty")
+          .withColor(NamedTextColor.RED)
+          .send();
       return true;
     }
 
     files.forEach(file -> {
       ChatMessage.of(this, "entry")
-          .withArgs(file.name(), file.lastModified())
+          .withColor(NamedTextColor.GRAY)
+          .withArgs(
+              Component.text(file.name(), NamedTextColor.YELLOW),
+              file.lastModified()
+          )
           .send();
     });
 

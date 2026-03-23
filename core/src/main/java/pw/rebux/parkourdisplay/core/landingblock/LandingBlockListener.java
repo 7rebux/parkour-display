@@ -1,6 +1,8 @@
 package pw.rebux.parkourdisplay.core.landingblock;
 
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
@@ -94,11 +96,26 @@ public final class LandingBlockListener {
     if (newBest) {
       landingBlock.bestDistance(distance);
       ChatMessage.of("messages.lb.newPB")
-          .withArgs(formattedTotal, formattedX, formattedZ)
+          .withColor(NamedTextColor.GREEN)
+          .withArgs(
+              Component.text(formattedTotal, NamedTextColor.DARK_GREEN),
+              formattedX,
+              formattedZ
+          )
           .send();
     } else if (this.addon.configuration().showLandingBlockOffsets().get()) {
-      ChatMessage.of(distance > 0 ? "messages.lb.offsetsHit" : "messages.lb.offsetsMiss")
-          .withArgs(formattedX, formattedZ)
+      ChatMessage.of("messages.lb.offsets")
+          .withColor(distance > 0 ? NamedTextColor.GREEN : NamedTextColor.RED)
+          .withArgs(
+              Component.text(
+                  formattedX,
+                  distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED
+              ),
+              Component.text(
+                  formattedZ,
+                  distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED
+              )
+          )
           .send();
     }
 

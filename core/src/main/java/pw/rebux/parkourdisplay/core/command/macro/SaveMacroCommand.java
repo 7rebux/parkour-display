@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.macro.MacroRotationChange;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
@@ -22,7 +23,9 @@ public final class SaveMacroCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     if (arguments.length == 0) {
-      ChatMessage.of(this, "nameRequired").send();
+      ChatMessage.of(this, "nameRequired")
+          .withColor(NamedTextColor.RED)
+          .send();
       return true;
     }
 
@@ -31,10 +34,14 @@ public final class SaveMacroCommand extends SubCommand {
 
     try {
       this.addon.macroFileManager().save(inputs, name);
-      ChatMessage.of(this, "success").send();
+      ChatMessage.of(this, "success")
+          .withColor(NamedTextColor.GREEN)
+          .send();
     } catch (IOException e) {
       this.addon.logger().error("Could not save macro", e);
-      ChatMessage.of(this, "error").send();
+      ChatMessage.of(this, "error")
+          .withColor(NamedTextColor.RED)
+          .send();
     }
 
     return true;

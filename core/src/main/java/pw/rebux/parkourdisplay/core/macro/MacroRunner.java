@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
@@ -17,11 +18,15 @@ public final class MacroRunner {
 
   public void execute(List<MacroTickState> inputs) {
     if (!this.isAllowed()) {
-      ChatMessage.of("messages.macros.disabled").send();
+      ChatMessage.of("messages.macros.disabled")
+          .withColor(NamedTextColor.RED)
+          .send();
       return;
     }
 
-    ChatMessage.of("messages.macros.running").send();
+    ChatMessage.of("messages.macros.running")
+        .withColor(NamedTextColor.GREEN)
+        .send();
     this.activeMacro.clear();
     this.activeMacro.addAll(inputs);
   }

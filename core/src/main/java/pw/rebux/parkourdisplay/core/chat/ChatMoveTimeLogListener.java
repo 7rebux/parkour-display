@@ -29,6 +29,7 @@ public final class ChatMoveTimeLogListener {
       ChatMessage.of("messages.moveTime.air")
           .withArgs(TickFormatter.format(state.airTime(), formatTicks))
           .prefix(false)
+          .withColor(NamedTextColor.GOLD)
           .send();
     }
 

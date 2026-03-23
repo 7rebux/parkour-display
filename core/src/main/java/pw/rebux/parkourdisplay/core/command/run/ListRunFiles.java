@@ -1,6 +1,8 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
@@ -18,13 +20,20 @@ public final class ListRunFiles extends SubCommand {
       var files = this.addon.runFileManager().availableFiles();
 
       if (files.isEmpty()) {
-        ChatMessage.of(this, "empty").send();
+        ChatMessage.of(this, "empty")
+            .withColor(NamedTextColor.RED)
+            .send();
         return true;
       }
 
       files.forEach(file -> {
         ChatMessage.of(this, "entry")
-            .withArgs(file.name(), file.type().name(), file.lastModified())
+            .withColor(NamedTextColor.GRAY)
+            .withArgs(
+                Component.text(file.name(), NamedTextColor.YELLOW),
+                Component.text(file.type().name(), NamedTextColor.LIGHT_PURPLE),
+                file.lastModified()
+            )
             .send();
       });
 

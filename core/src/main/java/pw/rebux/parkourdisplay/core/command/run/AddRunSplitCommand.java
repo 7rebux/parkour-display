@@ -1,6 +1,7 @@
 package pw.rebux.parkourdisplay.core.command.run;
 
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.split.Split;
@@ -36,7 +37,9 @@ public final class AddRunSplitCommand extends SubCommand {
             absoluteBB,
             SplitBoxTriggerMode.IntersectXZSameY));
 
-    ChatMessage.of(this, "success").send();
+    ChatMessage.of(this, "success")
+        .withColor(NamedTextColor.GREEN)
+        .send();
 
     return true;
   }

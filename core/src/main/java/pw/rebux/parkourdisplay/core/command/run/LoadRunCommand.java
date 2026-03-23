@@ -2,6 +2,7 @@ package pw.rebux.parkourdisplay.core.command.run;
 
 import java.io.FileNotFoundException;
 import net.labymod.api.client.chat.command.SubCommand;
+import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
@@ -20,7 +21,9 @@ public final class LoadRunCommand extends SubCommand {
     var landingBlockRegistry = this.addon.landingBlockRegistry();
 
     if (arguments.length == 0) {
-      ChatMessage.of(this, "nameRequired").send();
+      ChatMessage.of(this, "nameRequired")
+          .withColor(NamedTextColor.RED)
+          .send();
       return true;
     }
 
@@ -41,9 +44,13 @@ public final class LoadRunCommand extends SubCommand {
         landingBlockRegistry.landingBlocks().addAll(data.landingBlocks());
       }
 
-      ChatMessage.of(this, "success").send();
+      ChatMessage.of(this, "success")
+          .withColor(NamedTextColor.GREEN)
+          .send();
     } catch (FileNotFoundException e) {
-      ChatMessage.of(this, "notFound").send();
+      ChatMessage.of(this, "notFound")
+          .withColor(NamedTextColor.RED)
+          .send();
     }
 
     return true;

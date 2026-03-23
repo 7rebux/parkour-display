@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.client.component.Component;
+import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -55,7 +57,9 @@ public final class RunState {
     this.timer++;
 
     if (this.trackingEnabled && this.tickStates.size() >= MAX_RUN_TICKS) {
-      ChatMessage.of("messages.run.tooLong").send();
+      ChatMessage.of("messages.run.tooLong")
+          .withColor(NamedTextColor.RED)
+          .send();
       this.trackingEnabled = false;
     }
 
@@ -95,7 +99,11 @@ public final class RunState {
         this.endSplit.boundingBox());
 
     ChatMessage.of("messages.run.finishOffsetHit")
-        .withArgs(stringFormat.formatted(overlap.getX()), stringFormat.formatted(overlap.getZ()))
+        .withColor(NamedTextColor.GREEN)
+        .withArgs(
+            Component.text(stringFormat.formatted(overlap.getX()), NamedTextColor.DARK_GREEN),
+            Component.text(stringFormat.formatted(overlap.getZ()), NamedTextColor.DARK_GREEN)
+        )
         .send();
 
     // Missed tick offsets (3 max)
@@ -120,10 +128,11 @@ public final class RunState {
       }
 
       ChatMessage.of("messages.run.finishOffsetMiss")
+          .withColor(NamedTextColor.RED)
           .withArgs(
-              formattedTicks,
-              stringFormat.formatted(offset.getX()),
-              stringFormat.formatted(offset.getZ())
+              Component.text(formattedTicks, NamedTextColor.DARK_RED),
+              Component.text(stringFormat.formatted(offset.getX()), NamedTextColor.DARK_RED),
+              Component.text(stringFormat.formatted(offset.getZ()), NamedTextColor.DARK_RED)
           )
           .send();
     }
