@@ -158,6 +158,12 @@
       "showJumpDurations": {
         "name": "Show Jump Durations In Chat"
       },
+      "showJumpCancels": {
+        "name": "Show Jump Cancels In Chat"
+      },
+      "showGrinds": {
+        "name": "Show Grinds In Chat"
+      },
       "offsetDecimalPlaces": {
         "name": "Offset Digits After Comma"
       },
@@ -389,6 +395,9 @@
       "moveTime": {
         "air": "%s Airtime",
         "ground": "%s Ground Time"
+      },
+      "stepping": {
+        "jumpCancel": "§9Jump Cancelled"
       }
     }
   }
