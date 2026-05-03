@@ -44,6 +44,10 @@
         "incremental": {
           "name": "Incremental",
           "description": "Whether to update the label continuously while on ground."
+        },
+        "hideIfZero": {
+          "name": "Hide If Zero",
+          "description": "Whether to hide the widget if the value is zero."
         }
       },
       "tier": {

@@ -39,13 +39,26 @@ public class GroundTimeWidget extends TextHudWidget<GroundTimeWidgetConfig> {
     }
   }
 
+  @Override
+  public boolean isVisibleInGame() {
+    var state = this.addon.playerState();
+
+    if (this.config.hideIfZero().get() && state.groundTime() == 0) {
+      return false;
+    }
+
+    return super.isVisibleInGame();
+  }
+
   @Getter
   public static class GroundTimeWidgetConfig extends TextHudWidgetConfig {
 
-    /**
-     * Whether to update the label continuously while on ground.
-     */
+    /// Whether to update the label continuously while on ground.
     @SwitchSetting
     private final ConfigProperty<Boolean> incremental = new ConfigProperty<>(true);
+
+    /// Whether to hide the widget if the value is zero.
+    @SwitchSetting
+    private final ConfigProperty<Boolean> hideIfZero = new ConfigProperty<>(false);
   }
 }
