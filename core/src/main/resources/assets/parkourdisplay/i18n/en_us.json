@@ -166,29 +166,47 @@
       "showJumpDurations": {
         "name": "Show Jump Durations In Chat"
       },
-      "offsetDecimalPlaces": {
-        "name": "Offset Digits After Comma"
+      "chatDecimalPlaces": {
+        "name": "Digits After Comma In Chat"
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
       },
-      "highlightLandingBlocks": {
-        "name": "Highlight Landing Blocks"
+      "highlightLandingBlocksSettings": {
+        "name": "Highlight Landing Blocks",
+        "fillColor": {
+          "name": "Fill Color"
+        },
+        "outlineColor": {
+          "name": "Outline Color"
+        },
+        "outlineThickness": {
+          "name": "Outline Thickness"
+        }
       },
-      "landingBlockFillColor": {
-        "name": "Block Fill Color"
-      },
-      "landingBlockOutlineColor": {
-        "name": "Block Outline Color"
-      },
-      "landingBlockOutlineThickness": {
-        "name": "Block Outline Thickness"
-      },
-      "highlightRunSplits": {
-        "name": "Highlight Run Splits"
-      },
-      "highlightRunEnd": {
-        "name": "Highlight Run End"
+      "highlightRunSplitsSettings": {
+        "name": "Highlight Run Splits Settings",
+        "highlightRegularSplits": {
+          "name": "Highlight Regular Splits"
+        },
+        "highlightEndSplit": {
+          "name": "Highlight End Split"
+        },
+        "regularFillColor": {
+          "name": "Regular Fill Color"
+        },
+        "regularOutlineColor": {
+          "name": "Regular Outline Color"
+        },
+        "intersectingFillColor": {
+          "name": "Intersecting Fill Color"
+        },
+        "intersectingOutlineColor": {
+          "name": "Intersecting Outline Color"
+        },
+        "outlineThickness": {
+          "name": "Outline Thickness"
+        }
       },
       "showRunSplitsInChat": {
         "name": "Show Run Splits In Chat"
@@ -196,8 +214,29 @@
       "formatTicks": {
         "name": "Format Ticks In Chat"
       },
-      "showPrevRunTickStates": {
-        "name": "Show Previous Run Tick States"
+      "highlightRunTickStates": {
+        "name": "Highlight Previous Run Tick States",
+        "startFillColor": {
+          "name": "Start Fill Color"
+        },
+        "startOutlineColor": {
+          "name": "Start Outline Color"
+        },
+        "regularFillColor": {
+          "name": "Regular Fill Color"
+        },
+        "regularOutlineColor": {
+          "name": "Regular Outline Color"
+        },
+        "onGroundFillColor": {
+          "name": "On Ground Fill Color"
+        },
+        "onGroundOutlineColor": {
+          "name": "On Ground Outline Color"
+        },
+        "outlineThickness": {
+          "name": "Outline Thickness"
+        }
       },
       "showRunFinishOffsets": {
         "name": "Show Run Finish Offsets In Chat"

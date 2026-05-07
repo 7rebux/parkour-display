@@ -90,7 +90,7 @@ public final class RunState {
   }
 
   private void showFinishOffsets() {
-    var stringFormat = "%%.%df".formatted(this.addon.configuration().offsetDecimalPlaces().get());
+    var stringFormat = "%%.%df".formatted(this.addon.configuration().chatDecimalPlaces().get());
 
     // Finish offset
     var lastTick = this.tickStates.getLast();

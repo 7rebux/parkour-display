@@ -6,9 +6,9 @@ import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
-import net.labymod.api.util.Color;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.HighlightRunSplitsSettings;
 import pw.rebux.parkourdisplay.core.run.RunTickState.KeyboardInput;
 import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
@@ -44,6 +44,7 @@ public final class RunListener {
       return;
     }
 
+    // TODO: Macros and run tick states are missing the first tick in case of burst!!!
     var lastTickAtStart =
         startPosition.distance(playerState.lastTick().toVector()) <= minStartDistance;
     var currentTickAtStart =
@@ -83,6 +84,8 @@ public final class RunListener {
 
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
+    var splitsSettings = this.addon.configuration().highlightRunSplitsSettings();
+    var tickStateSettings = this.addon.configuration().highlightRunTickStates();
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
     var run = this.addon.runState();
 
@@ -90,54 +93,74 @@ public final class RunListener {
       return;
     }
 
-    if (addon.configuration().highlightRunSplits().get()) {
+    if (splitsSettings.highlightRegularSplits().get()) {
       for (var split : run.splits()) {
-        this.renderSplit(event, player, split);
+        this.renderSplit(event, player, split, splitsSettings);
       }
     }
 
-    if (addon.configuration().highlightRunEnd().get()) {
-      this.renderSplit(event, player, run.endSplit());
+    if (splitsSettings.highlightEndSplit().get()) {
+      this.renderSplit(event, player, run.endSplit(), splitsSettings);
     }
 
-    if (this.addon.configuration().showPrevRunTickStates().get()) {
+    if (tickStateSettings.enabled().get()) {
       if (!this.addon.runState().previousTickStates().isEmpty()) {
         RenderUtils.renderAbsoluteBoundingBox(
             event.camera().renderPosition(),
             playerAABB.move(run.startPosition()),
-            0.005F,
+            tickStateSettings.outlineThickness().get() / 1000F,
             event.stack(),
-            Color.GREEN.withAlpha(30).get(),
-            Color.GREEN.get());
+            tickStateSettings.startFillColor().get().get(),
+            tickStateSettings.startOutlineColor().get().get()
+        );
 
         for (var tickState : run.previousTickStates()) {
-          var color = tickState.position().onGround()
-              ? Color.YELLOW
-              : Color.RED;
+          var onGround = tickState.position().onGround();
+          var fillColor =
+              onGround
+                  ? tickStateSettings.onGroundFillColor().get()
+                  : tickStateSettings.regularFillColor().get();
+          var outlineColor =
+              onGround
+                  ? tickStateSettings.onGroundOutlineColor().get()
+                  : tickStateSettings.regularOutlineColor().get();
 
           RenderUtils.renderAbsoluteBoundingBox(
               event.camera().renderPosition(),
               tickState.position().playerBoundingBox(),
-              0.005F,
+              tickStateSettings.outlineThickness().get() / 1000F,
               event.stack(),
-              color.withAlpha(30).get(),
-              color.get());
+              fillColor.get(),
+              outlineColor.get()
+          );
         }
       }
     }
   }
 
-  private void renderSplit(RenderWorldEvent event, ClientPlayer player, Split split) {
+  private void renderSplit(
+      RenderWorldEvent event,
+      ClientPlayer player,
+      Split split,
+      HighlightRunSplitsSettings settings
+  ) {
     var intersecting = split.intersects(player.axisAlignedBoundingBox());
-    var color = intersecting ? Color.GREEN : Color.RED;
+    var fillColor =
+        intersecting
+            ? settings.intersectingFillColor().get()
+            : settings.regularFillColor().get();
+    var outlineColor =
+        intersecting
+            ? settings.intersectingOutlineColor().get()
+            : settings.regularOutlineColor().get();
 
     RenderUtils.renderAbsoluteBoundingBox(
         event.camera().renderPosition(),
         split.boundingBox(),
-        0.005F,
+        settings.outlineThickness().get() / 1000F,
         event.stack(),
-        color.withAlpha(30).get(),
-        color.get()
+        fillColor.get(),
+        outlineColor.get()
     );
   }
 

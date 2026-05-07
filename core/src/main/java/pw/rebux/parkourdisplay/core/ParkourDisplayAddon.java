@@ -103,7 +103,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
   // TODO
   public String decimalFormat() {
-    return "%%.%df".formatted(configuration().offsetDecimalPlaces().get());
+    return "%%.%df".formatted(configuration().chatDecimalPlaces().get());
   }
 
   @Override

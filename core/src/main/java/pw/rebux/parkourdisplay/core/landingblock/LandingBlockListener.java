@@ -64,7 +64,9 @@ public final class LandingBlockListener {
 
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
-    if (!this.addon.configuration().highlightLandingBlocks().get()) {
+    var settings = this.addon.configuration().highlightLandingBlocksSettings();
+
+    if (!settings.enabled().get()) {
       return;
     }
 
@@ -73,10 +75,10 @@ public final class LandingBlockListener {
         RenderUtils.renderAbsoluteBoundingBox(
             event.camera().renderPosition(),
             boundingBox,
-            this.addon.configuration().landingBlockOutlineThickness().get(),
+            settings.outlineThickness().get() / 1000F,
             event.stack(),
-            this.addon.configuration().landingBlockFillColor().get().get(),
-            this.addon.configuration().landingBlockOutlineColor().get().get()
+            settings.fillColor().get().get(),
+            settings.outlineColor().get().get()
         );
       }
     }
