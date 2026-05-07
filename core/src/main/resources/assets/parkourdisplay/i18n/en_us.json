@@ -37,6 +37,10 @@
         "incremental": {
           "name": "Incremental",
           "description": "Whether to update the label continuously while airborne."
+        },
+        "showStreak": {
+          "name": "Show Streak",
+          "description": "Whether to show the streak count after the value."
         }
       },
       "ground_time": {
