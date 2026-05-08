@@ -244,6 +244,9 @@
       "importLandingBlocks": {
         "name": "Import Landing Blocks From Run Files"
       },
+      "serverDataLoadMode": {
+        "name": "Server Run Data Load Mode"
+      },
       "unpressKeys": {
         "name": "Unpress Keys On Macro End"
       },
@@ -431,11 +434,17 @@
         "splitHit": "%s: %s (%s)",
         "finishOffsetHit": "Finish offset X: %s, Z: %s",
         "finishOffsetMiss": "Lost %s by X: %s, Z: %s",
-        "tooLong": "Run too long, no longer tracking tick states."
+        "tooLong": "Run too long, no longer tracking tick states.",
+        "loadedFromServer": "Loaded run data from server for %s"
       },
       "moveTime": {
         "air": "%s Airtime",
         "ground": "%s Ground Time"
+      }
+    },
+    "activities": {
+      "loadRunData": {
+        "title": "Load Server Run Data?"
       }
     }
   }
