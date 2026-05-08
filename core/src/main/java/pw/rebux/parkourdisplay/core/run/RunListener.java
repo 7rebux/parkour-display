@@ -10,7 +10,6 @@ import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.HighlightRunSplitsSettings;
 import pw.rebux.parkourdisplay.core.run.RunTickState.KeyboardInput;
-import pw.rebux.parkourdisplay.core.run.split.Split;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
@@ -141,7 +140,7 @@ public final class RunListener {
   private void renderSplit(
       RenderWorldEvent event,
       ClientPlayer player,
-      Split split,
+      RunSplit split,
       HighlightRunSplitsSettings settings
   ) {
     var intersecting = split.intersects(player.axisAlignedBoundingBox());

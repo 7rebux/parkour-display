@@ -14,10 +14,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
+import pw.rebux.parkourdisplay.api.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.RunFileInfo.Type;
-import pw.rebux.parkourdisplay.core.run.split.Split;
-import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
 
 @RequiredArgsConstructor
 public final class RunFileManager {
@@ -65,7 +64,7 @@ public final class RunFileManager {
     );
 
     var endPosObj = rootObj.getAsJsonObject("endPos");
-    var runEndSplit = new Split(
+    var runEndSplit = new RunSplit(
         "Finish",
         new AxisAlignedBoundingBox(
             endPosObj.get("x").getAsDouble() - (rootObj.get("endDx").getAsDouble() / 2),
@@ -82,10 +81,10 @@ public final class RunFileManager {
     var splitDzArrayObj = rootObj.getAsJsonArray("splitDz");
     var bestSplitsArrayObj = rootObj.getAsJsonArray("bestSplits");
 
-    var splits = new ArrayList<Split>();
+    var splits = new ArrayList<RunSplit>();
     for (var i = 0; i < rootObj.get("splitCount").getAsInt(); i++) {
       var splitObj = splitsArrayObj.get(i).getAsJsonObject();
-      var split = new Split(
+      var split = new RunSplit(
           "Split %d".formatted(i + 1),
           new AxisAlignedBoundingBox(
               splitObj.get("x").getAsDouble() - (splitDxArrayObj.get(i).getAsDouble() / 2),

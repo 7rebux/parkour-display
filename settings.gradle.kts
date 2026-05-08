@@ -21,3 +21,4 @@ plugins.apply("net.labymod.labygradle.settings")
 
 include(":api")
 include(":core")
+include(":integration")
