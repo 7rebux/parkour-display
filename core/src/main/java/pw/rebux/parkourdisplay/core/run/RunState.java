@@ -9,9 +9,8 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
+import pw.rebux.parkourdisplay.api.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.run.split.Split;
-import pw.rebux.parkourdisplay.core.run.split.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.TickFormatter;
@@ -29,9 +28,9 @@ public final class RunState {
   private DoubleVector3 startPosition = null;
 
   @Nullable
-  private Split endSplit = null;
+  private RunSplit endSplit = null;
 
-  private List<Split> splits = new ArrayList<>();
+  private List<RunSplit> splits = new ArrayList<>();
   private boolean runStarted = false;
   private boolean trackingEnabled = true;
 

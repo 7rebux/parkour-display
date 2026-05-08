@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import lombok.Getter;
+import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
+import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
@@ -18,6 +20,7 @@ import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
+import pw.rebux.parkourdisplay.core.server.RunDataPacketHandler;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
@@ -40,6 +43,8 @@ import pw.rebux.parkourdisplay.core.widget.RunSplitsWidget;
 import pw.rebux.parkourdisplay.core.widget.SpeedVectorWidget;
 import pw.rebux.parkourdisplay.core.widget.TierWidget;
 import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
+import pw.rebux.parkourdisplay.integration.ParkourDisplayIntegration;
+import pw.rebux.parkourdisplay.integration.packets.RunDataPacket;
 
 @AddonMain
 @Getter
@@ -47,7 +52,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
   public static final String NAMESPACE = "parkourdisplay";
   public static final File DATA_DIR = new File("parkour-display");
-  public static final String MACRO_PERMISSION = NAMESPACE + ".macro";
 
   private final Gson gson = new GsonBuilder()
       .setPrettyPrinting()
@@ -69,7 +73,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
     this.registerSettingCategory();
 
-    this.labyAPI().permissionRegistry().register(MACRO_PERMISSION, false, true);
+    this.labyAPI().permissionRegistry().register(Permissions.RUN_MACROS, false, true);
 
     this.registerListener(new PlayerStateListener(this));
     this.registerListener(new ChatMoveTimeLogListener(this));
@@ -99,6 +103,15 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
+
+    var protocolService = Laby.references().labyModProtocolService();
+    var integration = protocolService.getOrRegisterIntegration(
+        ParkourDisplayIntegration.class,
+        ParkourDisplayIntegration::new
+    );
+
+    var protocol = integration.parkourDisplayProtocol();
+    protocol.registerHandler(RunDataPacket.class, new RunDataPacketHandler(this));
   }
 
   // TODO

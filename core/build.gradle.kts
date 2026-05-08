@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     labyProcessor()
+    implementation(project(":integration"))
     api(project(":api"))
 
     // An example of how to add an external dependency that is used by the addon.

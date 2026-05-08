@@ -52,6 +52,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> importLandingBlocks = new ConfigProperty<>(true);
 
+  @DropdownSetting
+  private final ConfigProperty<ServerDataLoadMode> serverDataLoadMode =
+      new ConfigProperty<>(ServerDataLoadMode.Always);
+
   private final HighlightRunSplitsSettings highlightRunSplitsSettings =
       new HighlightRunSplitsSettings();
 
@@ -83,6 +87,12 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
     @SliderSetting(min = 1, max = 30)
     private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(10);
+  }
+
+  public enum ServerDataLoadMode {
+    Always,
+    Confirm,
+    Never
   }
 
   @Getter
