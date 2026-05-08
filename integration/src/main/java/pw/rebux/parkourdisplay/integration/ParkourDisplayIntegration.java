@@ -41,7 +41,11 @@ public final class ParkourDisplayIntegration implements LabyModProtocolIntegrati
 
   @Override
   public LabyModIntegrationPlayer createIntegrationPlayer(AbstractLabyModPlayer<?> labyModPlayer) {
-    return new ParkourDisplayPlayer(this.addonProtocol, labyModPlayer.getUniqueId());
+    return new ParkourDisplayPlayer(
+        this.protocolService.labyModProtocol(),
+        this.addonProtocol,
+        labyModPlayer.getUniqueId()
+    );
   }
 
   public @NonNull AddonProtocol parkourDisplayProtocol() {

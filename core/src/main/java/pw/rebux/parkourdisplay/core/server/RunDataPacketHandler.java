@@ -20,7 +20,7 @@ public final class RunDataPacketHandler implements PacketHandler<RunDataPacket> 
   public void handle(@NotNull UUID sender, @NonNull RunDataPacket packet) {
     var start = new DoubleVector3(packet.getStart().x(), packet.getStart().y(), packet.getStart().z());
     var endSplit = new RunSplit(
-        packet.getName(),
+        "Finish",
         new AxisAlignedBoundingBox(
             packet.getMinEnd().x(), packet.getMinEnd().y(), packet.getMinEnd().z(),
             packet.getMaxEnd().x(), packet.getMaxEnd().y(), packet.getMaxEnd().z()
