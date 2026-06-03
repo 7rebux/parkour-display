@@ -1,7 +1,7 @@
 rootProject.name = "parkour-display"
 
 pluginManagement {
-    val labyGradlePluginVersion = "0.7.2"
+    val labyGradlePluginVersion = "0.8.0"
     buildscript {
         repositories {
             maven("https://maven.laby.net/api/v1/maven/release/")
