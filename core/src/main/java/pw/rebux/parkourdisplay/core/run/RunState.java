@@ -32,6 +32,7 @@ public final class RunState {
 
   private List<RunSplit> splits = new ArrayList<>();
   private boolean runStarted = false;
+  private boolean startedWithBurst = false;
   private boolean trackingEnabled = true;
 
   /// Tracks the elapsed ticks since the run started.
@@ -45,6 +46,18 @@ public final class RunState {
 
   /// Used to store the run as a macro and to render the different tick positions in a run.
   private final LinkedList<RunTickState> previousTickStates = new LinkedList<>();
+
+  /// Records the ticks of a burst start. These ticks are part of the movement
+  /// (macros, rendered tick states) but are not counted by the timer, matching
+  /// how servers ignore sub-threshold movement.
+  public void processBurstTicks(List<RunTickState> states) {
+    if (states.isEmpty()) {
+      return;
+    }
+
+    this.tickStates.addAll(states);
+    this.startedWithBurst = true;
+  }
 
   public void processTick(RunTickState state) {
     var lastTickOnGround = this.addon.playerState().lastTick().onGround();
@@ -82,6 +95,7 @@ public final class RunState {
   public void reset() {
     this.splits.forEach(split -> split.passed(false));
     this.runStarted = false;
+    this.startedWithBurst = false;
     this.timer = 0;
     this.groundTime = 0;
     this.trackingEnabled = true;

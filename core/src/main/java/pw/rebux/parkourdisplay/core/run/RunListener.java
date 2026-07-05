@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.run;
 
+import java.util.LinkedList;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.event.Phase;
@@ -23,6 +24,10 @@ public final class RunListener {
 
   private final ParkourDisplayAddon addon;
 
+  /// Buffers sub-threshold movement ticks at the start (burst) that happen before the run
+  /// officially starts, so they can be prepended to the run's tick states.
+  private final LinkedList<RunTickState> preStartTickStates = new LinkedList<>();
+
   @Subscribe
   public void onGameTickNew(GameTickEvent event) {
     if (event.phase() != Phase.POST) {
@@ -43,7 +48,6 @@ public final class RunListener {
       return;
     }
 
-    // TODO: Macros and run tick states are missing the first tick in case of burst!!!
     var lastTickAtStart =
         startPosition.distance(playerState.lastTick().toVector()) <= minStartDistance;
     var currentTickAtStart =
@@ -54,10 +58,25 @@ public final class RunListener {
       run.reset();
     }
 
+    // Buffer sub-threshold movement ticks (burst) so they can be prepended on start.
+    // The timer must not count them, but macros and rendered tick states must include them.
+    if (!run.runStarted() && currentTickAtStart) {
+      var tickMoveDistance = playerState.currentTick().toVector().distance(playerState.lastTick().toVector());
+      var burstTick = tickMoveDistance > 0 && tickMoveDistance <= minStartDistance;
+
+      if (burstTick) {
+        this.preStartTickStates.addLast(buildTickState(player));
+      } else {
+        this.preStartTickStates.clear();
+      }
+    }
+
     // Handle start
     if (!run.runStarted() && lastTickAtStart && !currentTickAtStart) {
       run.reset();
+      run.processBurstTicks(this.preStartTickStates);
       run.runStarted(true);
+      this.preStartTickStates.clear();
     }
 
     if (!run.runStarted()) {
