@@ -11,6 +11,7 @@ import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.widget.LastTurnWidget.LastTurnWidgetConfig;
 
+/// The yaw change from the previous tick to the current tick.
 public class LastTurnWidget extends TextHudWidget<LastTurnWidgetConfig> {
 
   private final ParkourDisplayAddon addon;

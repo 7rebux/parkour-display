@@ -8,6 +8,9 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 
+/// The last performed jump timing.
+///
+/// References: [Timings - MCPK Wiki](https://www.mcpk.wiki/wiki/Timings)
 public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
@@ -19,7 +22,10 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
   private int groundMoveTime = -1;
   private int jumpTime = -1;
   private int sneakTime = -2;
-  private boolean locked = false;
+  private int sprintTime = -1;
+  private boolean lastForward;
+  private boolean lastSideways;
+  private boolean locked;
 
   public LastTimingWidget(ParkourDisplayAddon addon) {
     super("last_timing");
@@ -50,7 +56,6 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     this.textLine.updateAndFlush(value);
   }
 
-  // https://www.mcpk.wiki/wiki/Timings
   private void updateLastTiming(PlayerState state) {
     var inputUtil = this.addon.minecraftInputUtil();
 
@@ -80,7 +85,9 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
 
       if (moveTime == 0) {
         this.value = "Jam";
-        locked = true;
+        if (inputUtil.sprintKey().isDown() || !inputUtil.forwardKey().isDown()) {
+          locked = true;
+        }
       } else if (moveTime > 0 && !locked) {
         if (sneakTime > -1) {
           this.value = "Burstjam %dt".formatted(groundMoveTime);
@@ -105,9 +112,41 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
       sneakTime = sneakTime < 0 ? -2 : -1;
     }
 
+    // FMM
+    if ((inputUtil.sprintKey().isDown() || sprintTime != -1) && !state.lastTick().onGround() ) {
+      sprintTime++;
+      if (value.startsWith("Jam") && !locked && sprintTime == 0 && lastForward) {
+        if (jumpTime >= 1) {
+          if (jumpTime == 1) {
+            value = "Max FMM";
+          } else {
+            value = "FMM " + (jumpTime) + " ticks";
+          }
+
+          locked = true;
+        }
+      }
+
+    } else {
+      sprintTime = -1;
+    }
+
+    // Mark
+    if (state.airTime() > 0) {
+      boolean pressingWNow = inputUtil.forwardKey().isDown();
+      boolean wasPressingW = lastForward;
+
+      if (pressingWNow && !wasPressingW && lastSideways) {
+        this.value = "Mark %dt".formatted(state.airTime());
+      }
+    }
+
     // Unlock
     if (!inputUtil.isMoving() && state.currentTick().onGround()) {
       locked = false;
     }
+
+    lastForward = inputUtil.forwardKey().isDown();
+    lastSideways = inputUtil.isMovingSideways();
   }
 }

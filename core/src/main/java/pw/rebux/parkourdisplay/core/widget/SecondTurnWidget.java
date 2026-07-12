@@ -9,28 +9,29 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SliderWidget.SliderSetting;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.util.MathHelper;
-import pw.rebux.parkourdisplay.core.widget.JumpAngleWidget.JumpAngleWidgetConfig;
+import pw.rebux.parkourdisplay.core.widget.SecondTurnWidget.SecondTurnWidgetConfig;
 
-/// The player's yaw at the moment of jump initiation, captured on the same tick.
-public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
+/// The yaw delta at the tick exactly 1t after jump initiation.
+public final class SecondTurnWidget extends TextHudWidget<SecondTurnWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
 
   private TextLine textLine;
   private String stringFormat;
 
-  public JumpAngleWidget(ParkourDisplayAddon addon) {
-    super("jump_angle", JumpAngleWidgetConfig.class);
+  private boolean jumpedLastTick = false;
+
+  public SecondTurnWidget(ParkourDisplayAddon addon) {
+    super("second_turn", SecondTurnWidgetConfig.class);
     this.bindCategory(addon.category());
     this.addon = addon;
   }
 
   @Override
-  public void load(JumpAngleWidgetConfig config) {
+  public void load(SecondTurnWidgetConfig config) {
     super.load(config);
 
-    this.textLine = createLine(translatable("parkourdisplay.labels.jump_angle"), 0);
+    this.textLine = this.createLine(translatable("parkourdisplay.labels.second_turn"), 0);
     this.stringFormat = "%%.%df".formatted(config.decimalPlaces().get());
   }
 
@@ -38,16 +39,16 @@ public class JumpAngleWidget extends TextHudWidget<JumpAngleWidgetConfig> {
   public void onTick(boolean isEditorContext) {
     var state = this.addon.playerState();
 
-    if (!state.isJumpTick()) {
-      return;
+    if (this.jumpedLastTick) {
+      var turn = String.format(this.stringFormat, state.yawTurn());
+      this.textLine.updateAndFlush(turn);
     }
 
-    var yaw = String.format(this.stringFormat, MathHelper.formatYaw(state.currentTick().yaw()));
-    this.textLine.updateAndFlush(yaw);
+    this.jumpedLastTick = state.isJumpTick();
   }
 
   @Getter
-  public static class JumpAngleWidgetConfig extends TextHudWidgetConfig {
+  public static class SecondTurnWidgetConfig extends TextHudWidgetConfig {
 
     @SliderSetting(min = 0, max = 10)
     private final ConfigProperty<Integer> decimalPlaces = new ConfigProperty<>(3);

@@ -39,6 +39,10 @@ public final class MinecraftInputUtil {
     return forwardKey.isDown() || backKey.isDown() || leftKey.isDown() || rightKey.isDown();
   }
 
+  public boolean isMovingSideways() {
+    return leftKey.isDown() ^ rightKey.isDown();
+  }
+
   public void unpressAll() {
     setPressed(forwardKey, false);
     setPressed(backKey, false);

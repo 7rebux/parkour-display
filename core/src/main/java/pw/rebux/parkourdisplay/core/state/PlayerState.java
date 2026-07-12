@@ -6,21 +6,16 @@ import pw.rebux.parkourdisplay.core.util.TickPosition;
 @Data
 public class PlayerState {
 
-  /**
-   * Position data computed at the start of the current tick.
-   */
+  /// Position data computed at the start of the current tick.
   private TickPosition currentTick = TickPosition.INITIAL;
-  /**
-   * Position data computed at the end of the current tick.
-   */
+
+  /// Position data computed at the end of the current tick.
   private TickPosition lastTick = TickPosition.INITIAL;
-  /**
-   * Amount of ticks the player has been continuously in the air.
-   */
+
+  /// Amount of ticks the player has been continuously in the air.
   private long airTime;
-  /**
-   * Amount of ticks the player has been continuously on the ground.
-   */
+
+  /// Amount of ticks the player has been continuously on the ground.
   private long groundTime;
 
   public double vx() {

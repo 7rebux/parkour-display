@@ -110,6 +110,10 @@
       },
       "last_forty_five": {
         "name": "Last 45",
+        "strict": {
+          "name": "Strict",
+          "description": "Only update the label if strafe was added exactly 1t after jumping."
+        },
         "decimalPlaces": {
           "name": "Digits after comma"
         }
@@ -139,6 +143,21 @@
         },
         "backgroundColor": {
           "name": "Background Color"
+        }
+      },
+      "last_sidestep": {
+        "name": "Last Sidestep"
+      },
+      "preturn": {
+        "name": "Preturn",
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
+      },
+      "second_turn": {
+        "name": "Second Turn",
+        "decimalPlaces": {
+          "name": "Digits after comma"
         }
       }
     },
@@ -305,7 +324,10 @@
         "z": "LB Offset Z"
       },
       "run_ground_time": "Run Ground Time",
-      "run_splits": "Run Splits"
+      "run_splits": "Run Splits",
+      "last_sidestep": "Last Sidestep",
+      "preturn": "Preturn",
+      "second_turn": "Second Turn"
     },
     "commands": {
       "addlb": {
