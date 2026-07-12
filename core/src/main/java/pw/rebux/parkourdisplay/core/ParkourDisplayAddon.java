@@ -36,10 +36,13 @@ import pw.rebux.parkourdisplay.core.widget.LandingCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LastFortyFiveWidget;
 import pw.rebux.parkourdisplay.core.widget.LastInputWidget;
 import pw.rebux.parkourdisplay.core.widget.LastLandingBlockOffsetsWidget;
+import pw.rebux.parkourdisplay.core.widget.LastSidestepWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTimingWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTurnWidget;
+import pw.rebux.parkourdisplay.core.widget.PreturnWidget;
 import pw.rebux.parkourdisplay.core.widget.RunGroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.RunSplitsWidget;
+import pw.rebux.parkourdisplay.core.widget.SecondTurnWidget;
 import pw.rebux.parkourdisplay.core.widget.SpeedVectorWidget;
 import pw.rebux.parkourdisplay.core.widget.TierWidget;
 import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
@@ -103,6 +106,9 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
+    hudWidgetRegistry.register(new SecondTurnWidget(this));
+    hudWidgetRegistry.register(new PreturnWidget(this));
+    hudWidgetRegistry.register(new LastSidestepWidget(this));
 
     var protocolService = Laby.references().labyModProtocolService();
     var integration = protocolService.getOrRegisterIntegration(

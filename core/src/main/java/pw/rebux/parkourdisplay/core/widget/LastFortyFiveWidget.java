@@ -8,11 +8,14 @@ import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SliderWidget.SliderSetting;
+import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.widget.LastFortyFiveWidget.LastFortyFiveWidgetConfig;
 
-/// [45 Strafe - MCPK Wiki](https://www.mcpk.wiki/wiki/45_Strafe)
+/// The yaw delta at the tick strafe input is added while airborne.
+///
+/// References: [45 Strafe - MCPK Wiki](https://www.mcpk.wiki/wiki/45_Strafe)
 public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
@@ -47,15 +50,12 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
     }
 
     var movingForward = player.getForwardMovingSpeed() != 0;
-    var movingSideways = tryGetMovingSideways(player);
+    var movingSideways = checkMovingSideways(player);
 
-    // TODO: This could also check if in the last tick a jump was initiated.
-    // Player attempted 45 degree strafe
-    if (this.lastTickMovingForward
-        && !this.lastTickMovingSideways
-        && movingForward
-        && movingSideways
+    if (this.lastTickMovingForward && movingForward
+        && !this.lastTickMovingSideways && movingSideways
         && !state.currentTick().onGround()
+        && (!this.config.strict.get() || state.lastTick().onGround())
     ) {
       var lastFF = String.format(this.stringFormat, state.yawTurn());
       this.textLine.updateAndFlush(lastFF);
@@ -65,17 +65,22 @@ public class LastFortyFiveWidget extends TextHudWidget<LastFortyFiveWidgetConfig
     this.lastTickMovingSideways = movingSideways;
   }
 
-  // TODO: This is somehow still broken in version 1.21.4
-  private boolean tryGetMovingSideways(ClientPlayer player) {
+  private boolean checkMovingSideways(ClientPlayer player) {
     try {
       return player.getStrafeMovingSpeed() != 0;
     } catch (Throwable throwable) {
-      return false;
+      // Somehow ClientPlayer#getStrafeMovingSpeed is not implemented in newer versions.
+      // We use a fallback here to check keyboard input instead.
+      return this.addon.minecraftInputUtil().isMovingSideways();
     }
   }
 
   @Getter
   public static class LastFortyFiveWidgetConfig extends TextHudWidgetConfig {
+
+    /// Only updates the label if strafe was added exactly 1t after jumping.
+    @SwitchSetting
+    private final ConfigProperty<Boolean> strict = new ConfigProperty<>(false);
 
     @SliderSetting(min = 0, max = 10)
     private final ConfigProperty<Integer> decimalPlaces = new ConfigProperty<>(3);

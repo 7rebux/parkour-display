@@ -3,12 +3,13 @@ package pw.rebux.parkourdisplay.core.util;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import net.labymod.api.client.entity.player.ClientPlayer;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
 
-@Data
+/// An immutable snapshot of a player's position and rotation at a specific tick.
+@Getter
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TickPosition {
