@@ -43,6 +43,7 @@ public final class LastSidestepWidget extends TextHudWidget<TextHudWidgetConfig>
     var formatted = switch (this.sidestep) {
       case -1 -> "-";
       case 0 -> "WDWA";
+      case 1 -> "WAD";
       default -> "WAD %dt".formatted(this.sidestep);
     };
 
@@ -65,6 +66,8 @@ public final class LastSidestepWidget extends TextHudWidget<TextHudWidgetConfig>
       } else if (!this.lastMovingSideways) {
         this.sidestep = -1;
       }
+    } else if (state.isLandTick()) {
+      this.wadStart = false;
     } else if (this.wadStart && movingSideways && this.lastAirTime != state.airTime()) {
       this.sidestep = (int) this.lastAirTime;
       this.wadStart = false;

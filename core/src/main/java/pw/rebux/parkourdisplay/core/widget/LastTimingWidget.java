@@ -56,6 +56,7 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
     this.textLine.updateAndFlush(value);
   }
 
+  // TODO: Refactor this entire thing :)
   private void updateLastTiming(PlayerState state) {
     var inputUtil = this.addon.minecraftInputUtil();
 
@@ -120,25 +121,19 @@ public class LastTimingWidget extends TextHudWidget<TextHudWidgetConfig> {
           if (jumpTime == 1) {
             value = "Max FMM";
           } else {
-            value = "FMM " + (jumpTime) + " ticks";
+            value = "FMM %dt".formatted(jumpTime);
           }
 
           locked = true;
         }
       }
-
     } else {
       sprintTime = -1;
     }
 
     // Mark
-    if (state.airTime() > 0) {
-      boolean pressingWNow = inputUtil.forwardKey().isDown();
-      boolean wasPressingW = lastForward;
-
-      if (pressingWNow && !wasPressingW && lastSideways) {
-        this.value = "Mark %dt".formatted(state.airTime());
-      }
+    if (state.airTime() > 1 && inputUtil.forwardKey().isDown() && !lastForward && lastSideways) {
+      this.value = "Mark %dt".formatted(state.airTime() - 1);
     }
 
     // Unlock
