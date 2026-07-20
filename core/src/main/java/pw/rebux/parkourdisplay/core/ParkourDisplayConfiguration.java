@@ -70,6 +70,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<MacroRotationChange> rotationChange =
       new ConfigProperty<>(MacroRotationChange.Absolute);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> smoothRotation = new ConfigProperty<>(true);
+
   @Getter
   public static final class HighlightLandingBlocksSettings extends Config {
 

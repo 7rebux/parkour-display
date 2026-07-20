@@ -2,28 +2,37 @@ package pw.rebux.parkourdisplay.core.macro;
 
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.entity.player.GameMode;
+import net.labymod.api.client.entity.player.Player;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Priority;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
+import net.labymod.api.event.client.render.GameRenderEvent;
+import net.labymod.api.util.math.MathHelper;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.RotationSpline;
 
 @RequiredArgsConstructor
 public final class MacroListener {
 
   private final ParkourDisplayAddon addon;
 
+  private final RotationSpline yawSpline = new RotationSpline();
+  private final RotationSpline pitchSpline = new RotationSpline();
+
   private boolean macroFinished = false;
+  private boolean interpolatingRotation = false;
 
   @Subscribe(Priority.LATE)
   public void onGameTick(GameTickEvent event) {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
-    var activeMacro = this.addon.macroRunner().activeMacro();
+    var macroRunner = this.addon.macroRunner();
+    var activeMacro = macroRunner.activeMacro();
     var inputUtil = this.addon.minecraftInputUtil();
 
-    if (macroFinished && this.addon.configuration().unpressKeys().get()) {
+    if (this.macroFinished && this.addon.configuration().unpressKeys().get()) {
       inputUtil.unpressAll();
-      macroFinished = false;
+      this.macroFinished = false;
       return;
     }
 
@@ -39,7 +48,8 @@ public final class MacroListener {
     // TODO: This only works in singleplayer
     if (this.addon.labyAPI().minecraft().isPaused()) {
       activeMacro.clear();
-      macroFinished = true;
+      this.macroFinished = true;
+      this.stopInterpolating();
       return;
     }
 
@@ -53,16 +63,91 @@ public final class MacroListener {
     inputUtil.setPressed(inputUtil.sprintKey(), tickInput.sprint());
     inputUtil.setPressed(inputUtil.sneakKey(), tickInput.sneak());
 
-    if (this.addon.configuration().rotationChange().get() == MacroRotationChange.Relative) {
-      player.setRotationYaw(player.getRotationYaw() + tickInput.yaw());
-      player.setRotationPitch(player.getRotationPitch() + tickInput.pitch());
+    float yaw;
+    float pitch;
+
+    if (this.hasValidInterpolation()) {
+      // Already calculated while interpolating towards this tick
+      yaw = this.yawSpline.target();
+      pitch = this.pitchSpline.target();
     } else {
-      player.setRotationYaw(tickInput.yaw());
-      player.setRotationPitch(tickInput.pitch());
+      yaw = this.resolveRotation(player.getRotationYaw(), tickInput.yaw());
+      pitch = this.resolveRotation(player.getRotationPitch(), tickInput.pitch());
+    }
+
+    this.setRotation(player, yaw, pitch);
+
+    // The spline needs the tick after the next one as well to get its outgoing tangent
+    var iterator = activeMacro.iterator();
+    var nextTickInput = iterator.hasNext() ? iterator.next() : null;
+    var followingTickInput = iterator.hasNext() ? iterator.next() : null;
+
+    if (nextTickInput == null || !this.addon.configuration().smoothRotation().get()) {
+      this.stopInterpolating();
+    } else {
+      var nextYaw = this.resolveRotation(yaw, nextTickInput.yaw());
+      var nextPitch = this.resolveRotation(pitch, nextTickInput.pitch());
+
+      this.yawSpline.advance(yaw, nextYaw, followingTickInput == null
+          ? nextYaw
+          : this.resolveRotation(nextYaw, followingTickInput.yaw()));
+      this.pitchSpline.advance(pitch, nextPitch, followingTickInput == null
+          ? nextPitch
+          : this.resolveRotation(nextPitch, followingTickInput.pitch()));
+
+      this.interpolatingRotation = true;
     }
 
     if (activeMacro.isEmpty()) {
       macroFinished = true;
     }
+  }
+
+  @Subscribe
+  public void onGameRender(GameRenderEvent event) {
+    if (event.phase() != Phase.PRE || !this.hasValidInterpolation()) {
+      return;
+    }
+
+    var minecraft = this.addon.labyAPI().minecraft();
+    var player = minecraft.getClientPlayer();
+
+    if (player == null) {
+      this.stopInterpolating();
+      return;
+    }
+
+    var partialTicks = MathHelper.clamp(minecraft.getPartialTicks(), 0.0F, 1.0F);
+
+    this.setRotation(
+        player,
+        this.yawSpline.valueAt(partialTicks),
+        // The spline can overshoot its control points, which would flip the camera upside down
+        MathHelper.clamp(this.pitchSpline.valueAt(partialTicks), -90.0F, 90.0F)
+    );
+  }
+
+  private boolean hasValidInterpolation() {
+    return this.interpolatingRotation;
+  }
+
+  private void stopInterpolating() {
+    this.interpolatingRotation = false;
+    this.yawSpline.reset();
+    this.pitchSpline.reset();
+  }
+
+  private float resolveRotation(float current, float change) {
+    return this.addon.configuration().rotationChange().get() == MacroRotationChange.Relative
+        ? current + change
+        : change;
+  }
+
+  private void setRotation(Player player, float yaw, float pitch) {
+    player.setRotationYaw(yaw);
+    player.setRotationPitch(pitch);
+    // Otherwise the renderer would interpolate towards the value we just set a second time
+    player.setPreviousRotationYaw(yaw);
+    player.setPreviousRotationPitch(pitch);
   }
 }

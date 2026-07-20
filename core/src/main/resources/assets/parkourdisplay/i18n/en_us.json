@@ -271,6 +271,10 @@
       },
       "rotationChange": {
         "name": "Rotation Change"
+      },
+      "smoothRotation": {
+        "name": "Smooth Rotation",
+        "description": "Interpolates the rotation between ticks instead of snapping to the rotation of every tick. Purely visual, the rotation used for actual movement stays the same."
       }
     },
     "labels": {
