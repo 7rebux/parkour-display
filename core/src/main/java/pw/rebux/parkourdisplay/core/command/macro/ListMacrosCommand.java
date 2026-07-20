@@ -31,6 +31,7 @@ public final class ListMacrosCommand extends SubCommand {
           .withColor(NamedTextColor.GRAY)
           .withArgs(
               Component.text(file.name(), NamedTextColor.YELLOW),
+              Component.text(file.type().name(), NamedTextColor.LIGHT_PURPLE),
               file.lastModified()
           )
           .send();

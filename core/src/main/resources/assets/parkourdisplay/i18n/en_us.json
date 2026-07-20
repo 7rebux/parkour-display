@@ -370,7 +370,7 @@
         "description": "Lists all loaded macros",
         "messages": {
           "empty": "No macros found.",
-          "entry": "- %s [%s]"
+          "entry": "- %s (%s) [%s]"
         }
       },
       "savemacro": {
