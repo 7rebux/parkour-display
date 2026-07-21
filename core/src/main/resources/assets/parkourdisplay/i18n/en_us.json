@@ -180,10 +180,12 @@
         "name": "Enabled"
       },
       "showGroundDurations": {
-        "name": "Show Ground Durations In Chat"
+        "name": "Show Ground Durations In Chat",
+        "description": "Whether to show the time spent on the ground between jumps in the chat."
       },
       "showJumpDurations": {
-        "name": "Show Jump Durations In Chat"
+        "name": "Show Jump Durations In Chat",
+        "description": "Whether to show the airtime of every jump in the chat."
       },
       "chatDecimalPlaces": {
         "name": "Digits After Comma In Chat"
@@ -193,6 +195,7 @@
       },
       "highlightLandingBlocksSettings": {
         "name": "Highlight Landing Blocks",
+        "description": "Whether to render landing block overlays in the world.",
         "fillColor": {
           "name": "Fill Color"
         },
@@ -206,10 +209,12 @@
       "highlightRunSplitsSettings": {
         "name": "Highlight Run Splits Settings",
         "highlightRegularSplits": {
-          "name": "Highlight Regular Splits"
+          "name": "Highlight Regular Splits",
+          "description": "Whether to highlight the bounding box of regular splits."
         },
         "highlightEndSplit": {
-          "name": "Highlight End Split"
+          "name": "Highlight End Split",
+          "description": "Whether to highlight the bounding box of the end split."
         },
         "regularFillColor": {
           "name": "Regular Fill Color"
@@ -231,10 +236,12 @@
         "name": "Show Run Splits In Chat"
       },
       "formatTicks": {
-        "name": "Format Ticks In Chat"
+        "name": "Format Ticks In Chat",
+        "description": "Whether to format ticks in chat, for example 02.750 instead of 55."
       },
       "highlightRunTickStates": {
         "name": "Highlight Previous Run Tick States",
+        "description": "Whether to render all tick positions of the latest run in the world.",
         "startFillColor": {
           "name": "Start Fill Color"
         },
@@ -258,23 +265,23 @@
         }
       },
       "showRunFinishOffsets": {
-        "name": "Show Run Finish Offsets In Chat"
+        "name": "Show Run Finish Offsets In Chat",
+        "description": "Whether to show how far you were from the run finish on the last tick."
       },
       "importLandingBlocks": {
         "name": "Import Landing Blocks From Run Files"
       },
       "serverDataLoadMode": {
-        "name": "Server Run Data Load Mode"
-      },
-      "unpressKeys": {
-        "name": "Unpress Keys On Macro End"
+        "name": "Server Run Data Load Mode",
+        "description": "How run data received from the server should be loaded."
       },
       "rotationChange": {
-        "name": "Rotation Change"
+        "name": "Rotation Change",
+        "description": "Whether macros store absolute rotations or changes relative to the previous tick."
       },
       "smoothRotation": {
         "name": "Smooth Rotation",
-        "description": "Interpolates the rotation between ticks instead of snapping to the rotation of every tick. Purely visual, the rotation used for actual movement stays the same."
+        "description": "Interpolates the rotation between ticks instead of snapping to the rotation of every tick."
       }
     },
     "labels": {
