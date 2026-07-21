@@ -30,7 +30,7 @@ public final class MacroListener {
     var activeMacro = macroRunner.activeMacro();
     var inputUtil = this.addon.minecraftInputUtil();
 
-    if (this.macroFinished && this.addon.configuration().unpressKeys().get()) {
+    if (this.macroFinished) {
       inputUtil.unpressAll();
       this.macroFinished = false;
       return;

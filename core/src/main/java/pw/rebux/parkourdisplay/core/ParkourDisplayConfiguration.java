@@ -64,14 +64,11 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
   @SettingSection("macro")
   @SwitchSetting
-  private final ConfigProperty<Boolean> unpressKeys = new ConfigProperty<>(true);
+  private final ConfigProperty<Boolean> smoothRotation = new ConfigProperty<>(true);
 
   @DropdownSetting
   private final ConfigProperty<MacroRotationChange> rotationChange =
       new ConfigProperty<>(MacroRotationChange.Absolute);
-
-  @SwitchSetting
-  private final ConfigProperty<Boolean> smoothRotation = new ConfigProperty<>(true);
 
   @Getter
   public static final class HighlightLandingBlocksSettings extends Config {
