@@ -6,7 +6,7 @@ plugins {
 val versions = providers.gradleProperty("net.labymod.minecraft-versions").get().split(";")
 
 group = "pw.rebux.parkourdisplay"
-version = providers.environmentVariable("VERSION").getOrElse("1.0.0")
+version = providers.environmentVariable("VERSION").getOrElse("1.3.0")
 
 labyMod {
     defaultPackageName = "pw.rebux.parkourdisplay"
