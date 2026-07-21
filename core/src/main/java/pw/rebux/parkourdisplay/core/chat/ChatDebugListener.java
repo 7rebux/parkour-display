@@ -15,8 +15,6 @@ public final class ChatDebugListener {
 
   private final ParkourDisplayAddon addon;
 
-  private boolean isJumpTickLast = false;
-
   @Subscribe
   public void onTick(GameTickEvent event) {
     var showJumpCancels = this.addon.configuration().showJumpCancels().get();
@@ -26,12 +24,12 @@ public final class ChatDebugListener {
     }
 
     var state = this.addon.playerState();
-    var isJumpCancel = isJumpTickLast && state.currentTick().onGround();
+    var isGrind = state.airTime() == 1
+        && state.currentTick().y() == state.lastTick().y()
+        && state.vy() == 0;
 
-    if (showJumpCancels && isJumpCancel) {
+    if (showJumpCancels && isGrind) {
       ChatMessage.of("messages.stepping.jumpCancel").send();
     }
-
-    this.isJumpTickLast = state.isJumpTick();
   }
 }

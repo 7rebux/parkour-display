@@ -27,6 +27,7 @@ import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.gson.MacroTickStateTypeAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
+import pw.rebux.parkourdisplay.core.widget.BlipsWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -111,6 +112,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new SecondTurnWidget(this));
     hudWidgetRegistry.register(new PreturnWidget(this));
     hudWidgetRegistry.register(new LastSidestepWidget(this));
+    hudWidgetRegistry.register(new BlipsWidget(this));
 
     var protocolService = Laby.references().labyModProtocolService();
     var integration = protocolService.getOrRegisterIntegration(
