@@ -28,6 +28,12 @@ public final class LadderBoxListener {
 
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
+    var settings = this.addon.configuration().highlightLadderBoxesSettings();
+
+    if (!settings.enabled().get()) {
+      return;
+    }
+
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
     var ladderBoxes = this.addon.ladderBoxRegistry().ladderBoxes();
 
@@ -39,10 +45,10 @@ public final class LadderBoxListener {
       RenderUtils.renderAbsoluteBoundingBox(
           event.camera().renderPosition(),
           ladderBox.boundingBox(),
-          this.addon.configuration().landingBlockOutlineThickness().get(),
+          settings.outlineThickness().get() / 1000F,
           event.stack(),
-          this.addon.configuration().landingBlockFillColor().get().get(),
-          this.addon.configuration().landingBlockOutlineColor().get().get()
+          settings.fillColor().get().get(),
+          settings.outlineColor().get().get()
       );
 
       var overlap = BoundingBoxUtils.computeOverlap(
@@ -56,7 +62,7 @@ public final class LadderBoxListener {
       RenderUtils.renderAbsoluteBoundingBox(
           event.camera().renderPosition(),
           ladderBox.intersectionBox(),
-          this.addon.configuration().landingBlockOutlineThickness().get(),
+          settings.outlineThickness().get() / 1000F,
           event.stack(),
           color.withAlpha(30).get(),
           color.get()
