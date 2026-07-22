@@ -10,6 +10,7 @@ import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
+import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
@@ -26,6 +27,7 @@ import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.gson.MacroTickStateTypeAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
+import pw.rebux.parkourdisplay.core.widget.BlipsWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -83,6 +85,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new LandingBlockListener(this));
     this.registerListener(new RunListener(this));
     this.registerListener(new MacroListener(this));
+    this.registerListener(new ChatMovementLogListener(this));
 
     this.registerCommand(new BaseCommand(this));
 
@@ -109,6 +112,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new SecondTurnWidget(this));
     hudWidgetRegistry.register(new PreturnWidget(this));
     hudWidgetRegistry.register(new LastSidestepWidget(this));
+    hudWidgetRegistry.register(new BlipsWidget(this));
 
     var protocolService = Laby.references().labyModProtocolService();
     var integration = protocolService.getOrRegisterIntegration(

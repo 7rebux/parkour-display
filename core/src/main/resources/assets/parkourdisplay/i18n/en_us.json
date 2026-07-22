@@ -159,6 +159,12 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
+      },
+      "blips": {
+        "name": "Blips",
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
       }
     },
     "settings": {
@@ -189,6 +195,10 @@
       },
       "chatDecimalPlaces": {
         "name": "Digits After Comma In Chat"
+      },
+      "showGrinds": {
+        "name": "Show Grinds In Chat",
+        "description": "Whether to show ceiling jump cancels in the chat."
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -338,7 +348,8 @@
       "run_splits": "Run Splits",
       "last_sidestep": "Last Sidestep",
       "preturn": "Preturn",
-      "second_turn": "Second Turn"
+      "second_turn": "Second Turn",
+      "blips": "Blips"
     },
     "commands": {
       "addlb": {
@@ -473,6 +484,9 @@
       "moveTime": {
         "air": "%s Airtime",
         "ground": "%s Ground Time"
+      },
+      "movement": {
+        "grind": "§9Grind"
       }
     },
     "activities": {
