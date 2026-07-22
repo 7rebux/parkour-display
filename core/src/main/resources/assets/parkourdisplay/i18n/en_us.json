@@ -196,8 +196,9 @@
       "chatDecimalPlaces": {
         "name": "Digits After Comma In Chat"
       },
-      "showJumpCancels": {
-        "name": "Show Jump Cancels In Chat"
+      "showGrinds": {
+        "name": "Show Grinds In Chat",
+        "description": "Whether to show ceiling jump cancels in the chat."
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -484,8 +485,8 @@
         "air": "%s Airtime",
         "ground": "%s Ground Time"
       },
-      "stepping": {
-        "jumpCancel": "§9Grind"
+      "movement": {
+        "grind": "§9Grind"
       }
     },
     "activities": {

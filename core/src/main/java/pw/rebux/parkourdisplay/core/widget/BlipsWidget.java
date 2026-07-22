@@ -11,6 +11,7 @@ import net.labymod.api.configuration.loader.property.ConfigProperty;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.widget.BlipsWidget.BlipsWidgetConfig;
 
+/// [Blips - MCPK Wiki](https://www.mcpk.wiki/wiki/Blip)
 public class BlipsWidget extends TextHudWidget<BlipsWidgetConfig> {
 
   private final ParkourDisplayAddon addon;
@@ -22,7 +23,6 @@ public class BlipsWidget extends TextHudWidget<BlipsWidgetConfig> {
 
   private boolean secondLastOnGround = false;
   private double lastVy = 0;
-  private long lastAirtime = 0;
 
   public BlipsWidget(ParkourDisplayAddon addon) {
     super("blips", BlipsWidgetConfig.class);
@@ -46,7 +46,7 @@ public class BlipsWidget extends TextHudWidget<BlipsWidgetConfig> {
       if (!secondLastOnGround
           && lastVy == 0
           && (state.lastTick().y() % 0.015625 != 0)
-          && lastAirtime > 1
+          && state.airTime() > 0
       ) {
         var height = String.format(this.stringFormat, state.lastTick().y());
         if (++chained == 1) {
@@ -62,7 +62,6 @@ public class BlipsWidget extends TextHudWidget<BlipsWidgetConfig> {
 
     this.secondLastOnGround = state.lastTick().onGround();
     this.lastVy = state.vy();
-    this.lastAirtime = state.airTime();
   }
 
   @Getter

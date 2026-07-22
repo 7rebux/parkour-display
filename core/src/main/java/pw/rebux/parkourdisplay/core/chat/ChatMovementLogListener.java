@@ -7,29 +7,30 @@ import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
-/// [Blip](https://www.mcpk.wiki/wiki/Blip)
-/// [Stepping](https://www.mcpk.wiki/wiki/Stepping)
-/// [Jump Cancel](https://www.mcpk.wiki/wiki/Jump_Cancel)
+/// [Jump Cancel - MCPK Wiki](https://www.mcpk.wiki/wiki/Jump_Cancel)
 @RequiredArgsConstructor
-public final class ChatDebugListener {
+public final class ChatMovementLogListener {
 
   private final ParkourDisplayAddon addon;
 
   @Subscribe
   public void onTick(GameTickEvent event) {
-    var showJumpCancels = this.addon.configuration().showJumpCancels().get();
+    var showGrinds = this.addon.configuration().showGrinds().get();
+    var state = this.addon.playerState();
 
     if (event.phase() != Phase.POST) {
       return;
     }
 
-    var state = this.addon.playerState();
+    // Note: It's possible to use the corner of a slab to jump-cancel without moving up
+    // the slab itself. To do this, the collision must be X-facing.
     var isGrind = state.airTime() == 1
+        && this.addon.minecraftInputUtil().jumpKey().isDown()
         && state.currentTick().y() == state.lastTick().y()
         && state.vy() == 0;
 
-    if (showJumpCancels && isGrind) {
-      ChatMessage.of("messages.stepping.jumpCancel").send();
+    if (showGrinds && isGrind) {
+      ChatMessage.of("messages.movement.grind").send();
     }
   }
 }
