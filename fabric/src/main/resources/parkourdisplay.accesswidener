@@ -1,0 +1,6 @@
+accessWidener v2 named
+
+# Needed so macro playback can pin the previous-frame rotation and stop the camera from
+# interpolating a second time towards a rotation the macro engine already applied this tick.
+accessible field net/minecraft/entity/Entity lastYaw F
+accessible field net/minecraft/entity/Entity lastPitch F

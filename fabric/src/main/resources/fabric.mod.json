@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "parkourdisplay",
+  "version": "${version}",
+  "name": "ParkourDisplay",
+  "description": "Shows different information about parkour related game mechanics.",
+  "authors": ["Rebux"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/parkourdisplay/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "pw.rebux.parkourdisplay.fabric.ParkourDisplayFabric"
+    ]
+  },
+  "accessWidener": "parkourdisplay.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.8",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
