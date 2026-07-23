@@ -6,6 +6,7 @@ import net.labymod.api.client.entity.player.Player;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Priority;
 import net.labymod.api.event.Subscribe;
+import net.labymod.api.event.client.gui.screen.ScreenDisplayEvent;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.GameRenderEvent;
 import net.labymod.api.util.math.MathHelper;
@@ -22,6 +23,12 @@ public final class MacroListener {
 
   private boolean macroFinished = false;
   private boolean interpolatingRotation = false;
+  private boolean screenOpen = false;
+
+  @Subscribe
+  public void onScreenDisplay(ScreenDisplayEvent event) {
+    this.screenOpen = event.getScreen() != null;
+  }
 
   @Subscribe(Priority.LATE)
   public void onGameTick(GameTickEvent event) {
@@ -44,9 +51,9 @@ public final class MacroListener {
       return;
     }
 
-    // Cancel macro execution if the game is paused
-    // TODO: This only works in singleplayer
-    if (this.addon.labyAPI().minecraft().isPaused()) {
+    // Cancel macro execution if the game is paused (singleplayer) or a screen
+    // (pause menu, inventory, chat, ...) is open, which also happens in multiplayer
+    if (this.addon.labyAPI().minecraft().isPaused() || this.screenOpen) {
       activeMacro.clear();
       this.macroFinished = true;
       this.stopInterpolating();
