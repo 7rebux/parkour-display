@@ -43,7 +43,7 @@ public final class SetRunEndCommand extends SubCommand {
       return true;
     }
 
-    var targetBlock = targetBlockOptional.get();
+    var targetBlock = targetBlockOptional.get().blockState();
 
     if (!isPressurePlate(targetBlock) && (mode == Mode.Plate || mode == Mode.PlateOld)) {
       ChatMessage.of(this, "notAPlate")

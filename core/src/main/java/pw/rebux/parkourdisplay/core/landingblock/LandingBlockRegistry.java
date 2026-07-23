@@ -1,11 +1,15 @@
 package pw.rebux.parkourdisplay.core.landingblock;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
 import net.labymod.api.client.world.block.BlockState;
+import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 
 @Data
 @RequiredArgsConstructor
@@ -17,12 +21,18 @@ public class LandingBlockRegistry {
   private double lastTotalLandingBlockOffset = 0;
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
-  public void register(BlockState blockState, LandingBlockMode mode) {
+  /// Blocks can be made up of multiple collision boxes at different heights/positions (e.g.
+  /// stairs), so only the one box closest to `referencePoint` (the spot the player targeted) is
+  /// kept - comparing against all of them at runtime doesn't make sense for such blocks.
+  public void register(BlockState blockState, LandingBlockMode mode, DoubleVector3 referencePoint) {
     var world = this.addon.labyAPI().minecraft().clientWorld();
     var collisions = world.getBlockCollisions(blockState.bounds().move(blockState.position()));
+    var closest = collisions.stream()
+        .min(Comparator.comparingDouble(box -> BoundingBoxUtils.distanceToPoint(box, referencePoint)))
+        .orElseThrow();
     var label = Laby.labyAPI().minecraft().getTranslation(
         "block.minecraft.%s".formatted(blockState.block().id().getPath()));
 
-    this.landingBlocks.add(new LandingBlock(label, mode, collisions));
+    this.landingBlocks.add(new LandingBlock(label, mode, List.of(closest)));
   }
 }
