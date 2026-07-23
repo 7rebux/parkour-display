@@ -16,6 +16,10 @@ repositories {
     maven("https://maven.fabricmc.net/")
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/parkourdisplay.accesswidener")
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings("net.fabricmc:yarn:$yarnMappings:v2")
