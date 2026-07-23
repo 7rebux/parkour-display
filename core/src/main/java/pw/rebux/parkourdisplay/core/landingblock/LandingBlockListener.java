@@ -30,9 +30,8 @@ public final class LandingBlockListener {
       return;
     }
 
-    // TODO: Also doesn't really make sense for some blocks to compare multiple bounding boxes
-    //       since their height and position can differ. Depending on which one the player tries
-    //       to land on, it might be better to only specify one bounding box in the landing block.
+    // Newly registered landing blocks only ever have one box (LandingBlockRegistry#register
+    // picks it at registration time); this still loops for runs saved before that change.
     for (LandingBlock landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
       var tickPosition = landingBlock.mode() == LandingBlockMode.Land
           ? this.addon.playerState().lastTick()

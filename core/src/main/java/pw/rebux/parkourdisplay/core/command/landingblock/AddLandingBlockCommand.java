@@ -19,7 +19,7 @@ public final class AddLandingBlockCommand extends SubCommand {
   @Override
   public boolean execute(String prefix, String[] arguments) {
     var useTargetBlock = arguments.length > 0 && arguments[0].equalsIgnoreCase("target");
-    var blockState = useTargetBlock ? WorldUtils.getBlockLookingAt() : WorldUtils.getBlockStandingOn();
+    var targetedBlock = useTargetBlock ? WorldUtils.getBlockLookingAt() : WorldUtils.getBlockStandingOn();
     var modeArgIndex = useTargetBlock ? 1 : 0;
     var mode = LandingBlockMode.Land;
 
@@ -32,14 +32,18 @@ public final class AddLandingBlockCommand extends SubCommand {
       }
     }
 
-    if (blockState.isEmpty() || !blockState.get().hasCollision()) {
+    if (targetedBlock.isEmpty() || !targetedBlock.get().blockState().hasCollision()) {
       ChatMessage.of(this, "invalidBlock")
           .withColor(NamedTextColor.RED)
           .send();
       return true;
     }
 
-    this.addon.landingBlockRegistry().register(blockState.get(), mode);
+    this.addon.landingBlockRegistry().register(
+        targetedBlock.get().blockState(),
+        mode,
+        targetedBlock.get().referencePoint()
+    );
     ChatMessage.of(this, "success")
         .withColor(NamedTextColor.GREEN)
         .withArgs(mode.name())
