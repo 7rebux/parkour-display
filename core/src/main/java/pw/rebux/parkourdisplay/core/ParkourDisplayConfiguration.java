@@ -33,6 +33,12 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> showClimbDurations = new ConfigProperty<>(false);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showLadderYCoordinates = new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showClimbCatchAndExit = new ConfigProperty<>(false);
+
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
   private final ConfigProperty<Integer> chatDecimalPlaces = new ConfigProperty<>(3);
@@ -79,6 +85,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @DropdownSetting
   private final ConfigProperty<MacroRotationChange> rotationChange =
       new ConfigProperty<>(MacroRotationChange.Absolute);
+
+  public String decimalFormat() {
+    return "%%.%df".formatted(this.chatDecimalPlaces.get());
+  }
 
   @Getter
   public static final class HighlightLandingBlocksSettings extends Config {

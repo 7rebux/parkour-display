@@ -9,8 +9,10 @@ import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.api.Permissions;
+import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
+import pw.rebux.parkourdisplay.core.chat.ClimbCatchExitLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxListener;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxRegistry;
@@ -80,63 +82,64 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   protected void enable() {
     this.minecraftInputUtil = new MinecraftInputUtil(this);
 
-    this.registerSettingCategory();
+    this.registerListeners();
+    this.registerHudWidgets();
+    this.registerCommand(new BaseCommand(this));
 
     this.labyAPI().permissionRegistry().register(Permissions.RUN_MACROS, false, true);
 
-    this.registerListener(new PlayerStateListener(this));
-    this.registerListener(new ChatMoveTimeLogListener(this));
-    this.registerListener(new LandingBlockListener(this));
-    this.registerListener(new LadderBoxListener(this));
-    this.registerListener(new RunListener(this));
-    this.registerListener(new MacroListener(this));
-    this.registerListener(new ChatMovementLogListener(this));
-
-    this.registerCommand(new BaseCommand(this));
-
-    var hudWidgetRegistry = this.labyAPI().hudWidgetRegistry();
-    hudWidgetRegistry.categoryRegistry().register(this.category);
-    hudWidgetRegistry.register(new AirTimeWidget(this));
-    hudWidgetRegistry.register(new GroundTimeWidget(this));
-    hudWidgetRegistry.register(new ClimbTimeWidget(this));
-    hudWidgetRegistry.register(new TierWidget(this));
-    hudWidgetRegistry.register(new VelocityWidget(this));
-    hudWidgetRegistry.register(new SpeedVectorWidget(this));
-    hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
-    hudWidgetRegistry.register(new JumpAngleWidget(this));
-    hudWidgetRegistry.register(new LandingCoordinatesWidget(this));
-    hudWidgetRegistry.register(new HitCoordinatesWidget(this));
-    hudWidgetRegistry.register(new HitAngleWidget(this));
-    hudWidgetRegistry.register(new HitVelocityWidget(this));
-    hudWidgetRegistry.register(new LastTurnWidget(this));
-    hudWidgetRegistry.register(new LastFortyFiveWidget(this));
-    hudWidgetRegistry.register(new LastInputWidget(this));
-    hudWidgetRegistry.register(new LastTimingWidget(this));
-    hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
-    hudWidgetRegistry.register(new RunGroundTimeWidget(this));
-    hudWidgetRegistry.register(new RunSplitsWidget(this));
-    hudWidgetRegistry.register(new SecondTurnWidget(this));
-    hudWidgetRegistry.register(new PreturnWidget(this));
-    hudWidgetRegistry.register(new LastSidestepWidget(this));
-    hudWidgetRegistry.register(new BlipsWidget(this));
-
-    var protocolService = Laby.references().labyModProtocolService();
-    var integration = protocolService.getOrRegisterIntegration(
-        ParkourDisplayIntegration.class,
-        ParkourDisplayIntegration::new
-    );
-
-    var protocol = integration.parkourDisplayProtocol();
-    protocol.registerHandler(RunDataPacket.class, new RunDataPacketHandler(this));
-  }
-
-  // TODO
-  public String decimalFormat() {
-    return "%%.%df".formatted(configuration().chatDecimalPlaces().get());
+    // Register parkour-display protocol
+    var integration = Laby.references().labyModProtocolService().getOrRegisterIntegration(
+        ParkourDisplayIntegration.class, ParkourDisplayIntegration::new);
+    integration.parkourDisplayProtocol().registerHandler(
+        RunDataPacket.class, new RunDataPacketHandler(this));
   }
 
   @Override
   protected Class<ParkourDisplayConfiguration> configurationClass() {
     return ParkourDisplayConfiguration.class;
+  }
+
+  private void registerListeners() {
+    this.registerListener(new PlayerStateListener(this));
+    this.registerListener(new RunListener(this));
+    this.registerListener(new MacroListener(this));
+    this.registerListener(new LandingBlockListener(this));
+    this.registerListener(new ChatMoveTimeLogListener(this));
+    this.registerListener(new ChatMovementLogListener(this));
+    this.registerListener(new LadderBoxListener(this));
+    this.registerListener(new ChatLadderYLogListener(this));
+    this.registerListener(new ClimbCatchExitLogListener(this));
+  }
+
+  private void registerHudWidgets() {
+    var hudWidgetRegistry = this.labyAPI().hudWidgetRegistry();
+
+    this.registerSettingCategory();
+    hudWidgetRegistry.categoryRegistry().register(this.category);
+
+    hudWidgetRegistry.register(new AirTimeWidget(this));
+    hudWidgetRegistry.register(new TierWidget(this));
+    hudWidgetRegistry.register(new ClimbTimeWidget(this));
+    hudWidgetRegistry.register(new GroundTimeWidget(this));
+    hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
+    hudWidgetRegistry.register(new JumpAngleWidget(this));
+    hudWidgetRegistry.register(new LandingCoordinatesWidget(this));
+    hudWidgetRegistry.register(new VelocityWidget(this));
+    hudWidgetRegistry.register(new SpeedVectorWidget(this));
+    hudWidgetRegistry.register(new HitCoordinatesWidget(this));
+    hudWidgetRegistry.register(new HitAngleWidget(this));
+    hudWidgetRegistry.register(new HitVelocityWidget(this));
+    hudWidgetRegistry.register(new LastInputWidget(this));
+    hudWidgetRegistry.register(new LastTimingWidget(this));
+    hudWidgetRegistry.register(new LastSidestepWidget(this));
+    hudWidgetRegistry.register(new LastTurnWidget(this));
+    hudWidgetRegistry.register(new LastFortyFiveWidget(this));
+    hudWidgetRegistry.register(new PreturnWidget(this));
+    hudWidgetRegistry.register(new SecondTurnWidget(this));
+    hudWidgetRegistry.register(new BlipsWidget(this));
+    hudWidgetRegistry.register(new RunGroundTimeWidget(this));
+    hudWidgetRegistry.register(new RunSplitsWidget(this));
+    hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
   }
 }

@@ -86,7 +86,7 @@ public final class LandingBlockListener {
 
   private void update(LandingBlock landingBlock, DoubleVector3 offset) {
     var landingBlockRegistry = this.addon.landingBlockRegistry();
-    var format = this.addon.decimalFormat();
+    var format = this.addon.configuration().decimalFormat();
 
     var distance = MathHelper.offsetDistance(offset);
     var formattedX = String.format(format, offset.getX());
