@@ -9,11 +9,12 @@ import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.api.Permissions;
-import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
+import pw.rebux.parkourdisplay.core.chat.ChatLadderLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
-import pw.rebux.parkourdisplay.core.chat.ClimbCatchExitLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
+import pw.rebux.parkourdisplay.core.graph.JumpGraphFileManager;
+import pw.rebux.parkourdisplay.core.graph.JumpRecorder;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxListener;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxRegistry;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
@@ -75,6 +76,8 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final RunFileManager runFileManager = new RunFileManager(this);
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
+  private final JumpRecorder jumpRecorder = new JumpRecorder(this);
+  private final JumpGraphFileManager jumpGraphFileManager = new JumpGraphFileManager();
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -108,8 +111,10 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new ChatMovementLogListener(this));
     this.registerListener(new LadderBoxListener(this));
-    this.registerListener(new ChatLadderYLogListener(this));
-    this.registerListener(new ClimbCatchExitLogListener(this));
+    this.registerListener(new ChatLadderLogListener(this));
+//    this.registerListener(new ChatLadderYLogListener(this));
+//    this.registerListener(new ClimbCatchExitLogListener(this));
+//    this.registerListener(this.jumpRecorder);
   }
 
   private void registerHudWidgets() {

@@ -210,6 +210,14 @@
       "showClimbDurations": {
         "name": "Show Climb Durations In Chat"
       },
+      "showLadderYCoordinates": {
+        "name": "Show Airborne Y Coordinates In Chat",
+        "description": "Whether to log your Y coordinate and its per-tick delta for every tick while airborne, from leaving the ground until landing. Ticks spent on a climbable are flagged."
+      },
+      "showClimbCatchAndExit": {
+        "name": "Show Climb Catch & Exit In Chat",
+        "description": "A less spammy trace: logs the tick you catch a climbable (with Y velocity and airtime), then every tick after you leave it until you land."
+      },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
       },
@@ -363,6 +371,14 @@
       "blips": "Blips"
     },
     "commands": {
+      "savejump": {
+        "description": "Saves the last jump's height curve (normalized Y) as a PNG image.",
+        "messages": {
+          "noJump": "No jump recorded yet. Do a jump first.",
+          "success": "Saved jump graph to %s",
+          "error": "Failed to save jump graph. Check console for more info."
+        }
+      },
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {
@@ -499,6 +515,15 @@
       },
       "movement": {
         "grind": "§9Grind"
+      },
+      "ladder": {
+        "y": "%s: Y: %s (Δ %s)%s"
+      },
+      "climb": {
+        "catch": "Climb catch — Y: %s | vy: %s | air: %s",
+        "catchOffsetHit": "Catch offset X: %s, Z: %s",
+        "catchOffsetMiss": "Missed by X: %s, Z: %s",
+        "exit": "%s: Y: %s (Δ %s)"
       }
     },
     "activities": {
