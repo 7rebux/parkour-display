@@ -31,8 +31,6 @@ public final class BoundingBoxUtils {
   }
 
   /// Distance from `point` to the closest point on `box`, or 0 if `point` lies inside it.
-  /// Used to pick the one box a player actually meant out of a block's collision shape when
-  /// it's made up of several boxes at different heights/positions (e.g. stairs).
   public static double distanceToPoint(
       AxisAlignedBoundingBox box,
       DoubleVector3 point
