@@ -1,7 +1,6 @@
 package pw.rebux.parkourdisplay.core.landingblock;
 
 import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
@@ -22,6 +21,6 @@ public final class LandingBlockRegistry {
   public void register(Block block, AxisAlignedBoundingBox aabb, LandingBlockMode mode) {
     var label = Laby.labyAPI().minecraft().getTranslation(
         "block.minecraft.%s".formatted(block.id().getPath()));
-    this.landingBlocks.add(new LandingBlock(label, mode, List.of(aabb)));
+    this.landingBlocks.add(new LandingBlock(label, mode, aabb));
   }
 }

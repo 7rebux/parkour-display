@@ -30,34 +30,22 @@ public final class LandingBlockListener {
       return;
     }
 
-    // Newly registered landing blocks only ever have one box (LandingBlockRegistry#register
-    // picks it at registration time); this still loops for runs saved before that change.
     for (LandingBlock landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
       var tickPosition = landingBlock.mode() == LandingBlockMode.Land
           ? this.addon.playerState().lastTick()
           : this.addon.playerState().currentTick();
 
-      DoubleVector3 currentBest = null;
+      var box = landingBlock.collisionBox();
+      var isTryingToLandOn = state.currentTick().playerBoundingBox().getMinY() <= box.getMaxY()
+          && state.lastTick().playerBoundingBox().getMinY() > box.getMaxY();
+      var isInRange = box.getCenter().distanceSquared(player.position().toDoubleVector3()) <= maxCheckDistance;
 
-      for (var box : landingBlock.blockCollisions()) {
-        var isTryingToLandOn = state.currentTick().playerBoundingBox().getMinY() <= box.getMaxY()
-            && state.lastTick().playerBoundingBox().getMinY() > box.getMaxY();
-        var isInRange = box.getCenter().distanceSquared(player.position().toDoubleVector3()) <= maxCheckDistance;
-
-        if (!isTryingToLandOn || !isInRange) {
-          continue;
-        }
-
-        var offset = BoundingBoxUtils.computeOverlap(tickPosition.playerBoundingBox(), box);
-
-        if (currentBest == null || MathHelper.offsetDistance(offset) > MathHelper.offsetDistance(currentBest)) {
-          currentBest = offset;
-        }
+      if (!isTryingToLandOn || !isInRange) {
+        continue;
       }
 
-      if (currentBest != null) {
-        this.update(landingBlock, currentBest);
-      }
+      var offset = BoundingBoxUtils.computeOverlap(tickPosition.playerBoundingBox(), box);
+      this.update(landingBlock, offset);
     }
   }
 
@@ -70,16 +58,14 @@ public final class LandingBlockListener {
     }
 
     for (var landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
-      for (var boundingBox : landingBlock.blockCollisions()) {
-        RenderUtils.renderAbsoluteBoundingBox(
-            event.camera().renderPosition(),
-            boundingBox,
-            settings.outlineThickness().get() / 1000F,
-            event.stack(),
-            settings.fillColor().get().get(),
-            settings.outlineColor().get().get()
-        );
-      }
+      RenderUtils.renderAbsoluteBoundingBox(
+          event.camera().renderPosition(),
+          landingBlock.collisionBox(),
+          settings.outlineThickness().get() / 1000F,
+          event.stack(),
+          settings.fillColor().get().get(),
+          settings.outlineColor().get().get()
+      );
     }
   }
 

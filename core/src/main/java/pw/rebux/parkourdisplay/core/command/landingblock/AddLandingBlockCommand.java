@@ -49,7 +49,8 @@ public final class AddLandingBlockCommand extends SubCommand {
     var absoluteBounds = Objects.requireNonNull(blockState.bounds()).move(hitResult.location());
 
     var aabb = world.getBlockCollisions(absoluteBounds).stream()
-        .min(Comparator.comparingDouble(box -> BoundingBoxUtils.distanceToPoint(box, hitResult.hit())))
+        .min(Comparator.comparingDouble(box ->
+            BoundingBoxUtils.distanceToPoint(box, hitResult.hit())))
         .orElse(null);
 
     if (aabb == null) {
