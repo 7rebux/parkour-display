@@ -520,6 +520,8 @@
         "y": "%s: Y: %s (Δ %s)%s"
       },
       "climb": {
+        "duration": "Climb duration: %s + %s + %s = %s",
+
         "catch": "Climb catch — Y: %s | vy: %s | air: %s",
         "catchOffsetHit": "Catch offset X: %s, Z: %s",
         "catchOffsetMiss": "Missed by X: %s, Z: %s",

@@ -10,6 +10,7 @@ import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderLogListener;
+import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
@@ -112,7 +113,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new ChatMovementLogListener(this));
     this.registerListener(new LadderBoxListener(this));
     this.registerListener(new ChatLadderLogListener(this));
-//    this.registerListener(new ChatLadderYLogListener(this));
+    this.registerListener(new ChatLadderYLogListener(this));
 //    this.registerListener(new ClimbCatchExitLogListener(this));
 //    this.registerListener(this.jumpRecorder);
   }

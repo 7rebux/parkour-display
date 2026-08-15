@@ -12,6 +12,7 @@ import net.labymod.api.client.world.block.BlockState;
 import net.labymod.api.client.world.item.VanillaItems;
 import net.labymod.api.client.world.phys.hit.BlockHitResult;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
+import net.labymod.api.util.math.vector.DoubleVector3;
 import net.labymod.api.util.math.vector.IntVector3;
 
 public final class WorldUtils {
@@ -48,8 +49,8 @@ public final class WorldUtils {
     return Optional.of(blockState).filter(bs -> !bs.block().isAir());
   }
 
-  public static BlockState getInBlockState(ClientPlayer player) {
-    return minecraft.clientWorld().getBlockState(player.position().toDoubleVector3());
+  public static BlockState getInBlockState(DoubleVector3 position) {
+    return minecraft.clientWorld().getBlockState(position);
   }
 
   public static boolean onClimbable(ClientPlayer player) {
@@ -61,7 +62,7 @@ public final class WorldUtils {
       return false;
     }
 
-    var state = getInBlockState(player);
+    var state = getInBlockState(player.position().toDoubleVector3());
     return isClimbable(state);
   }
 
