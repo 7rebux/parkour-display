@@ -71,8 +71,8 @@ public final class WorldUtils {
     return Optional.ofNullable(hit);
   }
 
-  public static BlockState getInBlockState(ClientPlayer player) {
-    return minecraft.clientWorld().getBlockState(player.position().toDoubleVector3());
+  public static BlockState getInBlockState(DoubleVector3 position) {
+    return minecraft.clientWorld().getBlockState(position);
   }
 
   public static boolean onClimbable(ClientPlayer player) {
@@ -84,7 +84,7 @@ public final class WorldUtils {
       return false;
     }
 
-    var state = getInBlockState(player);
+    var state = getInBlockState(player.position().toDoubleVector3());
     return isClimbable(state);
   }
 
