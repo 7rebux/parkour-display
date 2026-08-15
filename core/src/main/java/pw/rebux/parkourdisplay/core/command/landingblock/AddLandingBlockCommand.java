@@ -1,9 +1,12 @@
 package pw.rebux.parkourdisplay.core.command.landingblock;
 
+import java.util.Comparator;
+import java.util.Objects;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockMode;
+import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
@@ -18,8 +21,8 @@ public final class AddLandingBlockCommand extends SubCommand {
 
   @Override
   public boolean execute(String prefix, String[] arguments) {
+    var world = this.addon.labyAPI().minecraft().clientWorld();
     var useTargetBlock = arguments.length > 0 && arguments[0].equalsIgnoreCase("target");
-    var targetedBlock = useTargetBlock ? WorldUtils.getBlockLookingAt() : WorldUtils.getBlockStandingOn();
     var modeArgIndex = useTargetBlock ? 1 : 0;
     var mode = LandingBlockMode.Land;
 
@@ -32,18 +35,32 @@ public final class AddLandingBlockCommand extends SubCommand {
       }
     }
 
-    if (targetedBlock.isEmpty() || !targetedBlock.get().blockState().hasCollision()) {
+    var hitResultOptional = WorldUtils.rayTraceHit(64.0D, 1.0F);
+
+    if (hitResultOptional.isEmpty()) {
       ChatMessage.of(this, "invalidBlock")
           .withColor(NamedTextColor.RED)
           .send();
       return true;
     }
 
-    this.addon.landingBlockRegistry().register(
-        targetedBlock.get().blockState(),
-        mode,
-        targetedBlock.get().referencePoint()
-    );
+    var hitResult = hitResultOptional.get();
+    var blockState = world.getBlockState(hitResult.location());
+    var absoluteBounds = Objects.requireNonNull(blockState.bounds()).move(hitResult.location());
+
+    var aabb = world.getBlockCollisions(absoluteBounds).stream()
+        .min(Comparator.comparingDouble(box -> BoundingBoxUtils.distanceToPoint(box, hitResult.hit())))
+        .orElse(null);
+
+    if (aabb == null) {
+      ChatMessage.of(this, "invalidBlock")
+          .withColor(NamedTextColor.RED)
+          .send();
+      return true;
+    }
+
+    this.addon.landingBlockRegistry().register(blockState.block(), aabb, mode);
+
     ChatMessage.of(this, "success")
         .withColor(NamedTextColor.GREEN)
         .withArgs(mode.name())

@@ -2,27 +2,22 @@ package pw.rebux.parkourdisplay.core.util;
 
 import java.util.Objects;
 import java.util.Optional;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.labymod.api.Laby;
 import net.labymod.api.client.Minecraft;
 import net.labymod.api.client.world.block.BlockState;
-import net.labymod.api.client.world.phys.hit.BlockHitResult;
 import net.labymod.api.util.math.vector.DoubleVector3;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WorldUtils {
 
   private static final Minecraft minecraft = Laby.labyAPI().minecraft();
 
-  /// A block found by [#getBlockStandingOn()] or [#getBlockLookingAt()], together with the point
-  /// that was used to target it. When a block's collision shape is made up of multiple boxes
-  /// (e.g. stairs), this point identifies which one the player actually meant.
-  public record TargetedBlock(BlockState blockState, DoubleVector3 referencePoint) {
-
-  }
-
   /// Finds block with collision at or below player
-  public static Optional<TargetedBlock> getBlockStandingOn() {
-    var world = minecraft.clientWorld();
+  public static Optional<BlockState> getBlockStandingOn() {
     var player = Objects.requireNonNull(minecraft.getClientPlayer());
+    var world = minecraft.clientWorld();
     var position = player.position().toDoubleVector3();
 
     var inside = Optional.of(world.getBlockState(position))
@@ -30,25 +25,42 @@ public final class WorldUtils {
     var below = Optional.of(world.getBlockState(position.sub(0, 1, 0)))
         .filter(BlockState::hasCollision);
 
-    return inside.or(() -> below)
-        .map(blockState -> new TargetedBlock(blockState, position));
+    return inside.or(() -> below);
   }
 
-  /**
-   * Retrieves the block that the player is currently looking at.
-   * The method uses Minecraft's current hit result and determines the block state
-   * present at the position of the targeted block.
-   *
-   * @return An {@code Optional} containing the targeted block, or an empty {@code Optional} if
-   *         there is no block or if the block is air.
-   */
-  public static Optional<TargetedBlock> getBlockLookingAt() {
-    var result = minecraft.getHitResult();
-    var blockResult = (BlockHitResult) result;
-    var blockState = minecraft.clientWorld().getBlockState(blockResult.getBlockPosition());
+  /// Retrieves the block that the player is currently looking at (within 64 blocks).
+  public static Optional<BlockState> getBlockLookingAt() {
+    return rayTraceHit(64.0D, 1.0F)
+        .map(hit -> minecraft.clientWorld().getBlockState(hit.location()));
+  }
 
-    return Optional.of(blockState)
-        .filter(bs -> !bs.block().isAir())
-        .map(bs -> new TargetedBlock(bs, blockResult.location()));
+  public static Optional<BlockRayTracer.Hit> rayTraceHit(double distance, float partialTicks) {
+    var player = Objects.requireNonNull(minecraft.getClientPlayer());
+    // Reused across every voxel the ray visits, so the traversal allocates nothing.
+    var scratch = new double[6];
+
+    var hit = BlockRayTracer.trace(
+        player.eyePosition(),
+        new DoubleVector3(player.perspectiveVector(partialTicks)),
+        distance,
+        (x, y, z) -> {
+          var state = minecraft.clientWorld().getBlockState(x, y, z);
+          if (state == null) return null;
+          if (state.block().isAir()) return null;
+
+          var box = state.bounds();
+          if (box == null) return null;
+
+          scratch[0] = box.getMinX();
+          scratch[1] = box.getMinY();
+          scratch[2] = box.getMinZ();
+          scratch[3] = box.getMaxX();
+          scratch[4] = box.getMaxY();
+          scratch[5] = box.getMaxZ();
+          return scratch;
+        }
+    );
+
+    return Optional.ofNullable(hit);
   }
 }
