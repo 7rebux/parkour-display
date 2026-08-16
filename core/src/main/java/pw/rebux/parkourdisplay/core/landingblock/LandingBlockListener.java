@@ -30,35 +30,22 @@ public final class LandingBlockListener {
       return;
     }
 
-    // TODO: Also doesn't really make sense for some blocks to compare multiple bounding boxes
-    //       since their height and position can differ. Depending on which one the player tries
-    //       to land on, it might be better to only specify one bounding box in the landing block.
     for (LandingBlock landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
       var tickPosition = landingBlock.mode() == LandingBlockMode.Land
           ? this.addon.playerState().lastTick()
           : this.addon.playerState().currentTick();
 
-      DoubleVector3 currentBest = null;
+      var box = landingBlock.collisionBox();
+      var isTryingToLandOn = state.currentTick().playerBoundingBox().getMinY() <= box.getMaxY()
+          && state.lastTick().playerBoundingBox().getMinY() > box.getMaxY();
+      var isInRange = box.getCenter().distanceSquared(player.position().toDoubleVector3()) <= maxCheckDistance;
 
-      for (var box : landingBlock.blockCollisions()) {
-        var isTryingToLandOn = state.currentTick().playerBoundingBox().getMinY() <= box.getMaxY()
-            && state.lastTick().playerBoundingBox().getMinY() > box.getMaxY();
-        var isInRange = box.getCenter().distanceSquared(player.position().toDoubleVector3()) <= maxCheckDistance;
-
-        if (!isTryingToLandOn || !isInRange) {
-          continue;
-        }
-
-        var offset = BoundingBoxUtils.computeOverlap(tickPosition.playerBoundingBox(), box);
-
-        if (currentBest == null || MathHelper.offsetDistance(offset) > MathHelper.offsetDistance(currentBest)) {
-          currentBest = offset;
-        }
+      if (!isTryingToLandOn || !isInRange) {
+        continue;
       }
 
-      if (currentBest != null) {
-        this.update(landingBlock, currentBest);
-      }
+      var offset = BoundingBoxUtils.computeOverlap(tickPosition.playerBoundingBox(), box);
+      this.update(landingBlock, offset);
     }
   }
 
@@ -71,16 +58,14 @@ public final class LandingBlockListener {
     }
 
     for (var landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
-      for (var boundingBox : landingBlock.blockCollisions()) {
-        RenderUtils.renderAbsoluteBoundingBox(
-            event.camera().renderPosition(),
-            boundingBox,
-            settings.outlineThickness().get() / 1000F,
-            event.stack(),
-            settings.fillColor().get().get(),
-            settings.outlineColor().get().get()
-        );
-      }
+      RenderUtils.renderAbsoluteBoundingBox(
+          event.camera().renderPosition(),
+          landingBlock.collisionBox(),
+          settings.outlineThickness().get() / 1000F,
+          event.stack(),
+          settings.fillColor().get().get(),
+          settings.outlineColor().get().get()
+      );
     }
   }
 

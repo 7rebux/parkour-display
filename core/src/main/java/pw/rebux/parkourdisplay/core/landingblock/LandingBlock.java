@@ -1,6 +1,5 @@
 package pw.rebux.parkourdisplay.core.landingblock;
 
-import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
@@ -14,8 +13,7 @@ public class LandingBlock {
   private final String label;
   /// Determines which tick is used to compute the offsets.
   private final LandingBlockMode mode;
-  /// Blocks might be made of multiple collision boxes.
-  private final List<AxisAlignedBoundingBox> blockCollisions;
+  private final AxisAlignedBoundingBox collisionBox;
 
   @Nullable
   private Double bestDistance;
