@@ -86,10 +86,16 @@ public final class AddLandingBlockCommand extends SubCommand {
 
     var blockState = blockStateOptional.get();
     var absoluteBounds = Objects.requireNonNull(blockState.bounds()).move(blockState.position());
+    var playerBounds = player.axisAlignedBoundingBox();
 
+    // Components with equally close top surfaces are disambiguated by the one the player actually
+    // stands on, otherwise the box of a horizontally disjoint component could be picked.
     var aabb = world.getBlockCollisions(absoluteBounds).stream()
-        .min(Comparator.comparingDouble(b ->
-            Math.abs(b.getMaxY() - player.position().getY())))
+        .min(Comparator.<AxisAlignedBoundingBox>comparingDouble(box ->
+                Math.abs(box.getMaxY() - player.position().getY()))
+            .thenComparing(
+                box -> BoundingBoxUtils.overlapAreaXZ(box, playerBounds),
+                Comparator.reverseOrder()))
         .orElse(null);
 
     if (aabb == null) return null;

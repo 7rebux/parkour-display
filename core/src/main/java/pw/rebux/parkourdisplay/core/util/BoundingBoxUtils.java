@@ -42,6 +42,19 @@ public final class BoundingBoxUtils {
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
 
+  /// Area of the overlap between the two boxes on the xz plane, or 0 if they do not overlap.
+  public static double overlapAreaXZ(
+      AxisAlignedBoundingBox a,
+      AxisAlignedBoundingBox b
+  ) {
+    var overlapX = Math.min(a.getMaxX(), b.getMaxX()) - Math.max(a.getMinX(), b.getMinX());
+    var overlapZ = Math.min(a.getMaxZ(), b.getMaxZ()) - Math.max(a.getMinZ(), b.getMinZ());
+
+    if (overlapX <= 0 || overlapZ <= 0) return 0;
+
+    return overlapX * overlapZ;
+  }
+
   public static DoubleVector3 computeOverlap(
       AxisAlignedBoundingBox a,
       AxisAlignedBoundingBox b
