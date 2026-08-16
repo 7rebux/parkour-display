@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
-import net.labymod.api.client.world.block.BlockState;
+import net.labymod.api.client.world.block.Block;
+import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @Data
 @RequiredArgsConstructor
-public class LandingBlockRegistry {
+public final class LandingBlockRegistry {
 
   private final ParkourDisplayAddon addon;
   private final ArrayList<LandingBlock> landingBlocks = new ArrayList<>();
@@ -17,12 +18,9 @@ public class LandingBlockRegistry {
   private double lastTotalLandingBlockOffset = 0;
   private double lastLandingBlockOffsetX = 0, lastLandingBlockOffsetZ = 0;
 
-  public void register(BlockState blockState, LandingBlockMode mode) {
-    var world = this.addon.labyAPI().minecraft().clientWorld();
-    var collisions = world.getBlockCollisions(blockState.bounds().move(blockState.position()));
+  public void register(Block block, AxisAlignedBoundingBox aabb, LandingBlockMode mode) {
     var label = Laby.labyAPI().minecraft().getTranslation(
-        "block.minecraft.%s".formatted(blockState.block().id().getPath()));
-
-    this.landingBlocks.add(new LandingBlock(label, mode, collisions));
+        "block.minecraft.%s".formatted(block.id().getPath()));
+    this.landingBlocks.add(new LandingBlock(label, mode, aabb));
   }
 }

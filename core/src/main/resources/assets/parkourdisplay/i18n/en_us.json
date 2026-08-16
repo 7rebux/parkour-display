@@ -355,7 +355,7 @@
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {
-          "invalidBlock": "Please stand on a valid block.",
+          "invalidBlock": "Invalid block.",
           "success": "Successfully added landing block (Mode = %s)."
         }
       },
