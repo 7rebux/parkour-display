@@ -172,6 +172,12 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
+      },
+      "last_ladder_box_offsets": {
+        "name": "Last Ladder Box Offsets",
+        "singleLine": {
+          "name": "Single Line"
+        }
       }
     },
     "settings": {
@@ -310,6 +316,10 @@
       "smoothRotation": {
         "name": "Smooth Rotation",
         "description": "Interpolates the rotation between ticks instead of snapping to the rotation of every tick."
+      },
+      "showLadderBoxOffsets": {
+        "name": "Show Ladder Box Offsets In Chat",
+        "description": "Whether to log the closest approach to each ladder box in chat, even when it did not beat the personal best."
       }
     },
     "labels": {
@@ -368,7 +378,13 @@
       "last_sidestep": "Last Sidestep",
       "preturn": "Preturn",
       "second_turn": "Second Turn",
-      "blips": "Blips"
+      "blips": "Blips",
+      "last_ladder_box_offsets": {
+        "single": "Last Ladder Offsets",
+        "total": "Ladder Offset Total",
+        "x": "Ladder Offset X",
+        "z": "Ladder Offset Z"
+      }
     },
     "commands": {
       "savejump": {
@@ -490,6 +506,14 @@
         "messages": {
           "success": "Successfully cleared run data."
         }
+      },
+      "resetladderbox": {
+        "description": "Reset the personal best offsets for all or a single ladder box",
+        "messages": {
+          "invalidIndex": "Please provide a valid index.",
+          "successSingle": "Successfully reset ladder box offsets.",
+          "successAll": "Successfully reset offsets of all ladder boxes."
+        }
       }
     },
     "messages": {
@@ -521,11 +545,14 @@
       },
       "climb": {
         "duration": "Climb duration: %s + %s + %s = %s",
-
         "catch": "Climb catch — Y: %s | vy: %s | air: %s",
         "catchOffsetHit": "Catch offset X: %s, Z: %s",
         "catchOffsetMiss": "Missed by X: %s, Z: %s",
         "exit": "%s: Y: %s (Δ %s)"
+      },
+      "ladderbox": {
+        "newPB": "New PB: %s (X: %s, Z: %s)",
+        "offsets": "Offset X: %s, Z: %s"
       }
     },
     "activities": {

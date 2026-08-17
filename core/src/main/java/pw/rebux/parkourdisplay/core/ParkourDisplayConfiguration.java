@@ -55,6 +55,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
       new HighlightLandingBlocksSettings();
 
   @SettingSection("ladderBox")
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showLadderBoxOffsets = new ConfigProperty<>(false);
+
   private final HighlightLadderBoxesSettings highlightLadderBoxesSettings =
       new HighlightLadderBoxesSettings();
 

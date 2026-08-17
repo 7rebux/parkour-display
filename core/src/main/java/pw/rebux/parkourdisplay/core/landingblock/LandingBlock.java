@@ -3,7 +3,7 @@ package pw.rebux.parkourdisplay.core.landingblock;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
-import org.jspecify.annotations.Nullable;
+import pw.rebux.parkourdisplay.core.offset.PersonalBest;
 
 @Data
 @RequiredArgsConstructor
@@ -15,6 +15,5 @@ public class LandingBlock {
   private final LandingBlockMode mode;
   private final AxisAlignedBoundingBox collisionBox;
 
-  @Nullable
-  private Double bestDistance;
+  private final PersonalBest best = new PersonalBest();
 }

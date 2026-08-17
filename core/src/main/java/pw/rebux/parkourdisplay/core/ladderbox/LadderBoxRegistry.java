@@ -18,6 +18,9 @@ public final class LadderBoxRegistry {
 
   private final List<LadderBox> ladderBoxes = new ArrayList<>();
 
+  private double lastTotalLadderBoxOffset = 0;
+  private double lastLadderBoxOffsetX = 0, lastLadderBoxOffsetZ = 0;
+
   public void register(BlockState blockState) {
     var boundingBoxes = WorldUtils.findConnectedLadders(blockState.position());
     var mainLadderBB = blockState.bounds().move(blockState.position());

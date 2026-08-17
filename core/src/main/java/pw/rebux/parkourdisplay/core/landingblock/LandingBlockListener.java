@@ -1,8 +1,6 @@
 package pw.rebux.parkourdisplay.core.landingblock;
 
 import lombok.RequiredArgsConstructor;
-import net.labymod.api.client.component.Component;
-import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
@@ -10,7 +8,6 @@ import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
-import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
@@ -71,40 +68,16 @@ public final class LandingBlockListener {
 
   private void update(LandingBlock landingBlock, DoubleVector3 offset) {
     var landingBlockRegistry = this.addon.landingBlockRegistry();
-    var format = this.addon.configuration().decimalFormat();
-
     var distance = MathHelper.offsetDistance(offset);
-    var formattedX = String.format(format, offset.getX());
-    var formattedZ = String.format(format, offset.getZ());
-    var formattedTotal = String.format(format, distance);
 
-    var newBest = landingBlock.bestDistance() == null || distance > landingBlock.bestDistance();
-
-    if (newBest) {
-      landingBlock.bestDistance(distance);
-      ChatMessage.of("messages.lb.newPB")
-          .withColor(NamedTextColor.GREEN)
-          .withArgs(
-              Component.text(formattedTotal, NamedTextColor.DARK_GREEN),
-              formattedX,
-              formattedZ
-          )
-          .send();
-    } else if (this.addon.configuration().showLandingBlockOffsets().get()) {
-      ChatMessage.of("messages.lb.offsets")
-          .withColor(distance > 0 ? NamedTextColor.GREEN : NamedTextColor.RED)
-          .withArgs(
-              Component.text(
-                  formattedX,
-                  distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED
-              ),
-              Component.text(
-                  formattedZ,
-                  distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED
-              )
-          )
-          .send();
-    }
+    this.addon.offsetReporter().report(
+        "messages.lb",
+        landingBlock.best(),
+        distance,
+        this.addon.configuration().showLandingBlockOffsets().get(),
+        offset.getX(),
+        offset.getZ()
+    );
 
     landingBlockRegistry.lastTotalLandingBlockOffset(distance);
     landingBlockRegistry.lastLandingBlockOffsetX(offset.getX());
