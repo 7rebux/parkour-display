@@ -54,6 +54,13 @@
           "description": "Whether to hide the widget if the value is zero."
         }
       },
+      "climb_time": {
+        "name": "Climb Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while climbing."
+        }
+      },
       "tier": {
         "name": "Tier"
       },
@@ -165,6 +172,12 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
+      },
+      "last_ladder_box_offsets": {
+        "name": "Last Ladder Box Offsets",
+        "singleLine": {
+          "name": "Single Line"
+        }
       }
     },
     "settings": {
@@ -199,6 +212,17 @@
       "showGrinds": {
         "name": "Show Grinds In Chat",
         "description": "Whether to show ceiling jump cancels in the chat."
+      },
+      "showClimbDurations": {
+        "name": "Show Climb Durations In Chat"
+      },
+      "showLadderYCoordinates": {
+        "name": "Show Airborne Y Coordinates In Chat",
+        "description": "Whether to log your Y coordinate and its per-tick delta for every tick while airborne, from leaving the ground until landing. Ticks spent on a climbable are flagged."
+      },
+      "showClimbCatchAndExit": {
+        "name": "Show Climb Catch & Exit In Chat",
+        "description": "A less spammy trace: logs the tick you catch a climbable (with Y velocity and airtime), then every tick after you leave it until you land."
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -292,10 +316,15 @@
       "smoothRotation": {
         "name": "Smooth Rotation",
         "description": "Interpolates the rotation between ticks instead of snapping to the rotation of every tick."
+      },
+      "showLadderBoxOffsets": {
+        "name": "Show Ladder Box Offsets In Chat",
+        "description": "Whether to log the closest approach to each ladder box in chat, even when it did not beat the personal best."
       }
     },
     "labels": {
       "air_time": "Airtime",
+      "climb_time": "Climb Time",
       "ground_time": "Ground Time",
       "hit_coordinates": {
         "single": "Hit XYZ",
@@ -349,9 +378,23 @@
       "last_sidestep": "Last Sidestep",
       "preturn": "Preturn",
       "second_turn": "Second Turn",
-      "blips": "Blips"
+      "blips": "Blips",
+      "last_ladder_box_offsets": {
+        "single": "Last Ladder Offsets",
+        "total": "Ladder Offset Total",
+        "x": "Ladder Offset X",
+        "z": "Ladder Offset Z"
+      }
     },
     "commands": {
+      "savejump": {
+        "description": "Saves the last jump's height curve (normalized Y) as a PNG image.",
+        "messages": {
+          "noJump": "No jump recorded yet. Do a jump first.",
+          "success": "Saved jump graph to %s",
+          "error": "Failed to save jump graph. Check console for more info."
+        }
+      },
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {
@@ -463,6 +506,14 @@
         "messages": {
           "success": "Successfully cleared run data."
         }
+      },
+      "resetladderbox": {
+        "description": "Reset the personal best offsets for all or a single ladder box",
+        "messages": {
+          "invalidIndex": "Please provide a valid index.",
+          "successSingle": "Successfully reset ladder box offsets.",
+          "successAll": "Successfully reset offsets of all ladder boxes."
+        }
       }
     },
     "messages": {
@@ -483,10 +534,25 @@
       },
       "moveTime": {
         "air": "%s Airtime",
-        "ground": "%s Ground Time"
+        "ground": "%s Ground Time",
+        "climbable": "§5%s Climb Time"
       },
       "movement": {
         "grind": "§9Grind"
+      },
+      "ladder": {
+        "y": "%s: Y: %s (Δ %s)%s"
+      },
+      "climb": {
+        "duration": "Climb duration: %s + %s + %s = %s",
+        "catch": "Climb catch — Y: %s | vy: %s | air: %s",
+        "catchOffsetHit": "Catch offset X: %s, Z: %s",
+        "catchOffsetMiss": "Missed by X: %s, Z: %s",
+        "exit": "%s: Y: %s (Δ %s)"
+      },
+      "ladderbox": {
+        "newPB": "New PB: %s (X: %s, Z: %s)",
+        "offsets": "Offset X: %s, Z: %s"
       }
     },
     "activities": {
