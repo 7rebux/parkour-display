@@ -25,6 +25,7 @@ import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
+import pw.rebux.parkourdisplay.core.offset.OffsetReporter;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
@@ -45,6 +46,7 @@ import pw.rebux.parkourdisplay.core.widget.JumpCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LandingCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LastFortyFiveWidget;
 import pw.rebux.parkourdisplay.core.widget.LastInputWidget;
+import pw.rebux.parkourdisplay.core.widget.LastLadderBoxOffsetsWidget;
 import pw.rebux.parkourdisplay.core.widget.LastLandingBlockOffsetsWidget;
 import pw.rebux.parkourdisplay.core.widget.LastSidestepWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTimingWidget;
@@ -74,6 +76,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockRegistry landingBlockRegistry = new LandingBlockRegistry(this);
   private final LadderBoxRegistry ladderBoxRegistry = new LadderBoxRegistry(this);
+  private final OffsetReporter offsetReporter = new OffsetReporter(this);
   private final MacroRunner macroRunner = new MacroRunner(this);
   private final MacroFileManager macroFileManager = new MacroFileManager(this);
   private final RunFileManager runFileManager = new RunFileManager(this);
@@ -153,5 +156,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
+    hudWidgetRegistry.register(new LastLadderBoxOffsetsWidget(this));
   }
 }
