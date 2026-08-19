@@ -31,6 +31,10 @@ public final class ChatLadderLogListener {
       return;
     }
 
+    if (!this.addon.configuration().showClimbCatchAndExit().get()) {
+      return;
+    }
+
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
 
     if (player == null) {

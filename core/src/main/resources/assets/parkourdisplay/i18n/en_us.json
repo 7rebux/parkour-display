@@ -541,14 +541,14 @@
         "grind": "§9Grind"
       },
       "ladder": {
-        "y": "%s: Y: %s (Δ %s)%s"
+        "y": "%s: Y: %s (%s)%s"
       },
       "climb": {
         "duration": "Climb duration: %s + %s + %s = %s",
         "catch": "Climb catch — Y: %s | vy: %s | air: %s",
         "catchOffsetHit": "Catch offset X: %s, Z: %s",
         "catchOffsetMiss": "Missed by X: %s, Z: %s",
-        "exit": "%s: Y: %s (Δ %s)"
+        "exit": "%s: Y: %s (%s)"
       },
       "ladderbox": {
         "newPB": "New PB: %s (X: %s, Z: %s)",

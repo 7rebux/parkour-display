@@ -45,7 +45,7 @@ public final class ChatLadderYLogListener {
 
     // Flag ticks spent on a climbable so ladder sections stand out within the jump.
     var flag = state.currentTick().onClimbable()
-        ? Component.text(" [climb]", NamedTextColor.GOLD)
+        ? Component.text(" [onLadder]", NamedTextColor.BLUE)
         : Component.empty();
 
     ChatMessage.of("messages.ladder.y")
