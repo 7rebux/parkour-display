@@ -41,6 +41,22 @@ public final class LadderBoxRegistry {
         mainLadderBB.getMaxZ()
     );
 
-    this.ladderBoxes.add(new LadderBox(boundingBox));
+    this.ladderBoxes.add(new LadderBox(boundingBox, intersectionBox(boundingBox)));
+  }
+
+  /// Expands the thin ladder bounding box to the climbable intersection region: the block column
+  /// the ladder sits in, inset by 0.3 on X and Z. Y is left untouched.
+  private static AxisAlignedBoundingBox intersectionBox(AxisAlignedBoundingBox box) {
+    var blockX = Math.floor(box.getMinX());
+    var blockZ = Math.floor(box.getMinZ());
+
+    return new AxisAlignedBoundingBox(
+        blockX + 0.3,
+        box.getMinY(),
+        blockZ + 0.3,
+        blockX + 0.7,
+        box.getMaxY(),
+        blockZ + 0.7
+    );
   }
 }
