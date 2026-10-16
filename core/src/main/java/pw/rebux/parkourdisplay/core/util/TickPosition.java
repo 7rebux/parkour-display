@@ -20,12 +20,17 @@ public final class TickPosition {
   // the size can change, e.g., when the player is crouching or swimming.
   private AxisAlignedBoundingBox playerBoundingBox;
   private boolean onGround;
+  private boolean onClimbable;
+  private boolean collided;
 
   public DoubleVector3 toVector() {
     return new DoubleVector3(x, y, z);
   }
 
   public static TickPosition of(ClientPlayer player) {
+    double motionX = player.previousPosition().getX() - player.position().getX();
+    double motionZ = player.previousPosition().getZ() - player.position().getZ();
+
     return TickPosition.builder()
         .x(player.position().getX())
         .y(player.position().getY())
@@ -35,6 +40,8 @@ public final class TickPosition {
         // Otherwise the reference would be stored
         .playerBoundingBox(player.axisAlignedBoundingBox().move(0, 0, 0))
         .onGround(player.isOnGround())
+        .onClimbable(WorldUtils.onClimbable(player))
+        .collided(player.getForwardMovingSpeed() > 0.0F && (motionX == 0.0F || motionZ == 0.0F))
         .build();
   }
 
@@ -46,5 +53,7 @@ public final class TickPosition {
       .pitch(0)
       .playerBoundingBox(new AxisAlignedBoundingBox())
       .onGround(false)
+      .onClimbable(false)
+      .collided(false)
       .build();
 }

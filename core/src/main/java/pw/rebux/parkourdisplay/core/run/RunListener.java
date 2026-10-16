@@ -7,6 +7,7 @@ import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
+import net.labymod.api.util.Color;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.HighlightRunSplitsSettings;
@@ -133,11 +134,14 @@ public final class RunListener {
         );
 
         for (var tickState : run.previousTickStates()) {
+          var onClimbable = tickState.position().onClimbable();
           var onGround = tickState.position().onGround();
           var fillColor =
-              onGround
-                  ? tickStateSettings.onGroundFillColor().get()
-                  : tickStateSettings.regularFillColor().get();
+              onClimbable
+                  ? Color.PINK
+                  : onGround
+                      ? tickStateSettings.onGroundFillColor().get()
+                      : tickStateSettings.regularFillColor().get();
           var outlineColor =
               onGround
                   ? tickStateSettings.onGroundOutlineColor().get()

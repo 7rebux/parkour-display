@@ -30,6 +30,15 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> showGrinds = new ConfigProperty<>(false);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showClimbDurations = new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showLadderYCoordinates = new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showClimbCatchAndExit = new ConfigProperty<>(false);
+
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
   private final ConfigProperty<Integer> chatDecimalPlaces = new ConfigProperty<>(3);
@@ -44,6 +53,13 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
   private final HighlightLandingBlocksSettings highlightLandingBlocksSettings =
       new HighlightLandingBlocksSettings();
+
+  @SettingSection("ladderBox")
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showLadderBoxOffsets = new ConfigProperty<>(false);
+
+  private final HighlightLadderBoxesSettings highlightLadderBoxesSettings =
+      new HighlightLadderBoxesSettings();
 
   @SettingSection("runSplit")
   @SwitchSetting
@@ -73,8 +89,31 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<MacroRotationChange> rotationChange =
       new ConfigProperty<>(MacroRotationChange.Absolute);
 
+  public String decimalFormat() {
+    return "%%.%df".formatted(this.chatDecimalPlaces.get());
+  }
+
   @Getter
   public static final class HighlightLandingBlocksSettings extends Config {
+
+    @SwitchSetting
+    @ShowSettingInParent
+    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);
+
+    @ColorPickerSetting(alpha = true, chroma = true)
+    private final ConfigProperty<Color> fillColor =
+        new ConfigProperty<>(Color.ofRGB(0, 192, 255, 25));
+
+    @ColorPickerSetting(alpha = true, chroma = true)
+    private final ConfigProperty<Color> outlineColor =
+        new ConfigProperty<>(Color.ofRGB(0, 192, 255, 75));
+
+    @SliderSetting(min = 1, max = 30)
+    private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(10);
+  }
+
+  @Getter
+  public static final class HighlightLadderBoxesSettings extends Config {
 
     @SwitchSetting
     @ShowSettingInParent
