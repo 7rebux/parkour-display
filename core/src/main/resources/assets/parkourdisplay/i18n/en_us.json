@@ -524,6 +524,12 @@
           "successSingle": "Successfully reset ladder box offsets.",
           "successAll": "Successfully reset offsets of all ladder boxes."
         }
+      },
+      "version": {
+        "description": "Shows the current addon version",
+        "messages": {
+          "success": "ParkourDisplay version: %s"
+        }
       }
     },
     "messages": {

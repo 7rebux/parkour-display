@@ -7,19 +7,15 @@ import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
-import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.HighlightRunSplitsSettings;
 import pw.rebux.parkourdisplay.core.run.RunTickState.KeyboardInput;
-import pw.rebux.parkourdisplay.core.tickdot.TickDot;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 @RequiredArgsConstructor
 public final class RunListener {
 
-  private static final AxisAlignedBoundingBox playerAABB =
-      new AxisAlignedBoundingBox(-0.3, 0, -0.3, 0.3, 1.8, 0.3);
   // Before version 1.18, there is a minimum distance for move packets to update their position.
   private static final float minStartDistance = 0.03f;
 
@@ -104,7 +100,6 @@ public final class RunListener {
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
     var splitsSettings = this.addon.configuration().highlightRunSplitsSettings();
-    var tickStateSettings = this.addon.configuration().highlightRunTickStates();
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
     var run = this.addon.runState();
 
@@ -120,18 +115,6 @@ public final class RunListener {
 
     if (splitsSettings.highlightEndSplit().get()) {
       this.renderSplit(event, player, run.endSplit(), splitsSettings);
-    }
-
-    // The ticks themselves are rendered by the TickDotListener.
-    if (tickStateSettings.enabled().get() && !run.previousTickStates().isEmpty()) {
-      RenderUtils.renderAbsoluteBoundingBox(
-          event.camera().renderPosition(),
-          playerAABB.move(run.startPosition()),
-          tickStateSettings.outlineThickness().get() / 1000F,
-          event.stack(),
-          tickStateSettings.startFillColor().get().get(),
-          tickStateSettings.startOutlineColor().get().get()
-      );
     }
   }
 
@@ -177,6 +160,15 @@ public final class RunListener {
         inputUtil.sneakKey().isDown()
     );
 
-    return new RunTickState(input, TickPosition.of(player), TickDot.capture(this.addon, player));
+    var state = this.addon.playerState();
+
+    return new RunTickState(
+        input,
+        TickPosition.of(player),
+        state.airTime(),
+        state.vx(),
+        state.vy(),
+        state.vz()
+    );
   }
 }

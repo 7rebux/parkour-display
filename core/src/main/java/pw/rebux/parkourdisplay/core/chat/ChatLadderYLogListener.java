@@ -43,17 +43,16 @@ public final class ChatLadderYLogListener {
         ? NamedTextColor.GREEN
         : delta < 0 ? NamedTextColor.RED : NamedTextColor.GRAY;
 
-    // Flag ticks spent on a climbable so ladder sections stand out within the jump.
-    var flag = state.currentTick().onGround()
-        ? Component.text(" [onGround]", NamedTextColor.YELLOW)
-        : Component.empty();
+    var flags = Component.empty();
 
-    if (state.currentTick().onClimbable()) {
-      flag.append(Component.text(" [onLadder]", NamedTextColor.BLUE));
+    if (state.currentTick().onGround()) {
+      flags.append(Component.text(" [onGround]", NamedTextColor.YELLOW));
     }
-
+    if (state.currentTick().onClimbable()) {
+      flags.append(Component.text(" [onLadder]", NamedTextColor.BLUE));
+    }
     if (state.currentTick().collided()) {
-      flag.append(Component.text(" [collidedHorizontally]", NamedTextColor.LIGHT_PURPLE));
+      flags.append(Component.text(" [collidedHorizontally]", NamedTextColor.LIGHT_PURPLE));
     }
 
     ChatMessage.of("messages.ladder.y")
@@ -62,7 +61,7 @@ public final class ChatLadderYLogListener {
             Component.text(String.valueOf(state.airTime()), NamedTextColor.GRAY),
             Component.text(format.formatted(y), NamedTextColor.AQUA),
             Component.text(format.formatted(delta), deltaColor),
-            flag
+            flags
         )
         .send();
   }
