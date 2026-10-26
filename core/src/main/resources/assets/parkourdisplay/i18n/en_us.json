@@ -338,10 +338,6 @@
       "showLadderBoxOffsets": {
         "name": "Show Ladder Box Offsets In Chat",
         "description": "Whether to log the closest approach to each ladder box in chat, even when it did not beat the personal best."
-      },
-      "showLadderTrajectory": {
-        "name": "Show Ladder Trajectory",
-        "description": "Renders a dot for every tick of your last airborne stretch that touched a ladder. Look at a dot to see its inputs, position and velocity and hit it to toggle the tick's hitbox."
       }
     },
     "labels": {
@@ -556,6 +552,9 @@
       },
       "ladder": {
         "y": "%s: Y: %s (%s)%s"
+      },
+      "climb": {
+        "duration": "Climb duration: %s + %s + %s = %s"
       },
       "ladderbox": {
         "newPB": "New PB: %s (X: %s, Z: %s)",

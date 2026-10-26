@@ -22,16 +22,12 @@ import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.ladderbox.LadderTrajectoryListener;
 import pw.rebux.parkourdisplay.core.run.RunTickState;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
-/// Renders the ticks of the ladder trajectory and of the previous run as dots in the world.
-/// Looking at a dot shows the state of that tick next to the crosshair, hitting it toggles between
-/// the dot and the tick's hitbox.
-///
-/// Both sources are handled here so that only one dot is hovered at a time, even where the
-/// ladder trajectory lies within the previous run.
+/// Renders the ticks of the previous run as dots in the world, colored by their vertical movement
+/// and ladder state. Looking at a dot shows the state of that tick next to the crosshair, hitting
+/// it toggles between the dot and the tick's hitbox.
 @RequiredArgsConstructor
 public final class TickDotListener {
 
@@ -48,17 +44,16 @@ public final class TickDotListener {
   private static final int tooltipPadding = 3;
 
   private final ParkourDisplayAddon addon;
-  private final LadderTrajectoryListener ladderTrajectoryListener;
 
   /// The dot under the crosshair, resolved every frame during world rendering.
   @Nullable
   private TickDot hovered;
 
-  /// The 1-based index of the hovered dot within the previous run, or 0 if it is not part of it.
+  /// The 1-based index of the hovered dot within the previous run.
   private int hoveredRunTick;
 
   /// Positions of the ticks that show their hitbox instead of a dot. Keyed by position so that
-  /// the same tick in the run and in the ladder trajectory toggles together.
+  /// they stay toggled when the run is repeated exactly, e.g. by a macro.
   private final Set<Position> toggled = new HashSet<>();
 
   @Subscribe
@@ -94,12 +89,9 @@ public final class TickDotListener {
       return;
     }
 
-    var runDots = this.runDots();
-    var ladderDots = this.addon.configuration().showLadderTrajectory().get()
-        ? this.ladderTrajectoryListener.displayedTrajectory()
-        : List.<TickDot>of();
+    var dots = this.runDots();
 
-    if (runDots.isEmpty() && ladderDots.isEmpty()) {
+    if (dots.isEmpty()) {
       return;
     }
 
@@ -117,16 +109,11 @@ public final class TickDotListener {
 
     // Dots are small, so a dot whose center passes within the hover radius wins over any hitbox
     // the ray enters. Among dots the one closest to the ray wins, so that neighbouring dots don't
-    // flicker between each other, among hitboxes the one entered first. Run dots are checked
-    // first so that a ladder dot at the same position doesn't hide the run tick.
+    // flicker between each other, among hitboxes the one entered first.
     var hover = new Hover();
 
-    for (var i = 0; i < runDots.size(); i++) {
-      this.checkHover(hover, runDots.get(i), i + 1, eye, dirX, dirY, dirZ);
-    }
-
-    for (var dot : ladderDots) {
-      this.checkHover(hover, dot, 0, eye, dirX, dirY, dirZ);
+    for (var i = 0; i < dots.size(); i++) {
+      this.checkHover(hover, dots.get(i), i + 1, eye, dirX, dirY, dirZ);
     }
 
     if (hover.dot != null) {
@@ -138,8 +125,7 @@ public final class TickDotListener {
     }
 
     var renderPosition = event.camera().renderPosition();
-    this.renderDots(event, renderPosition, runDots);
-    this.renderDots(event, renderPosition, ladderDots);
+    this.renderDots(event, renderPosition, dots);
   }
 
   private void checkHover(
@@ -184,11 +170,7 @@ public final class TickDotListener {
     if (dot.collided()) flags.append("[collided] ");
 
     var lines = new ArrayList<RenderableComponent>();
-
-    if (this.hoveredRunTick > 0) {
-      lines.add(line("Run Tick", String.valueOf(this.hoveredRunTick), NamedTextColor.WHITE));
-    }
-
+    lines.add(line("Run Tick", String.valueOf(this.hoveredRunTick), NamedTextColor.WHITE));
     lines.add(line("Air Time", String.valueOf(dot.airTime()), NamedTextColor.WHITE));
     lines.add(line("Y", format.formatted(dot.y()), NamedTextColor.AQUA));
     lines.add(line("vY", format.formatted(dot.vy()), vyColor));
@@ -248,9 +230,7 @@ public final class TickDotListener {
     var settings = this.addon.configuration().highlightRunTickStates();
 
     for (var dot : dots) {
-      // Compared by position so that a duplicate of the hovered dot from the other source is
-      // highlighted as well instead of fighting with it.
-      var isHovered = this.hovered != null && dot.samePosition(this.hovered);
+      var isHovered = dot == this.hovered;
 
       if (this.toggled.contains(Position.of(dot))) {
         var fillColor = dot.onClimbable()

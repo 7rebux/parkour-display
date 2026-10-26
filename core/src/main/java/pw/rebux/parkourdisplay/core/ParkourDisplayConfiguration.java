@@ -58,9 +58,6 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final HighlightLadderBoxesSettings highlightLadderBoxesSettings =
       new HighlightLadderBoxesSettings();
 
-  @SwitchSetting
-  private final ConfigProperty<Boolean> showLadderTrajectory = new ConfigProperty<>(true);
-
   @SettingSection("runSplit")
   @SwitchSetting
   private final ConfigProperty<Boolean> showRunSplitsInChat = new ConfigProperty<>(true);
