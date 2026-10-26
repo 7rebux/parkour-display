@@ -19,6 +19,7 @@ import pw.rebux.parkourdisplay.core.graph.JumpGraphFileManager;
 import pw.rebux.parkourdisplay.core.graph.JumpRecorder;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxListener;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxRegistry;
+import pw.rebux.parkourdisplay.core.ladderbox.LadderTrajectoryListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
 import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
@@ -120,6 +121,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new ChatMovementLogListener(this));
     this.registerListener(new LadderBoxListener(this));
+    this.registerListener(new LadderTrajectoryListener(this));
     this.registerListener(new ChatLadderLogListener(this));
     this.registerListener(new ChatLadderYLogListener(this));
 //    this.registerListener(new ClimbCatchExitLogListener(this));
