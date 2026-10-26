@@ -47,6 +47,7 @@ import pw.rebux.parkourdisplay.core.widget.RunSplitsWidget;
 import pw.rebux.parkourdisplay.core.widget.SecondTurnWidget;
 import pw.rebux.parkourdisplay.core.widget.SpeedVectorWidget;
 import pw.rebux.parkourdisplay.core.widget.TierWidget;
+import pw.rebux.parkourdisplay.core.widget.TurnAnglesWidget;
 import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
 import pw.rebux.parkourdisplay.integration.ParkourDisplayIntegration;
 import pw.rebux.parkourdisplay.integration.packets.RunDataPacket;
@@ -113,6 +114,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new PreturnWidget(this));
     hudWidgetRegistry.register(new LastSidestepWidget(this));
     hudWidgetRegistry.register(new BlipsWidget(this));
+    hudWidgetRegistry.register(new TurnAnglesWidget(this));
 
     var protocolService = Laby.references().labyModProtocolService();
     var integration = protocolService.getOrRegisterIntegration(

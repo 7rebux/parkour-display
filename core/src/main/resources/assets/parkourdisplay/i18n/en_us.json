@@ -165,6 +165,20 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
+      },
+      "turn_angles": {
+        "name": "Turn Angles",
+        "minTick": {
+          "name": "First Tick",
+          "description": "The first tick after a jump to show the turn for. The jump tick is tick 1."
+        },
+        "maxTick": {
+          "name": "Last Tick",
+          "description": "The last tick after a jump to show the turn for."
+        },
+        "decimalPlaces": {
+          "name": "Digits after comma"
+        }
       }
     },
     "settings": {
