@@ -9,7 +9,6 @@ import net.labymod.api.util.Color;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
-import pw.rebux.parkourdisplay.core.util.CollisionUtils;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
@@ -23,9 +22,6 @@ public final class LadderBoxListener {
 
   private final ParkourDisplayAddon addon;
 
-  /// Stand-in for vanilla's `horizontalCollision`, which the climb assist requires.
-  private boolean pushingIntoObstacle;
-
   @Subscribe
   public void onTick(GameTickEvent event) {
     // The flag is only final once the movement of the tick has been applied.
@@ -38,8 +34,6 @@ public final class LadderBoxListener {
     if (player == null) {
       return;
     }
-
-    this.pushingIntoObstacle = CollisionUtils.isPushingIntoObstacle(player);
 
     var state = this.addon.playerState();
     var currentTick = state.currentTick();
@@ -118,7 +112,7 @@ public final class LadderBoxListener {
           overlap.getX() >= 0 && overlap.getY() >= 0 && overlap.getZ() >= 0;
       // Green once the climb assist would fire, yellow while only the box is intersected.
       var color = intersectingOrTouching
-          ? (this.pushingIntoObstacle ? Color.GREEN : Color.YELLOW)
+          ? Color.GREEN
           : Color.RED;
 
       RenderUtils.renderAbsoluteBoundingBox(

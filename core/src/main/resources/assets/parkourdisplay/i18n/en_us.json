@@ -230,9 +230,6 @@
         "name": "Show Grinds In Chat",
         "description": "Whether to show ceiling jump cancels in the chat."
       },
-      "showClimbDurations": {
-        "name": "Show Climb Durations In Chat"
-      },
       "showLadderYCoordinates": {
         "name": "Show Airborne Y Coordinates In Chat",
         "description": "Whether to log your Y coordinate and its per-tick delta for every tick while airborne, from leaving the ground until landing. Ticks spent on a climbable are flagged."
@@ -559,13 +556,6 @@
       },
       "ladder": {
         "y": "%s: Y: %s (%s)%s"
-      },
-      "climb": {
-        "duration": "Climb duration: %s + %s + %s = %s",
-        "catch": "Climb catch — Y: %s | vy: %s | air: %s",
-        "catchOffsetHit": "Catch offset X: %s, Z: %s",
-        "catchOffsetMiss": "Missed by X: %s, Z: %s",
-        "exit": "%s: Y: %s (%s)"
       },
       "ladderbox": {
         "newPB": "New PB: %s (X: %s, Z: %s)",

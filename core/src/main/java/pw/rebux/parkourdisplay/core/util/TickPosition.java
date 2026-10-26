@@ -41,6 +41,7 @@ public final class TickPosition {
         .playerBoundingBox(player.axisAlignedBoundingBox().move(0, 0, 0))
         .onGround(player.isOnGround())
         .onClimbable(WorldUtils.onClimbable(player))
+        // TODO: Is this reliable?
         .collided(player.getForwardMovingSpeed() > 0.0F && (motionX == 0.0F || motionZ == 0.0F))
         .build();
   }
