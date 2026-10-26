@@ -192,6 +192,9 @@
         "runSplit": {
           "name": "Run Splits"
         },
+        "clips": {
+          "name": "Clips"
+        },
         "macro": {
           "name": "Macros"
         }
@@ -291,6 +294,10 @@
       "showRunFinishOffsets": {
         "name": "Show Run Finish Offsets In Chat",
         "description": "Whether to show how far you were from the run finish on the last tick."
+      },
+      "saveClips": {
+        "name": "Automatically Save PB Clips",
+        "description": "Saves a clip whenever you finish a run with a new personal best. Requires the LabyMod Launcher with clips enabled."
       },
       "importLandingBlocks": {
         "name": "Import Landing Blocks From Run Files"

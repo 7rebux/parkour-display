@@ -65,6 +65,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final HighlightRunTickStatesSettings highlightRunTickStates =
       new HighlightRunTickStatesSettings();
 
+  @SettingSection("clips")
+  @SwitchSetting
+  private final ConfigProperty<Boolean> saveClips = new ConfigProperty<>(true);
+
   @SettingSection("macro")
   @SwitchSetting
   private final ConfigProperty<Boolean> smoothRotation = new ConfigProperty<>(true);

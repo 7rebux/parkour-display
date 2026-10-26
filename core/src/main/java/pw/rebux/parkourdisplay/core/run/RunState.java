@@ -81,15 +81,17 @@ public final class RunState {
   }
 
   public void processFinish() {
-    this.endSplit.updatePB(this.addon, this.timer);
-    this.runStarted = false;
+    var newPB = this.endSplit.updatePB(this.addon, this.timer);
 
+    this.runStarted = false;
     this.previousTickStates.clear();
     this.previousTickStates.addAll(this.tickStates);
 
     if (this.addon.configuration().showRunFinishOffsets().get()) {
       this.showFinishOffsets();
     }
+
+    this.addon.clipService().onRunFinish(this.timer, newPB);
   }
 
   public void reset() {

@@ -11,6 +11,7 @@ import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
+import pw.rebux.parkourdisplay.core.clip.ParkourDisplayClipService;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
@@ -70,6 +71,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final RunFileManager runFileManager = new RunFileManager(this);
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
+  private final ParkourDisplayClipService clipService = new ParkourDisplayClipService(this);
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -124,6 +126,8 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
     var protocol = integration.parkourDisplayProtocol();
     protocol.registerHandler(RunDataPacket.class, new RunDataPacketHandler(this));
+
+    this.clipService.initialize();
   }
 
   // TODO

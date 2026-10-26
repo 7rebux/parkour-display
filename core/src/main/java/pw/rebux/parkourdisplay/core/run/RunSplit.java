@@ -31,9 +31,11 @@ public class RunSplit {
     };
   }
 
-  public void updatePB(ParkourDisplayAddon addon, long ticks) {
+  /// @return whether the player achieved a new personal best for this split.
+  public boolean updatePB(ParkourDisplayAddon addon, long ticks) {
     var color = NamedTextColor.GRAY;
     var delta = 0L;
+    var newPB = personalBest == null || ticks < personalBest;
 
     if (personalBest == null) {
       this.personalBest = ticks;
@@ -60,5 +62,7 @@ public class RunSplit {
           .withColor(color)
           .send();
     }
+
+    return newPB;
   }
 }
