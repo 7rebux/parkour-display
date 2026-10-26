@@ -40,6 +40,13 @@ enhance gameplay with parkour-related features.
 - Configurable load behavior for server-sent run data (always / confirm /
   never)
 
+### Clips
+
+- Automatically saves a clip whenever you finish a run with a new personal
+  best, using the LabyMod Launcher clips feature
+- Requires the LabyMod Launcher with clips enabled; can be toggled via the
+  `Automatically Save PB Clips` setting
+
 ### Chat Logging
 
 - Airtime and ground time durations for every jump
@@ -68,6 +75,7 @@ enhance gameplay with parkour-related features.
 - Last Sidestep
 - Preturn
 - Second Turn
+- Turn Angles
 - Blips
 - Last Landing Block Offsets
 - Run Ground Time
