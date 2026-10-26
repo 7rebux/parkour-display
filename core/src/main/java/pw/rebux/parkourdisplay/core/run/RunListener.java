@@ -7,11 +7,11 @@ import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
-import net.labymod.api.util.Color;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.HighlightRunSplitsSettings;
 import pw.rebux.parkourdisplay.core.run.RunTickState.KeyboardInput;
+import pw.rebux.parkourdisplay.core.tickdot.TickDot;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
@@ -122,41 +122,16 @@ public final class RunListener {
       this.renderSplit(event, player, run.endSplit(), splitsSettings);
     }
 
-    if (tickStateSettings.enabled().get()) {
-      if (!this.addon.runState().previousTickStates().isEmpty()) {
-        RenderUtils.renderAbsoluteBoundingBox(
-            event.camera().renderPosition(),
-            playerAABB.move(run.startPosition()),
-            tickStateSettings.outlineThickness().get() / 1000F,
-            event.stack(),
-            tickStateSettings.startFillColor().get().get(),
-            tickStateSettings.startOutlineColor().get().get()
-        );
-
-        for (var tickState : run.previousTickStates()) {
-          var onClimbable = tickState.position().onClimbable();
-          var onGround = tickState.position().onGround();
-          var fillColor =
-              onClimbable
-                  ? Color.PINK
-                  : onGround
-                      ? tickStateSettings.onGroundFillColor().get()
-                      : tickStateSettings.regularFillColor().get();
-          var outlineColor =
-              onGround
-                  ? tickStateSettings.onGroundOutlineColor().get()
-                  : tickStateSettings.regularOutlineColor().get();
-
-          RenderUtils.renderAbsoluteBoundingBox(
-              event.camera().renderPosition(),
-              tickState.position().playerBoundingBox(),
-              tickStateSettings.outlineThickness().get() / 1000F,
-              event.stack(),
-              fillColor.get(),
-              outlineColor.get()
-          );
-        }
-      }
+    // The ticks themselves are rendered by the TickDotListener.
+    if (tickStateSettings.enabled().get() && !run.previousTickStates().isEmpty()) {
+      RenderUtils.renderAbsoluteBoundingBox(
+          event.camera().renderPosition(),
+          playerAABB.move(run.startPosition()),
+          tickStateSettings.outlineThickness().get() / 1000F,
+          event.stack(),
+          tickStateSettings.startFillColor().get().get(),
+          tickStateSettings.startOutlineColor().get().get()
+      );
     }
   }
 
@@ -202,6 +177,6 @@ public final class RunListener {
         inputUtil.sneakKey().isDown()
     );
 
-    return new RunTickState(input, TickPosition.of(player));
+    return new RunTickState(input, TickPosition.of(player), TickDot.capture(this.addon, player));
   }
 }

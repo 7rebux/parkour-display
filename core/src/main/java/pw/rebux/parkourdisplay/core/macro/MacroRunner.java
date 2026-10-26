@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.format.NamedTextColor;
+import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
@@ -32,6 +33,8 @@ public final class MacroRunner {
   }
 
   private boolean isAllowed() {
-    return true;
+    return this.addon.labyAPI()
+        .permissionRegistry()
+        .isPermissionEnabled(Permissions.RUN_MACROS);
   }
 }

@@ -292,7 +292,7 @@
       },
       "highlightRunTickStates": {
         "name": "Highlight Previous Run Tick States",
-        "description": "Whether to render all tick positions of the latest run in the world.",
+        "description": "Renders a dot for every tick of the latest run. Look at a dot to see its state and hit it to toggle between the dot and the tick's hitbox.",
         "startFillColor": {
           "name": "Start Fill Color"
         },
@@ -344,7 +344,7 @@
       },
       "showLadderTrajectory": {
         "name": "Show Ladder Trajectory",
-        "description": "Renders a dot for every tick of your last airborne stretch that touched a ladder. Look at a dot to see its inputs, position and velocity."
+        "description": "Renders a dot for every tick of your last airborne stretch that touched a ladder. Look at a dot to see its inputs, position and velocity and hit it to toggle the tick's hitbox."
       }
     },
     "labels": {
@@ -412,14 +412,6 @@
       }
     },
     "commands": {
-      "savejump": {
-        "description": "Saves the last jump's height curve (normalized Y) as a PNG image.",
-        "messages": {
-          "noJump": "No jump recorded yet. Do a jump first.",
-          "success": "Saved jump graph to %s",
-          "error": "Failed to save jump graph. Check console for more info."
-        }
-      },
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {

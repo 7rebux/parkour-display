@@ -8,7 +8,6 @@ import java.util.List;
 import net.labymod.api.client.chat.command.Command;
 import net.labymod.api.client.component.format.NamedTextColor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
-import pw.rebux.parkourdisplay.core.command.graph.SaveJumpCommand;
 import pw.rebux.parkourdisplay.core.command.ladderbox.AddLadderBoxCommand;
 import pw.rebux.parkourdisplay.core.command.ladderbox.ResetLadderBoxCommand;
 import pw.rebux.parkourdisplay.core.command.landingblock.AddLandingBlockCommand;
@@ -48,9 +47,6 @@ public final class BaseCommand extends Command {
     // Ladder box commands
     this.withSubCommand(new AddLadderBoxCommand(addon));
     this.withSubCommand(new ResetLadderBoxCommand(addon));
-
-    // Graph commands
-    this.withSubCommand(new SaveJumpCommand(addon));
 
     // Macro commands
     this.withSubCommand(new ListMacrosCommand(addon));

@@ -13,10 +13,9 @@ import pw.rebux.parkourdisplay.core.chat.ChatLadderLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
+import pw.rebux.parkourdisplay.core.chat.ClimbCatchExitLogListener;
 import pw.rebux.parkourdisplay.core.clip.ParkourDisplayClipService;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
-import pw.rebux.parkourdisplay.core.graph.JumpGraphFileManager;
-import pw.rebux.parkourdisplay.core.graph.JumpRecorder;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxListener;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxRegistry;
 import pw.rebux.parkourdisplay.core.ladderbox.LadderTrajectoryListener;
@@ -33,6 +32,7 @@ import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.server.RunDataPacketHandler;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
+import pw.rebux.parkourdisplay.core.tickdot.TickDotListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.gson.MacroTickStateTypeAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
@@ -84,8 +84,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
   private final ParkourDisplayClipService clipService = new ParkourDisplayClipService(this);
-  private final JumpRecorder jumpRecorder = new JumpRecorder(this);
-  private final JumpGraphFileManager jumpGraphFileManager = new JumpGraphFileManager();
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -121,11 +119,12 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new ChatMovementLogListener(this));
     this.registerListener(new LadderBoxListener(this));
-    this.registerListener(new LadderTrajectoryListener(this));
+    var ladderTrajectoryListener = new LadderTrajectoryListener(this);
+    this.registerListener(ladderTrajectoryListener);
+    this.registerListener(new TickDotListener(this, ladderTrajectoryListener));
     this.registerListener(new ChatLadderLogListener(this));
     this.registerListener(new ChatLadderYLogListener(this));
-//    this.registerListener(new ClimbCatchExitLogListener(this));
-//    this.registerListener(this.jumpRecorder);
+    this.registerListener(new ClimbCatchExitLogListener(this));
   }
 
   private void registerHudWidgets() {
