@@ -130,10 +130,18 @@ public final class LadderTrajectoryListener {
       return;
     }
 
-    var camera = event.camera();
-    var eye = camera.renderPosition();
-    var yaw = Math.toRadians(camera.getYaw());
-    var pitch = Math.toRadians(camera.getPitch());
+    var player = this.addon.labyAPI().minecraft().getClientPlayer();
+
+    if (player == null) {
+      return;
+    }
+
+    var eye = event.camera().renderPosition();
+    // The player's rotation rather than the camera's: the camera derives yaw and pitch from its
+    // quaternion in a different convention (pitch is positive looking up), which mirrors the
+    // ray. In back third person the crosshair ray is parallel to the player's look anyway.
+    var yaw = Math.toRadians(player.getRotationYaw());
+    var pitch = Math.toRadians(player.getRotationPitch());
     var dirX = -Math.sin(yaw) * Math.cos(pitch);
     var dirY = -Math.sin(pitch);
     var dirZ = Math.cos(yaw) * Math.cos(pitch);
