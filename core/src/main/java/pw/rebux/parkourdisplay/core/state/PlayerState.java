@@ -18,9 +18,6 @@ public class PlayerState {
   /// Amount of ticks the player has been continuously on the ground.
   private long groundTime;
 
-  /// Amount of ticks the player has been continuously on a climbable object.
-  private long climbTime;
-
   public double vx() {
     return this.currentTick.x() - this.lastTick.x();
   }

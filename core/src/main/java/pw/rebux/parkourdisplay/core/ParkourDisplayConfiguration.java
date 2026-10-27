@@ -75,8 +75,8 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final HighlightRunSplitsSettings highlightRunSplitsSettings =
       new HighlightRunSplitsSettings();
 
-  private final HighlightRunTickStatesSettings highlightRunTickStates =
-      new HighlightRunTickStatesSettings();
+  @SwitchSetting
+  private final ConfigProperty<Boolean> highlightRunTickStates = new ConfigProperty<>(false);
 
   @SettingSection("clips")
   @SwitchSetting
@@ -146,6 +146,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
         new ConfigProperty<>(false);
 
     @SwitchSetting
+    private final ConfigProperty<Boolean> highlightStart = new ConfigProperty<>(true);
+
+    @SwitchSetting
     private final ConfigProperty<Boolean> highlightEndSplit = new ConfigProperty<>(true);
 
     @ColorPickerSetting(alpha = true, chroma = true)
@@ -163,41 +166,6 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
     @ColorPickerSetting(alpha = true, chroma = true)
     private final ConfigProperty<Color> intersectingOutlineColor =
         new ConfigProperty<>(Color.ofRGB(0, 255, 0, 100));
-
-    @SliderSetting(min = 1, max = 30)
-    private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(5);
-  }
-
-  @Getter
-  public static final class HighlightRunTickStatesSettings extends Config {
-
-    @SwitchSetting
-    @ShowSettingInParent
-    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(false);
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> startFillColor =
-        new ConfigProperty<>(Color.ofRGB(0, 255, 0, 30));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> startOutlineColor =
-        new ConfigProperty<>(Color.ofRGB(0, 255, 0, 100));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> regularFillColor =
-        new ConfigProperty<>(Color.ofRGB(255, 0, 0, 30));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> regularOutlineColor =
-        new ConfigProperty<>(Color.ofRGB(255, 0, 0, 100));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> onGroundFillColor =
-        new ConfigProperty<>(Color.ofRGB(255, 255, 0, 30));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> onGroundOutlineColor =
-        new ConfigProperty<>(Color.ofRGB(255, 255, 0, 100));
 
     @SliderSetting(min = 1, max = 30)
     private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(5);

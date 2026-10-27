@@ -15,6 +15,7 @@ import net.labymod.api.util.math.vector.DoubleVector3;
 public final class TickPosition {
 
   private double x, y, z;
+  private double vx, vy, vz;
   private float yaw, pitch;
   // We could work with a constant bounding box for the player, but there are states in which
   // the size can change, e.g., when the player is crouching or swimming.
@@ -28,13 +29,17 @@ public final class TickPosition {
   }
 
   public static TickPosition of(ClientPlayer player) {
-    double motionX = player.previousPosition().getX() - player.position().getX();
-    double motionZ = player.previousPosition().getZ() - player.position().getZ();
+    double vx = player.position().getX() - player.previousPosition().getX();
+    double vy = player.position().getY() - player.previousPosition().getY();
+    double vz = player.position().getZ() - player.previousPosition().getZ();
 
     return TickPosition.builder()
         .x(player.position().getX())
         .y(player.position().getY())
         .z(player.position().getZ())
+        .vx(vx)
+        .vy(vy)
+        .vz(vz)
         .yaw(player.getRotationYaw())
         .pitch(player.getRotationPitch())
         // Otherwise the reference would be stored
@@ -42,19 +47,11 @@ public final class TickPosition {
         .onGround(player.isOnGround())
         .onClimbable(WorldUtils.onClimbable(player))
         // TODO: Is this reliable?
-        .collided(player.getForwardMovingSpeed() > 0.0F && (motionX == 0.0F || motionZ == 0.0F))
+        .collided(player.getForwardMovingSpeed() > 0.0F && (vx == 0.0F || vz == 0.0F))
         .build();
   }
 
   public static TickPosition INITIAL = TickPosition.builder()
-      .x(0)
-      .y(0)
-      .z(0)
-      .yaw(0)
-      .pitch(0)
       .playerBoundingBox(new AxisAlignedBoundingBox())
-      .onGround(false)
-      .onClimbable(false)
-      .collided(false)
       .build();
 }

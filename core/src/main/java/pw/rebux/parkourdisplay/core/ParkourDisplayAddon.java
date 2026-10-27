@@ -26,8 +26,8 @@ import pw.rebux.parkourdisplay.core.macro.MacroTickState;
 import pw.rebux.parkourdisplay.core.offset.OffsetReporter;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
-import pw.rebux.parkourdisplay.core.run.RunTickDotListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
+import pw.rebux.parkourdisplay.core.run.RunTickDotListener;
 import pw.rebux.parkourdisplay.core.server.RunDataPacketHandler;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
@@ -35,7 +35,6 @@ import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
 import pw.rebux.parkourdisplay.core.util.gson.MacroTickStateTypeAdapter;
 import pw.rebux.parkourdisplay.core.widget.AirTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.BlipsWidget;
-import pw.rebux.parkourdisplay.core.widget.ClimbTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.GroundTimeWidget;
 import pw.rebux.parkourdisplay.core.widget.HitAngleWidget;
 import pw.rebux.parkourdisplay.core.widget.HitCoordinatesWidget;
@@ -130,7 +129,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
     hudWidgetRegistry.register(new AirTimeWidget(this));
     hudWidgetRegistry.register(new TierWidget(this));
-    hudWidgetRegistry.register(new ClimbTimeWidget(this));
     hudWidgetRegistry.register(new GroundTimeWidget(this));
     hudWidgetRegistry.register(new JumpCoordinatesWidget(this));
     hudWidgetRegistry.register(new JumpAngleWidget(this));

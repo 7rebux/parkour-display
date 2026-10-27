@@ -1,8 +1,9 @@
 package pw.rebux.parkourdisplay.core.run;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
@@ -42,10 +43,13 @@ public final class RunState {
   private long groundTime = 0;
 
   /// Holds information for each passed tick in the run.
-  private final LinkedList<RunTickState> tickStates = new LinkedList<>();
+  private final List<RunTickState> tickStates = new ArrayList<>();
 
   /// Used to store the run as a macro and to render the different tick positions in a run.
-  private final LinkedList<RunTickState> previousTickStates = new LinkedList<>();
+  private final List<RunTickState> previousTickStates = new ArrayList<>();
+
+  /// Indices of the previous run's ticks that render their hitbox instead of a dot.
+  private final Set<Integer> toggledTicks = new HashSet<>();
 
   /// Records the ticks of a burst start. These ticks are part of the movement
   /// (macros, rendered tick states) but are not counted by the timer, matching
@@ -86,12 +90,18 @@ public final class RunState {
     this.runStarted = false;
     this.previousTickStates.clear();
     this.previousTickStates.addAll(this.tickStates);
+    this.toggledTicks.clear();
 
     if (this.addon.configuration().showRunFinishOffsets().get()) {
       this.showFinishOffsets();
     }
 
     this.addon.clipService().onRunFinish(this.timer, newPB);
+  }
+
+  public void clearPreviousRun() {
+    this.previousTickStates.clear();
+    this.toggledTicks.clear();
   }
 
   public void reset() {

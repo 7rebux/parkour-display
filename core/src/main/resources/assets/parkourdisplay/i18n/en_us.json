@@ -260,6 +260,10 @@
           "name": "Highlight Regular Splits",
           "description": "Whether to highlight the bounding box of regular splits."
         },
+        "highlightStart": {
+          "name": "Highlight Start",
+          "description": "Whether to render a dot at the start position."
+        },
         "highlightEndSplit": {
           "name": "Highlight End Split",
           "description": "Whether to highlight the bounding box of the end split."
@@ -289,28 +293,7 @@
       },
       "highlightRunTickStates": {
         "name": "Highlight Previous Run Tick States",
-        "description": "Renders a dot for every tick of the latest run. Look at a dot to see its state and hit it to toggle between the dot and the tick's hitbox.",
-        "startFillColor": {
-          "name": "Start Fill Color"
-        },
-        "startOutlineColor": {
-          "name": "Start Outline Color"
-        },
-        "regularFillColor": {
-          "name": "Regular Fill Color"
-        },
-        "regularOutlineColor": {
-          "name": "Regular Outline Color"
-        },
-        "onGroundFillColor": {
-          "name": "On Ground Fill Color"
-        },
-        "onGroundOutlineColor": {
-          "name": "On Ground Outline Color"
-        },
-        "outlineThickness": {
-          "name": "Outline Thickness"
-        }
+        "description": "Renders a dot for every tick of the latest run. Look at a dot to see its state and hit it to toggle between the dot and the tick's hitbox."
       },
       "showRunFinishOffsets": {
         "name": "Show Run Finish Offsets In Chat",

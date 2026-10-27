@@ -1,9 +1,7 @@
 package pw.rebux.parkourdisplay.core.run;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
@@ -20,73 +18,32 @@ import net.labymod.api.util.Color;
 import net.labymod.api.util.bounds.Rectangle;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
-import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
-/// Renders the start position and the ticks of the previous run as dots in the world, colored by
-/// their vertical movement and ladder state. Looking at a dot shows the state of that tick next to
-/// the crosshair, hitting it toggles between the dot and the tick's hitbox.
+/// Renders the ticks of the previous run as dots in the world.
+/// Looking at a dot shows the state of that tick next to the crosshair,
+/// hitting it toggles between the dot and the tick's hitbox.
 @RequiredArgsConstructor
 public final class RunTickDotListener {
 
-  private static final AxisAlignedBoundingBox playerAABB =
-      new AxisAlignedBoundingBox(-0.3, 0, -0.3, 0.3, 1.8, 0.3);
-
   private static final double dotRadius = 0.03;
-
-  /// How far the crosshair ray may pass a dot's center and still hover it. Slightly larger than
-  /// the dot itself so that small dots stay easy to aim at.
   private static final double hoverRadius = 0.05;
-
-  /// Vertical speed the ladder climb assist forces: (0.2 - gravity 0.08) * drag 0.98.
-  private static final double ladderAssistSpeed = 0.1176;
-  private static final double assistEpsilon = 0.005;
-
   private static final int tooltipPadding = 3;
+  private static final double epsilon = 1e-9;
+  private static final double ladderClimbSpeed = (0.2 - 0.08) * 0.98F;
 
   private final ParkourDisplayAddon addon;
 
-  /// The index of the dot under the crosshair, resolved every frame during world rendering: 0 for
-  /// the start position, the 1-based run tick otherwise and -1 if nothing is hovered.
   private int hoveredIndex = -1;
-
-  @Nullable
-  private Position hoveredPosition;
-
-  /// Positions of the ticks that show their hitbox instead of a dot. Keyed by position so that
-  /// they stay toggled when the run is repeated exactly, e.g. by a macro.
-  private final Set<Position> toggled = new HashSet<>();
-
-  @Subscribe
-  public void onInteract(ClientPlayerInteractEvent event) {
-    var position = this.hoveredPosition;
-
-    if (position == null) {
-      return;
-    }
-
-    // Holding attack must not mine the block behind the hovered tick either.
-    if (event.type() == InteractionType.ATTACK) {
-      if (!this.toggled.remove(position)) {
-        this.toggled.add(position);
-      }
-
-      event.setCancelled(true);
-    } else if (event.type() == InteractionType.CONTINUE_ATTACK) {
-      event.setCancelled(true);
-    }
-  }
 
   @Subscribe
   public void onRenderWorld(RenderWorldEvent event) {
     this.hoveredIndex = -1;
-    this.hoveredPosition = null;
 
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
-    var start = this.startPosition();
-
-    if (player == null || start == null) {
+    if (player == null || !this.visible()) {
       return;
     }
 
@@ -111,46 +68,16 @@ public final class RunTickDotListener {
     // the ray enters. Among dots the one closest to the ray wins, so that neighbouring dots don't
     // flicker between each other, among hitboxes the one entered first.
     var hover = new Hover();
-    this.checkHover(hover, 0, start, playerAABB.move(start.toVector()), ray);
 
     for (var i = 0; i < ticks.size(); i++) {
       var position = ticks.get(i).position();
-      this.checkHover(
-          hover, i + 1, Position.of(position.toVector()), position.playerBoundingBox(), ray);
+      this.checkHover(hover, i, position.toVector(), position.playerBoundingBox(), ray);
     }
 
-    if (hover.dotIndex >= 0) {
-      this.hoveredIndex = hover.dotIndex;
-      this.hoveredPosition = hover.dotPosition;
-    } else {
-      this.hoveredIndex = hover.hitboxIndex;
-      this.hoveredPosition = hover.hitboxPosition;
-    }
+    this.hoveredIndex = hover.dotIndex >= 0 ? hover.dotIndex : hover.hitboxIndex;
 
     var renderPosition = event.camera().renderPosition();
-    this.renderStart(event, renderPosition, start);
     this.renderTicks(event, renderPosition, ticks);
-  }
-
-  private void checkHover(
-      Hover hover, int index, Position position, AxisAlignedBoundingBox hitbox, Ray ray) {
-    if (this.toggled.contains(position)) {
-      var distance = ray.boxDistance(hitbox);
-
-      if (distance < hover.hitboxDistance) {
-        hover.hitboxDistance = distance;
-        hover.hitboxIndex = index;
-        hover.hitboxPosition = position;
-      }
-    } else {
-      var distance = ray.pointDistance(position);
-
-      if (distance < hover.dotDistance) {
-        hover.dotDistance = distance;
-        hover.dotIndex = index;
-        hover.dotPosition = position;
-      }
-    }
   }
 
   @Subscribe
@@ -159,13 +86,11 @@ public final class RunTickDotListener {
     var ticks = this.addon.runState().previousTickStates();
 
     if (event.phase() != Phase.POST || event.isGuiHidden()
-        || index < 0 || index > ticks.size() || this.hoveredPosition == null) {
+        || index < 0 || index >= ticks.size() || !this.visible()) {
       return;
     }
 
-    var lines = index == 0
-        ? this.startLines(this.hoveredPosition)
-        : this.tickLines(index, ticks.get(index - 1));
+    var lines = this.tickLines(index + 1, ticks.get(index));
 
     var width = 0F;
     var height = 0F;
@@ -196,118 +121,118 @@ public final class RunTickDotListener {
     }
   }
 
-  private List<RenderableComponent> startLines(Position start) {
-    var format = this.addon.configuration().decimalFormat();
-    var lines = new ArrayList<RenderableComponent>();
-    lines.add(RenderableComponent.of(Component.text("Start", NamedTextColor.WHITE)));
-    lines.add(line("Y", format.formatted(start.y()), NamedTextColor.AQUA));
-    lines.add(line("X / Z",
-        format.formatted(start.x()) + " / " + format.formatted(start.z()),
-        NamedTextColor.AQUA));
-    return lines;
+  @Subscribe
+  public void onInteract(ClientPlayerInteractEvent event) {
+    var index = this.hoveredIndex;
+
+    if (index < 0) {
+      return;
+    }
+
+    if (event.type() == InteractionType.ATTACK) {
+      var toggled = this.addon.runState().toggledTicks();
+
+      if (!toggled.remove(index)) {
+        toggled.add(index);
+      }
+
+      event.setCancelled(true);
+    } else if (event.type() == InteractionType.CONTINUE_ATTACK) {
+      event.setCancelled(true);
+    }
+  }
+
+  private void checkHover(Hover hover, int index, DoubleVector3 position, AxisAlignedBoundingBox hitbox, Ray ray) {
+    if (this.addon.runState().toggledTicks().contains(index)) {
+      var distance = ray.boxDistance(hitbox);
+
+      if (distance < hover.hitboxDistance) {
+        hover.hitboxDistance = distance;
+        hover.hitboxIndex = index;
+      }
+    } else {
+      var distance = ray.pointDistance(position);
+
+      if (distance < hover.dotDistance) {
+        hover.dotDistance = distance;
+        hover.dotIndex = index;
+      }
+    }
   }
 
   private List<RenderableComponent> tickLines(int runTick, RunTickState tick) {
     var format = this.addon.configuration().decimalFormat();
-    var vyColor = tick.vy() > 0
-        ? NamedTextColor.GREEN
-        : tick.vy() < 0 ? NamedTextColor.RED : NamedTextColor.GRAY;
-
     var position = tick.position();
-    var flags = new StringBuilder();
-    if (position.onClimbable()) flags.append("[onLadder] ");
-    if (position.onGround()) flags.append("[onGround] ");
-    if (position.collided()) flags.append("[collided] ");
+    var title = isClimbTick(position.vy())
+        ? Component.text("Tick " + runTick + " (Climb)", NamedTextColor.AQUA)
+        : Component.text("Tick " + runTick, NamedTextColor.WHITE);
 
     var lines = new ArrayList<RenderableComponent>();
-    lines.add(line("Tick", String.valueOf(runTick), NamedTextColor.WHITE));
-    lines.add(line("Airtime", String.valueOf(tick.airTime()), NamedTextColor.WHITE));
-    lines.add(line("Y", format.formatted(position.y()), NamedTextColor.AQUA));
-    lines.add(line("vy", format.formatted(tick.vy()), vyColor));
-    lines.add(line("X / Z",
-        format.formatted(position.x()) + " / " + format.formatted(position.z()),
-        NamedTextColor.AQUA));
-    lines.add(line("vx / vz",
-        format.formatted(tick.vx()) + " / " + format.formatted(tick.vz()), NamedTextColor.GRAY));
-    lines.add(line("Yaw", format.formatted(position.yaw()), NamedTextColor.GRAY));
-    lines.add(line("Inputs", tick.input().formatted(), NamedTextColor.YELLOW));
-
-    if (!flags.isEmpty()) {
-      lines.add(RenderableComponent.of(
-          Component.text(flags.toString().trim(), NamedTextColor.BLUE)));
-    }
+    lines.add(RenderableComponent.of(title));
+    lines.add(line("Position", format.formatted(position.x()) + " / " + format.formatted(position.y()) + " / " + format.formatted(position.z()), NamedTextColor.WHITE));
+    lines.add(line("Rotation", format.formatted(MathHelper.formatYaw(position.yaw())) + " / " + format.formatted(position.pitch()), NamedTextColor.WHITE));
+    lines.add(RenderableComponent.of(
+        Component.text("Velocity: ", NamedTextColor.GRAY)
+            .append(Component.text(format.formatted(position.vx()), NamedTextColor.WHITE))
+            .append(Component.text(" / ", NamedTextColor.GRAY))
+            .append(Component.text(format.formatted(position.vy()), signColor(position.vy())))
+            .append(Component.text(" / ", NamedTextColor.GRAY))
+            .append(Component.text(format.formatted(position.vz()), NamedTextColor.WHITE))
+    ));
+    lines.add(line("Speed", format.formatted(Math.hypot(position.vx(), position.vz())), NamedTextColor.WHITE));
+    lines.add(line("onClimbable", position.onClimbable()));
+    lines.add(line("onGround", position.onGround()));
+    lines.add(line("collided", position.collided()));
+    lines.add(line("Inputs", formatInputState(tick.input()), NamedTextColor.YELLOW));
 
     return lines;
   }
 
-  /// The start position while the previous run's ticks are shown, otherwise null.
-  @Nullable
-  private Position startPosition() {
-    var settings = this.addon.configuration().highlightRunTickStates();
+  private String formatInputState(RunTickState.KeyboardInput state) {
+    var input = new StringBuilder();
+
+    if (state.w()) input.append("W");
+    if (state.a()) input.append("A");
+    if (state.s()) input.append("S");
+    if (state.d()) input.append("D");
+    if (state.jump()) input.append(input.isEmpty() ? "" : " ").append("Jump");
+    if (state.sneak()) input.append(input.isEmpty() ? "" : " ").append("Sneak");
+    if (state.sprint()) input.append(input.isEmpty() ? "" : " ").append("Sprint");
+
+    return input.isEmpty() ? "-" : input.toString();
+  }
+
+  private boolean visible() {
     var run = this.addon.runState();
 
-    if (!settings.enabled().get() || run.startPosition() == null || run.endSplit() == null
-        || run.previousTickStates().isEmpty()) {
-      return null;
-    }
-
-    return Position.of(run.startPosition());
+    return this.addon.configuration().highlightRunTickStates().get()
+        && run.startPosition() != null && run.endSplit() != null
+        && !run.previousTickStates().isEmpty();
   }
 
-  private void renderStart(RenderWorldEvent event, DoubleVector3 renderPosition, Position start) {
-    var settings = this.addon.configuration().highlightRunTickStates();
-    var isHovered = this.hoveredIndex == 0;
-
-    if (this.toggled.contains(start)) {
-      this.renderHitbox(
-          event,
-          renderPosition,
-          playerAABB.move(start.toVector()),
-          settings.startFillColor().get(),
-          isHovered ? Color.WHITE : settings.startOutlineColor().get()
-      );
-      return;
-    }
-
-    this.renderDot(
-        event,
-        renderPosition,
-        start,
-        isHovered ? Color.WHITE : settings.startOutlineColor().get().withAlpha(255),
-        isHovered
-    );
-  }
-
-  private void renderTicks(
-      RenderWorldEvent event, DoubleVector3 renderPosition, List<RunTickState> ticks) {
-    var settings = this.addon.configuration().highlightRunTickStates();
-
+  private void renderTicks(RenderWorldEvent event, DoubleVector3 renderPosition, List<RunTickState> ticks) {
     for (var i = 0; i < ticks.size(); i++) {
       var tick = ticks.get(i);
       var position = tick.position();
-      var isHovered = this.hoveredIndex == i + 1;
+      var isHovered = this.hoveredIndex == i;
 
-      if (this.toggled.contains(Position.of(position.toVector()))) {
-        var fillColor = position.onClimbable()
-            ? Color.PINK
-            : position.onGround()
-                ? settings.onGroundFillColor().get()
-                : settings.regularFillColor().get();
-        var outlineColor = isHovered
-            ? Color.WHITE
-            : position.onGround()
-                ? settings.onGroundOutlineColor().get()
-                : settings.regularOutlineColor().get();
+      if (this.addon.runState().toggledTicks().contains(i)) {
+        var color = dotColor(tick);
 
         this.renderHitbox(
-            event, renderPosition, position.playerBoundingBox(), fillColor, outlineColor);
+            event,
+            renderPosition,
+            position.playerBoundingBox(),
+            color.withAlpha(30),
+            isHovered ? Color.WHITE : color
+        );
         continue;
       }
 
       this.renderDot(
           event,
           renderPosition,
-          Position.of(position.toVector()),
+          position.toVector(),
           isHovered ? Color.WHITE : dotColor(tick),
           isHovered
       );
@@ -324,7 +249,7 @@ public final class RunTickDotListener {
     RenderUtils.renderAbsoluteBoundingBox(
         renderPosition,
         hitbox,
-        this.addon.configuration().highlightRunTickStates().outlineThickness().get() / 1000F,
+        0.005F,
         event.stack(),
         fillColor.get(),
         outlineColor.get()
@@ -334,7 +259,7 @@ public final class RunTickDotListener {
   private void renderDot(
       RenderWorldEvent event,
       DoubleVector3 renderPosition,
-      Position position,
+      DoubleVector3 position,
       Color color,
       boolean isHovered
   ) {
@@ -343,10 +268,10 @@ public final class RunTickDotListener {
     RenderUtils.renderAbsoluteBoundingBox(
         renderPosition,
         new AxisAlignedBoundingBox(
-            position.x() - radius, position.y() - radius, position.z() - radius,
-            position.x() + radius, position.y() + radius, position.z() + radius
+            position.getX() - radius, position.getY() - radius, position.getZ() - radius,
+            position.getX() + radius, position.getY() + radius, position.getZ() + radius
         ),
-        0.005F,
+        0.002F,
         event.stack(),
         color.withAlpha(120).get(),
         color.get()
@@ -360,41 +285,43 @@ public final class RunTickDotListener {
     );
   }
 
-  /// Colored like the jump graph: cyan while the climb assist drives the tick, yellow on any
-  /// other climbable tick, otherwise green when rising and red when falling.
-  private static Color dotColor(RunTickState tick) {
-    if (tick.position().onClimbable()) {
-      return Math.abs(tick.vy() - ladderAssistSpeed) < assistEpsilon
-          ? Color.CYAN
-          : Color.YELLOW;
-    }
-
-    if (tick.vy() > 0) {
-      return Color.GREEN;
-    }
-
-    return tick.vy() < 0 ? Color.RED : Color.GRAY;
+  private static RenderableComponent line(String label, boolean value) {
+    return line(label, String.valueOf(value), value ? NamedTextColor.GREEN : NamedTextColor.RED);
   }
 
-  private record Position(double x, double y, double z) {
-
-    static Position of(DoubleVector3 vector) {
-      return new Position(vector.getX(), vector.getY(), vector.getZ());
+  private static TextColor signColor(double value) {
+    if (Math.abs(value) < epsilon) {
+      return NamedTextColor.GRAY;
     }
 
-    DoubleVector3 toVector() {
-      return new DoubleVector3(this.x, this.y, this.z);
+    return value > 0 ? NamedTextColor.GREEN : NamedTextColor.RED;
+  }
+
+  private static Color dotColor(RunTickState tick) {
+    var position = tick.position();
+    if (isClimbTick(position.vy())) {
+      return Color.CYAN;
     }
+
+    if (Math.abs(position.vy()) < epsilon) {
+      return Color.GRAY;
+    }
+
+    return position.vy() > 0 ? Color.GREEN : Color.RED;
+  }
+
+  private static boolean isClimbTick(double vy) {
+    return Math.abs(vy - ladderClimbSpeed) < epsilon;
   }
 
   /// The crosshair ray, starting at the camera with a normalized direction.
   private record Ray(DoubleVector3 origin, double dirX, double dirY, double dirZ) {
 
     /// The distance between a point and the ray, or infinity if it lies behind the camera.
-    double pointDistance(Position point) {
-      var toX = point.x() - this.origin.getX();
-      var toY = point.y() - this.origin.getY();
-      var toZ = point.z() - this.origin.getZ();
+    double pointDistance(DoubleVector3 point) {
+      var toX = point.getX() - this.origin.getX();
+      var toY = point.getY() - this.origin.getY();
+      var toZ = point.getZ() - this.origin.getZ();
       var along = toX * this.dirX + toY * this.dirY + toZ * this.dirZ;
 
       if (along <= 0) {
@@ -448,11 +375,9 @@ public final class RunTickDotListener {
   private static final class Hover {
 
     int dotIndex = -1;
-    @Nullable Position dotPosition;
     double dotDistance = hoverRadius;
 
     int hitboxIndex = -1;
-    @Nullable Position hitboxPosition;
     double hitboxDistance = Double.POSITIVE_INFINITY;
   }
 }

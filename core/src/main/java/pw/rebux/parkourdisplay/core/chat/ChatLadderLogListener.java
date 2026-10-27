@@ -17,10 +17,7 @@ public final class ChatLadderLogListener {
   private long lastEnterAirtime = 0; // TODO: Das sagt ja nur wann man in der box ist, nicht wann w und so
   private double lastEnterY = 0;
   private double lastEnterVy = 0; // TODO: Das ist nicht so wichtig weil das ist vy wenn in box, nicht vy wenn start climb
-
   private long lastExitAirtime = 0;
-  private long lastExitClimbTime = 0; // TODO: Climb time ist halt auch einfach falsch, weil das ist time in box nicht climbtime
-  private double lastExitPrevY = 0;
   private double lastExitY = 0;
 
   private boolean awaitingOnGround = false;
@@ -53,9 +50,7 @@ public final class ChatLadderLogListener {
     // Exit ladder
     if (!state.currentTick().onClimbable() && state.lastTick().onClimbable()) {
       this.lastExitAirtime = state.airTime();
-      this.lastExitClimbTime = state.climbTime();
       this.lastExitY = state.currentTick().y();
-      this.lastExitPrevY = state.lastTick().y();
       this.awaitingOnGround = true;
     }
 
@@ -66,7 +61,7 @@ public final class ChatLadderLogListener {
           .withColor(NamedTextColor.GRAY)
           .withArgs(
               Component.text(this.lastEnterAirtime, NamedTextColor.AQUA),
-              Component.text(this.lastExitClimbTime, NamedTextColor.GOLD),
+              Component.text(this.lastExitAirtime - this.lastEnterAirtime, NamedTextColor.GOLD),
               Component.text(state.airTime() - this.lastExitAirtime, NamedTextColor.RED),
               Component.text(state.airTime(), NamedTextColor.WHITE)
           )

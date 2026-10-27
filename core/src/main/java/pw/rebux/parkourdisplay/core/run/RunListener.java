@@ -7,6 +7,9 @@ import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
+import net.labymod.api.util.Color;
+import net.labymod.api.util.math.AxisAlignedBoundingBox;
+import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.HighlightRunSplitsSettings;
 import pw.rebux.parkourdisplay.core.run.RunTickState.KeyboardInput;
@@ -18,6 +21,7 @@ public final class RunListener {
 
   // Before version 1.18, there is a minimum distance for move packets to update their position.
   private static final float minStartDistance = 0.03f;
+  private static final double startDotRadius = 0.03;
 
   private final ParkourDisplayAddon addon;
 
@@ -26,7 +30,7 @@ public final class RunListener {
   private final LinkedList<RunTickState> preStartTickStates = new LinkedList<>();
 
   @Subscribe
-  public void onGameTickNew(GameTickEvent event) {
+  public void onGameTick(GameTickEvent event) {
     if (event.phase() != Phase.POST) {
       return;
     }
@@ -113,9 +117,27 @@ public final class RunListener {
       }
     }
 
+    if (splitsSettings.highlightStart().get()) {
+      this.renderStart(event, run.startPosition());
+    }
+
     if (splitsSettings.highlightEndSplit().get()) {
       this.renderSplit(event, player, run.endSplit(), splitsSettings);
     }
+  }
+
+  private void renderStart(RenderWorldEvent event, DoubleVector3 start) {
+    RenderUtils.renderAbsoluteBoundingBox(
+        event.camera().renderPosition(),
+        new AxisAlignedBoundingBox(
+            start.getX() - startDotRadius, start.getY() - startDotRadius, start.getZ() - startDotRadius,
+            start.getX() + startDotRadius, start.getY() + startDotRadius, start.getZ() + startDotRadius
+        ),
+        0.002F,
+        event.stack(),
+        Color.WHITE.withAlpha(120).get(),
+        Color.WHITE.get()
+    );
   }
 
   private void renderSplit(
@@ -160,15 +182,6 @@ public final class RunListener {
         inputUtil.sneakKey().isDown()
     );
 
-    var state = this.addon.playerState();
-
-    return new RunTickState(
-        input,
-        TickPosition.of(player),
-        state.airTime(),
-        state.vx(),
-        state.vy(),
-        state.vz()
-    );
+    return new RunTickState(input, TickPosition.of(player));
   }
 }

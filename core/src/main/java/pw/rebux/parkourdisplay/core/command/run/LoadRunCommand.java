@@ -36,6 +36,7 @@ public final class LoadRunCommand extends SubCommand {
           : this.addon.runFileManager().load(name);
 
       runState.reset();
+      runState.clearPreviousRun();
       runState.startPosition(data.start());
       runState.endSplit(data.end());
       runState.splits(data.splits());
