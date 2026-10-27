@@ -293,7 +293,11 @@
       },
       "highlightRunTickStates": {
         "name": "Highlight Previous Run Tick States",
-        "description": "Renders a dot for every tick of the latest run. Look at a dot to see its state and hit it to toggle between the dot and the tick's hitbox."
+        "description": "Renders every tick of the latest run. Look at a tick to see its state.",
+        "renderMode": {
+          "name": "Render Mode",
+          "description": "Whether to render the ticks as dots or as the player's hitbox."
+        }
       },
       "showRunFinishOffsets": {
         "name": "Show Run Finish Offsets In Chat",

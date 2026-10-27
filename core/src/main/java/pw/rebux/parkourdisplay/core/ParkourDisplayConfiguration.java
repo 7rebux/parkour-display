@@ -75,8 +75,8 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final HighlightRunSplitsSettings highlightRunSplitsSettings =
       new HighlightRunSplitsSettings();
 
-  @SwitchSetting
-  private final ConfigProperty<Boolean> highlightRunTickStates = new ConfigProperty<>(false);
+  private final HighlightRunTickStatesSettings highlightRunTickStates =
+      new HighlightRunTickStatesSettings();
 
   @SettingSection("clips")
   @SwitchSetting
@@ -136,6 +136,23 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
     Always,
     Confirm,
     Never
+  }
+
+  @Getter
+  public static final class HighlightRunTickStatesSettings extends Config {
+
+    @SwitchSetting
+    @ShowSettingInParent
+    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(false);
+
+    @DropdownSetting
+    private final ConfigProperty<RunTickStateRenderMode> renderMode =
+        new ConfigProperty<>(RunTickStateRenderMode.Dots);
+  }
+
+  public enum RunTickStateRenderMode {
+    Dots,
+    Hitboxes
   }
 
   @Getter

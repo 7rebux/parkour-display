@@ -10,8 +10,6 @@ import net.labymod.api.client.gfx.pipeline.renderer.text.TextRenderingOptions;
 import net.labymod.api.client.render.font.RenderableComponent;
 import net.labymod.api.event.Phase;
 import net.labymod.api.event.Subscribe;
-import net.labymod.api.event.client.entity.player.ClientPlayerInteractEvent;
-import net.labymod.api.event.client.entity.player.ClientPlayerInteractEvent.InteractionType;
 import net.labymod.api.event.client.render.overlay.IngameOverlayRenderEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import net.labymod.api.util.Color;
@@ -19,12 +17,12 @@ import net.labymod.api.util.bounds.Rectangle;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.RunTickStateRenderMode;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
 /// Renders the ticks of the previous run as dots in the world.
-/// Looking at a dot shows the state of that tick next to the crosshair,
-/// hitting it toggles between the dot and the tick's hitbox.
+/// Looking at a dot shows the state of that tick next to the crosshair.
 @RequiredArgsConstructor
 public final class RunTickDotListener {
 
@@ -64,20 +62,25 @@ public final class RunTickDotListener {
         Math.cos(yaw) * Math.cos(pitch)
     );
 
-    // Dots are small, so a dot whose center passes within the hover radius wins over any hitbox
-    // the ray enters. Among dots the one closest to the ray wins, so that neighbouring dots don't
-    // flicker between each other, among hitboxes the one entered first.
-    var hover = new Hover();
+    // The dot closest to the ray wins, so that neighbouring dots don't flicker between each other,
+    // or the hitbox the ray enters first.
+    var hitboxes = this.hitboxes();
+    var closest = hitboxes ? Double.POSITIVE_INFINITY : hoverRadius;
 
     for (var i = 0; i < ticks.size(); i++) {
       var position = ticks.get(i).position();
-      this.checkHover(hover, i, position.toVector(), position.playerBoundingBox(), ray);
+      var distance = hitboxes
+          ? ray.boxDistance(position.playerBoundingBox())
+          : ray.pointDistance(position.toVector());
+
+      if (distance < closest) {
+        closest = distance;
+        this.hoveredIndex = i;
+      }
     }
 
-    this.hoveredIndex = hover.dotIndex >= 0 ? hover.dotIndex : hover.hitboxIndex;
-
     var renderPosition = event.camera().renderPosition();
-    this.renderTicks(event, renderPosition, ticks);
+    this.renderTicks(event, renderPosition, ticks, hitboxes);
   }
 
   @Subscribe
@@ -118,45 +121,6 @@ public final class RunTickDotListener {
       canvas.submitRenderableComponent(
           line, x + tooltipPadding, lineY, -1, TextRenderingOptions.SHADOW);
       lineY += line.getHeight();
-    }
-  }
-
-  @Subscribe
-  public void onInteract(ClientPlayerInteractEvent event) {
-    var index = this.hoveredIndex;
-
-    if (index < 0) {
-      return;
-    }
-
-    if (event.type() == InteractionType.ATTACK) {
-      var toggled = this.addon.runState().toggledTicks();
-
-      if (!toggled.remove(index)) {
-        toggled.add(index);
-      }
-
-      event.setCancelled(true);
-    } else if (event.type() == InteractionType.CONTINUE_ATTACK) {
-      event.setCancelled(true);
-    }
-  }
-
-  private void checkHover(Hover hover, int index, DoubleVector3 position, AxisAlignedBoundingBox hitbox, Ray ray) {
-    if (this.addon.runState().toggledTicks().contains(index)) {
-      var distance = ray.boxDistance(hitbox);
-
-      if (distance < hover.hitboxDistance) {
-        hover.hitboxDistance = distance;
-        hover.hitboxIndex = index;
-      }
-    } else {
-      var distance = ray.pointDistance(position);
-
-      if (distance < hover.dotDistance) {
-        hover.dotDistance = distance;
-        hover.dotIndex = index;
-      }
     }
   }
 
@@ -205,18 +169,28 @@ public final class RunTickDotListener {
   private boolean visible() {
     var run = this.addon.runState();
 
-    return this.addon.configuration().highlightRunTickStates().get()
+    return this.addon.configuration().highlightRunTickStates().enabled().get()
         && run.startPosition() != null && run.endSplit() != null
         && !run.previousTickStates().isEmpty();
   }
 
-  private void renderTicks(RenderWorldEvent event, DoubleVector3 renderPosition, List<RunTickState> ticks) {
+  private boolean hitboxes() {
+    return this.addon.configuration().highlightRunTickStates().renderMode().get()
+        == RunTickStateRenderMode.Hitboxes;
+  }
+
+  private void renderTicks(
+      RenderWorldEvent event,
+      DoubleVector3 renderPosition,
+      List<RunTickState> ticks,
+      boolean hitboxes
+  ) {
     for (var i = 0; i < ticks.size(); i++) {
       var tick = ticks.get(i);
       var position = tick.position();
       var isHovered = this.hoveredIndex == i;
 
-      if (this.addon.runState().toggledTicks().contains(i)) {
+      if (hitboxes) {
         var color = dotColor(tick);
 
         this.renderHitbox(
@@ -369,15 +343,5 @@ public final class RunTickDotListener {
       // Standing inside a hitbox still hovers it.
       return Math.max(near, 0);
     }
-  }
-
-  /// The best dot and hitbox candidates while resolving the hovered tick.
-  private static final class Hover {
-
-    int dotIndex = -1;
-    double dotDistance = hoverRadius;
-
-    int hitboxIndex = -1;
-    double hitboxDistance = Double.POSITIVE_INFINITY;
   }
 }
