@@ -22,4 +22,27 @@ public final class MathHelper {
       return Math.hypot(offset.getX(), offset.getZ());
     }
   }
+
+  /// The distance between a point and the ray, or infinity if it lies behind the origin or farther
+  /// than maxDistance along the ray. Expects a normalized direction.
+  public static double rayPointDistance(
+      DoubleVector3 origin,
+      DoubleVector3 direction,
+      double maxDistance,
+      DoubleVector3 point
+  ) {
+    var toX = point.getX() - origin.getX();
+    var toY = point.getY() - origin.getY();
+    var toZ = point.getZ() - origin.getZ();
+    var along = toX * direction.getX() + toY * direction.getY() + toZ * direction.getZ();
+
+    if (along <= 0 || along > maxDistance) {
+      return Double.POSITIVE_INFINITY;
+    }
+
+    var offX = toX - along * direction.getX();
+    var offY = toY - along * direction.getY();
+    var offZ = toZ - along * direction.getZ();
+    return Math.sqrt(offX * offX + offY * offY + offZ * offZ);
+  }
 }

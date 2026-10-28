@@ -19,6 +19,7 @@ import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.ParkourDisplayConfiguration.RunTickStateRenderMode;
+import pw.rebux.parkourdisplay.core.util.BlockRayTracer;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
 import pw.rebux.parkourdisplay.core.util.RenderUtils;
 
@@ -29,6 +30,7 @@ public final class RunTickDotListener {
 
   private static final double dotRadius = 0.03;
   private static final double hoverRadius = 0.05;
+  private static final double hoverRange = 5;
   private static final int tooltipPadding = 3;
   private static final double epsilon = 1e-9;
   private static final double ladderClimbSpeed = (0.2 - 0.08) * 0.98F;
@@ -75,6 +77,8 @@ public final class RunTickDotListener {
       height += line.getHeight() + 1;
     }
 
+    height -= 1;
+
     var window = this.addon.labyAPI().minecraft().minecraftWindow();
     // Offset from the crosshair so the tooltip never covers the dot being inspected.
     var x = window.getScaledWidth() / 2F + 8;
@@ -109,15 +113,8 @@ public final class RunTickDotListener {
   }
 
   private void updateHoveredIndex(RenderWorldEvent event, ClientPlayer player, List<RunTickState> ticks) {
-    var eye = event.camera().position();
-    var yaw = Math.toRadians(player.getRotationYaw());
-    var pitch = Math.toRadians(player.getRotationPitch());
-    var ray = new Ray(
-        eye,
-        -Math.sin(yaw) * Math.cos(pitch),
-        -Math.sin(pitch),
-        Math.cos(yaw) * Math.cos(pitch)
-    );
+    var origin = event.camera().position();
+    var direction = new DoubleVector3(player.perspectiveVector(event.getPartialTicks()));
 
     // The dot closest to the ray wins, so that neighbouring dots don't flicker between each other,
     // or the hitbox the ray enters first.
@@ -127,8 +124,8 @@ public final class RunTickDotListener {
     for (var i = 0; i < ticks.size(); i++) {
       var position = ticks.get(i).position();
       var distance = hitboxes
-          ? ray.boxDistance(position.playerBoundingBox())
-          : ray.pointDistance(position.toVector());
+          ? BlockRayTracer.intersect(origin, direction, hoverRange, position.playerBoundingBox())
+          : MathHelper.rayPointDistance(origin, direction, hoverRange, position.toVector());
 
       if (distance < closest) {
         closest = distance;
@@ -270,62 +267,5 @@ public final class RunTickDotListener {
     if (state.sprint()) input.append(input.isEmpty() ? "" : " ").append("Sprint");
 
     return input.isEmpty() ? "-" : input.toString();
-  }
-
-  /// The crosshair ray, starting at the camera with a normalized direction.
-  private record Ray(DoubleVector3 origin, double dirX, double dirY, double dirZ) {
-
-    /// The distance between a point and the ray, or infinity if it lies behind the camera.
-    double pointDistance(DoubleVector3 point) {
-      var toX = point.getX() - this.origin.getX();
-      var toY = point.getY() - this.origin.getY();
-      var toZ = point.getZ() - this.origin.getZ();
-      var along = toX * this.dirX + toY * this.dirY + toZ * this.dirZ;
-
-      if (along <= 0) {
-        return Double.POSITIVE_INFINITY;
-      }
-
-      var offX = toX - along * this.dirX;
-      var offY = toY - along * this.dirY;
-      var offZ = toZ - along * this.dirZ;
-      return Math.sqrt(offX * offX + offY * offY + offZ * offZ);
-    }
-
-    /// The distance along the ray at which it enters the box, or infinity if it misses the box or
-    /// the box lies behind the camera.
-    double boxDistance(AxisAlignedBoundingBox box) {
-      var near = Double.NEGATIVE_INFINITY;
-      var far = Double.POSITIVE_INFINITY;
-      double[][] slabs = {
-          {this.origin.getX(), this.dirX, box.getMinX(), box.getMaxX()},
-          {this.origin.getY(), this.dirY, box.getMinY(), box.getMaxY()},
-          {this.origin.getZ(), this.dirZ, box.getMinZ(), box.getMaxZ()},
-      };
-
-      for (var slab : slabs) {
-        var origin = slab[0];
-        var dir = slab[1];
-
-        if (dir == 0) {
-          if (origin < slab[2] || origin > slab[3]) {
-            return Double.POSITIVE_INFINITY;
-          }
-          continue;
-        }
-
-        var t1 = (slab[2] - origin) / dir;
-        var t2 = (slab[3] - origin) / dir;
-        near = Math.max(near, Math.min(t1, t2));
-        far = Math.min(far, Math.max(t1, t2));
-      }
-
-      if (near > far || far < 0) {
-        return Double.POSITIVE_INFINITY;
-      }
-
-      // Standing inside a hitbox still hovers it.
-      return Math.max(near, 0);
-    }
   }
 }
