@@ -148,6 +148,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
     @DropdownSetting
     private final ConfigProperty<RunTickStateRenderMode> renderMode =
         new ConfigProperty<>(RunTickStateRenderMode.Dots);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> showTickInfoOnHover = new ConfigProperty<>(true);
   }
 
   public enum RunTickStateRenderMode {

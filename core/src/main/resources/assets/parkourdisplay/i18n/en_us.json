@@ -199,6 +199,9 @@
         "landingBlock": {
           "name": "Landing Blocks"
         },
+        "ladderBox": {
+          "name": "Ladder Boxes"
+        },
         "formatting": {
           "name": "Formatting"
         },
@@ -293,10 +296,14 @@
       },
       "highlightRunTickStates": {
         "name": "Highlight Previous Run Tick States",
-        "description": "Renders every tick of the latest run. Look at a tick to see its state.",
+        "description": "Renders every tick of the latest run.",
         "renderMode": {
           "name": "Render Mode",
           "description": "Whether to render the ticks as dots or as the player's hitbox."
+        },
+        "showTickInfoOnHover": {
+          "name": "Show Tick Info On Hover",
+          "description": "Whether to show the state of the tick you are looking at."
         }
       },
       "showRunFinishOffsets": {
@@ -325,6 +332,19 @@
       "showLadderBoxOffsets": {
         "name": "Show Ladder Box Offsets In Chat",
         "description": "Whether to log the closest approach to each ladder box in chat, even when it did not beat the personal best."
+      },
+      "highlightLadderBoxesSettings": {
+        "name": "Highlight Ladder Boxes",
+        "description": "Whether to render ladder box overlays in the world.",
+        "fillColor": {
+          "name": "Fill Color"
+        },
+        "outlineColor": {
+          "name": "Outline Color"
+        },
+        "outlineThickness": {
+          "name": "Outline Thickness"
+        }
       }
     },
     "labels": {

@@ -38,6 +38,8 @@ public final class BaseCommand extends Command {
 
     this.addon = addon;
 
+    this.withSubCommand(new VersionCommand(addon));
+
     // Landing block commands
     this.withSubCommand(new AddLandingBlockCommand(addon));
     this.withSubCommand(new ListLandingBlocksCommand(addon));
@@ -63,9 +65,6 @@ public final class BaseCommand extends Command {
     this.withSubCommand(new LoadRunCommand(addon));
     this.withSubCommand(new ListRunFiles(addon));
     this.withSubCommand(new ClearRunCommand(addon));
-
-    // Misc commands
-    this.withSubCommand(new VersionCommand(addon));
   }
 
   @Override

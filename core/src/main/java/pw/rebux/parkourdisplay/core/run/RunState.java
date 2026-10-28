@@ -93,6 +93,7 @@ public final class RunState {
     this.addon.clipService().onRunFinish(this.timer, newPB);
   }
 
+  // TODO: Not sure if I like this
   public void clearPreviousRun() {
     this.previousTickStates.clear();
   }
