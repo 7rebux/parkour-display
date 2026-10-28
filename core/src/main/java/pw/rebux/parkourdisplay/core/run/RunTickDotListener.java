@@ -1,6 +1,5 @@
 package pw.rebux.parkourdisplay.core.run;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
@@ -28,12 +27,13 @@ import pw.rebux.parkourdisplay.core.util.RenderUtils;
 @RequiredArgsConstructor
 public final class RunTickDotListener {
 
-  private static final double dotRadius = 0.03;
-  private static final double hoverRadius = 0.05;
-  private static final double hoverRange = 5;
-  private static final int tooltipPadding = 3;
-  private static final double epsilon = 1e-9;
-  private static final double ladderClimbSpeed = (0.2 - 0.08) * 0.98F;
+  private static final double DOT_RADIUS = 0.03;
+  private static final double HOVER_RADIUS = 0.05;
+  private static final double HOVER_RANGE = 5;
+  private static final int TOOLTIP_PADDING = 3;
+  private static final int TOOLTIP_LINE_SPACING = 1;
+  private static final double EPSILON = 1e-9;
+  private static final double LADDER_CLIMB_SPEED = (0.2 - 0.08) * 0.98F;
 
   private final ParkourDisplayAddon addon;
 
@@ -62,8 +62,8 @@ public final class RunTickDotListener {
     var index = this.hoveredIndex;
     var ticks = this.addon.runState().previousTickStates();
 
-    if (event.phase() != Phase.POST || event.isGuiHidden()
-        || index < 0 || index >= ticks.size() || this.isHidden()) {
+    // The run can be cleared between the world and the overlay render.
+    if (event.phase() != Phase.POST || event.isGuiHidden() || index < 0 || index >= ticks.size()) {
       return;
     }
 
@@ -74,10 +74,10 @@ public final class RunTickDotListener {
 
     for (var line : lines) {
       width = Math.max(width, line.getWidth());
-      height += line.getHeight() + 1;
+      height += line.getHeight() + TOOLTIP_LINE_SPACING;
     }
 
-    height -= 1;
+    height -= TOOLTIP_LINE_SPACING;
 
     var window = this.addon.labyAPI().minecraft().minecraftWindow();
     // Offset from the crosshair so the tooltip never covers the dot being inspected.
@@ -86,15 +86,15 @@ public final class RunTickDotListener {
     var canvas = event.context().canvas();
 
     canvas.submitRect(
-        Rectangle.relative(x, y, width + tooltipPadding * 2, height + tooltipPadding * 2),
+        Rectangle.relative(x, y, width + TOOLTIP_PADDING * 2, height + TOOLTIP_PADDING * 2),
         0xA0000000
     );
 
-    var lineY = y + tooltipPadding;
+    var lineY = y + TOOLTIP_PADDING;
 
     for (var line : lines) {
-      canvas.submitRenderableComponent(line, x + tooltipPadding, lineY, -1, TextRenderingOptions.SHADOW);
-      lineY += line.getHeight() + 1;
+      canvas.submitRenderableComponent(line, x + TOOLTIP_PADDING, lineY, -1, TextRenderingOptions.SHADOW);
+      lineY += line.getHeight() + TOOLTIP_LINE_SPACING;
     }
   }
 
@@ -107,7 +107,7 @@ public final class RunTickDotListener {
         || run.previousTickStates().isEmpty();
   }
 
-  private boolean hitboxes() {
+  private boolean isHitboxesMode() {
     return this.addon.configuration().highlightRunTickStates().renderMode().get()
         == RunTickStateRenderMode.Hitboxes;
   }
@@ -116,16 +116,16 @@ public final class RunTickDotListener {
     var origin = event.camera().position();
     var direction = new DoubleVector3(player.perspectiveVector(event.getPartialTicks()));
 
-    // The dot closest to the ray wins, so that neighbouring dots don't flicker between each other,
-    // or the hitbox the ray enters first.
-    var hitboxes = this.hitboxes();
-    var closest = hitboxes ? Double.POSITIVE_INFINITY : hoverRadius;
+    // Dots: the one closest to the ray wins, so neighbouring dots don't flicker between each other.
+    // Hitboxes: the one the ray enters first wins. Misses are NaN, which never compares as closer.
+    var hitboxes = this.isHitboxesMode();
+    var closest = hitboxes ? Double.POSITIVE_INFINITY : HOVER_RADIUS;
 
     for (var i = 0; i < ticks.size(); i++) {
       var position = ticks.get(i).position();
       var distance = hitboxes
-          ? BlockRayTracer.intersect(origin, direction, hoverRange, position.playerBoundingBox())
-          : MathHelper.rayPointDistance(origin, direction, hoverRange, position.toVector());
+          ? BlockRayTracer.intersect(origin, direction, HOVER_RANGE, position.playerBoundingBox())
+          : MathHelper.rayPointDistance(origin, direction, HOVER_RANGE, position.toVector());
 
       if (distance < closest) {
         closest = distance;
@@ -136,38 +136,36 @@ public final class RunTickDotListener {
 
   private List<RenderableComponent> tickLines(int runTick, RunTickState tick) {
     var position = tick.position();
-    var title = Component.text("Tick " + runTick, NamedTextColor.WHITE);
 
-    var lines = new ArrayList<RenderableComponent>();
-    lines.add(RenderableComponent.of(title));
-    lines.add(line(
-        "Position",
-        this.number(position.x()),
-        this.number(position.y()),
-        this.number(position.z())
-    ));
-    lines.add(line(
-        "Rotation",
-        this.number(MathHelper.formatYaw(position.yaw())),
-        this.number(position.pitch())
-    ));
-    lines.add(line(
-        "Velocity",
-        this.number(position.vx()),
-        this.number(position.vy(), signColor(position.vy())),
-        this.number(position.vz())
-    ));
-    lines.add(line("onClimbable", position.onClimbable()));
-    lines.add(line("onGround", position.onGround()));
-    lines.add(line("collided", position.collided()));
-    lines.add(line("Inputs", Component.text(formatInputState(tick.input()), NamedTextColor.YELLOW)));
-
-    return lines;
+    return List.of(
+        RenderableComponent.of(Component.text("Tick " + runTick, NamedTextColor.WHITE)),
+        line(
+            "Position",
+            this.number(position.x()),
+            this.number(position.y()),
+            this.number(position.z())
+        ),
+        line(
+            "Rotation",
+            this.number(MathHelper.formatYaw(position.yaw())),
+            this.number(position.pitch())
+        ),
+        line(
+            "Velocity",
+            this.number(position.vx()),
+            this.number(position.vy(), bySign(position.vy(), NamedTextColor.GRAY, NamedTextColor.GREEN, NamedTextColor.RED)),
+            this.number(position.vz())
+        ),
+        line("onClimbable", position.onClimbable()),
+        line("onGround", position.onGround()),
+        line("collided", position.collided()),
+        line("Inputs", Component.text(formatInputState(tick.input()), NamedTextColor.YELLOW))
+    );
   }
 
   private void renderTicks(RenderWorldEvent event, List<RunTickState> ticks) {
     var renderPosition = event.camera().renderPosition();
-    var hitboxes = this.hitboxes();
+    var hitboxes = this.isHitboxesMode();
 
     for (var i = 0; i < ticks.size(); i++) {
       var tick = ticks.get(i);
@@ -175,29 +173,30 @@ public final class RunTickDotListener {
       var isHovered = this.hoveredIndex == i;
       var color = isHovered ? Color.WHITE : tickColor(tick);
 
-      if (hitboxes) {
-        RenderUtils.renderAbsoluteBoundingBox(
-            renderPosition,
-            position.playerBoundingBox(),
-            0.005F,
-            event.stack(),
-            color.withAlpha(30).get(),
-            color.get()
-        );
-        continue;
-      }
+      AxisAlignedBoundingBox box;
+      float outlineThickness;
+      int fillAlpha;
 
-      var radius = isHovered ? dotRadius * 1.5 : dotRadius;
+      if (hitboxes) {
+        box = position.playerBoundingBox();
+        outlineThickness = 0.005F;
+        fillAlpha = 30;
+      } else {
+        var radius = isHovered ? DOT_RADIUS * 1.5 : DOT_RADIUS;
+        box = new AxisAlignedBoundingBox(
+            position.x() - radius, position.y() - radius, position.z() - radius,
+            position.x() + radius, position.y() + radius, position.z() + radius
+        );
+        outlineThickness = 0.002F;
+        fillAlpha = 120;
+      }
 
       RenderUtils.renderAbsoluteBoundingBox(
           renderPosition,
-          new AxisAlignedBoundingBox(
-              position.toVector().getX() - radius, position.toVector().getY() - radius, position.toVector().getZ() - radius,
-              position.toVector().getX() + radius, position.toVector().getY() + radius, position.toVector().getZ() + radius
-          ),
-          0.002F,
+          box,
+          outlineThickness,
           event.stack(),
-          color.withAlpha(120).get(),
+          color.withAlpha(fillAlpha).get(),
           color.get()
       );
     }
@@ -232,30 +231,26 @@ public final class RunTickDotListener {
     );
   }
 
-  private static TextColor signColor(double value) {
-    if (Math.abs(value) < epsilon) {
-      return NamedTextColor.GRAY;
+  private static <T> T bySign(double value, T zero, T positive, T negative) {
+    if (Math.abs(value) < EPSILON) {
+      return zero;
     }
-
-    return value > 0 ? NamedTextColor.GREEN : NamedTextColor.RED;
+    return value > 0 ? positive : negative;
   }
 
   private static Color tickColor(RunTickState tick) {
     var position = tick.position();
 
-    if (Math.abs(position.vy() - ladderClimbSpeed) < epsilon) {
+    if (Math.abs(position.vy() - LADDER_CLIMB_SPEED) < EPSILON) {
       return Color.CYAN;
     }
     if (position.onGround()) {
       return Color.YELLOW;
     }
-    if (Math.abs(position.vy()) < epsilon) {
-      return Color.GRAY;
-    }
-    return position.vy() > 0 ? Color.GREEN : Color.RED;
+    return bySign(position.vy(), Color.GRAY, Color.GREEN, Color.RED);
   }
 
-  private String formatInputState(RunTickState.KeyboardInput state) {
+  private static String formatInputState(RunTickState.KeyboardInput state) {
     var input = new StringBuilder();
 
     if (state.w()) input.append("W");
