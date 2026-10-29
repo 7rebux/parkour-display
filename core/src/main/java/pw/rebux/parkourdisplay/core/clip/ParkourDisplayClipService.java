@@ -1,5 +1,6 @@
 package pw.rebux.parkourdisplay.core.clip;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
 import net.labymod.api.client.resources.ResourceLocation;
@@ -7,6 +8,7 @@ import net.labymod.api.platform.launcher.ClipFolder;
 import net.labymod.api.platform.launcher.ClipFolderIcon;
 import net.labymod.api.platform.launcher.ClipFolderIcon.Background;
 import net.labymod.api.platform.launcher.ClipFolderIcon.Block;
+import net.labymod.api.util.concurrent.task.Task;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 
 @RequiredArgsConstructor
@@ -14,6 +16,8 @@ public class ParkourDisplayClipService {
 
   private static final ResourceLocation RUN =
       ResourceLocation.create(ParkourDisplayAddon.NAMESPACE, "run");
+
+  private static final long CLIP_DELAY_SECONDS = 2;
 
   private final ParkourDisplayAddon addon;
 
@@ -32,7 +36,10 @@ public class ParkourDisplayClipService {
       return;
     }
 
-    clipService.requestClip(RUN, ticks + " ticks", ticks, this.clipFolder);
+    Task.builder(() -> clipService.requestClip(RUN, ticks + " ticks", ticks, this.clipFolder))
+        .delay(CLIP_DELAY_SECONDS, TimeUnit.SECONDS)
+        .build()
+        .execute();
 
     // Clipping might not have been available on startup, so try again for the next clip.
     this.requestFolder();
