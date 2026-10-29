@@ -10,4 +10,8 @@ public enum LandingBlockMode {
   /// Will use the player hitbox of the hit tick, which is one tick after the landing tick.
   /// You will want this, for example, when trying to bounce on slime.
   Hit,
+
+  /// Will compare the player hitbox at every tick the player is close to the bounding box.
+  /// You will want this when trying to catch a climbable block like ladders or vines.
+  Enter,
 }

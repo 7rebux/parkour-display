@@ -51,13 +51,6 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final HighlightLandingBlocksSettings highlightLandingBlocksSettings =
       new HighlightLandingBlocksSettings();
 
-  @SettingSection("ladderBox")
-  @SwitchSetting
-  private final ConfigProperty<Boolean> showLadderBoxOffsets = new ConfigProperty<>(false);
-
-  private final HighlightLadderBoxesSettings highlightLadderBoxesSettings =
-      new HighlightLadderBoxesSettings();
-
   @SettingSection("runSplit")
   @SwitchSetting
   private final ConfigProperty<Boolean> showRunSplitsInChat = new ConfigProperty<>(true);
@@ -96,25 +89,6 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
   @Getter
   public static final class HighlightLandingBlocksSettings extends Config {
-
-    @SwitchSetting
-    @ShowSettingInParent
-    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> fillColor =
-        new ConfigProperty<>(Color.ofRGB(0, 192, 255, 25));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> outlineColor =
-        new ConfigProperty<>(Color.ofRGB(0, 192, 255, 75));
-
-    @SliderSetting(min = 1, max = 30)
-    private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(10);
-  }
-
-  @Getter
-  public static final class HighlightLadderBoxesSettings extends Config {
 
     @SwitchSetting
     @ShowSettingInParent

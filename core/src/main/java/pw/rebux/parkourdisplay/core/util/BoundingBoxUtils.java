@@ -70,4 +70,17 @@ public final class BoundingBoxUtils {
             Math.max(a.getMinZ(), b.getMinZ())
     );
   }
+
+  /// The player volume the climb test is measured against: the hitbox flattened onto its
+  /// bottom face. Returns a new box, as the caller's may be a stored tick snapshot.
+  public static AxisAlignedBoundingBox climbTestBox(AxisAlignedBoundingBox playerBox) {
+    return new AxisAlignedBoundingBox(
+        playerBox.getMinX(),
+        playerBox.getMinY(),
+        playerBox.getMinZ(),
+        playerBox.getMaxX(),
+        playerBox.getMinY(),
+        playerBox.getMaxZ()
+    );
+  }
 }

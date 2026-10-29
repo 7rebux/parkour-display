@@ -21,7 +21,7 @@ public final class ResetLandingBlockCommand extends SubCommand {
 
     if (arguments.length == 0) {
       landingBlockRegistry.landingBlocks().forEach(landingBlock ->
-          landingBlock.best().reset());
+          landingBlock.bestDistance(null));
       ChatMessage.of(this, "successAll")
           .withColor(NamedTextColor.GREEN)
           .send();
@@ -37,7 +37,7 @@ public final class ResetLandingBlockCommand extends SubCommand {
 
       var landingBlock = landingBlockRegistry.landingBlocks().get(index);
 
-      landingBlock.best().reset();
+      landingBlock.bestDistance(null);
       ChatMessage.of(this, "successSingle")
           .withColor(NamedTextColor.GREEN)
           .send();

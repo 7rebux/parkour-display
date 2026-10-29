@@ -186,21 +186,12 @@
         "decimalPlaces": {
           "name": "Digits after comma"
         }
-      },
-      "last_ladder_box_offsets": {
-        "name": "Last Ladder Box Offsets",
-        "singleLine": {
-          "name": "Single Line"
-        }
       }
     },
     "settings": {
       "header": {
         "landingBlock": {
           "name": "Landing Blocks"
-        },
-        "ladderBox": {
-          "name": "Ladder Boxes"
         },
         "formatting": {
           "name": "Formatting"
@@ -328,23 +319,6 @@
       "smoothRotation": {
         "name": "Smooth Rotation",
         "description": "Interpolates the rotation between ticks instead of snapping to the rotation of every tick."
-      },
-      "showLadderBoxOffsets": {
-        "name": "Show Ladder Box Offsets In Chat",
-        "description": "Whether to log the closest approach to each ladder box in chat, even when it did not beat the personal best."
-      },
-      "highlightLadderBoxesSettings": {
-        "name": "Highlight Ladder Boxes",
-        "description": "Whether to render ladder box overlays in the world.",
-        "fillColor": {
-          "name": "Fill Color"
-        },
-        "outlineColor": {
-          "name": "Outline Color"
-        },
-        "outlineThickness": {
-          "name": "Outline Thickness"
-        }
       }
     },
     "labels": {
@@ -403,13 +377,7 @@
       "last_sidestep": "Last Sidestep",
       "preturn": "Preturn",
       "second_turn": "Second Turn",
-      "blips": "Blips",
-      "last_ladder_box_offsets": {
-        "single": "Last Ladder Offsets",
-        "total": "Ladder Offset Total",
-        "x": "Ladder Offset X",
-        "z": "Ladder Offset Z"
-      }
+      "blips": "Blips"
     },
     "commands": {
       "addlb": {
@@ -524,14 +492,6 @@
           "success": "Successfully cleared run data."
         }
       },
-      "resetladderbox": {
-        "description": "Reset the personal best offsets for all or a single ladder box",
-        "messages": {
-          "invalidIndex": "Please provide a valid index.",
-          "successSingle": "Successfully reset ladder box offsets.",
-          "successAll": "Successfully reset offsets of all ladder boxes."
-        }
-      },
       "version": {
         "description": "Shows the current addon version",
         "messages": {
@@ -568,10 +528,6 @@
       },
       "climb": {
         "duration": "Climb duration: %s + %s + %s = %s"
-      },
-      "ladderbox": {
-        "newPB": "New PB: %s (X: %s, Z: %s)",
-        "offsets": "Offset X: %s, Z: %s"
       }
     },
     "activities": {

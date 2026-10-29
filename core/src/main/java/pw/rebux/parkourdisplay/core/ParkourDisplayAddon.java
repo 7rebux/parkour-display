@@ -15,15 +15,12 @@ import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
 import pw.rebux.parkourdisplay.core.clip.ParkourDisplayClipService;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
-import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxListener;
-import pw.rebux.parkourdisplay.core.ladderbox.LadderBoxRegistry;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
 import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
-import pw.rebux.parkourdisplay.core.offset.OffsetReporter;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
@@ -44,7 +41,6 @@ import pw.rebux.parkourdisplay.core.widget.JumpCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LandingCoordinatesWidget;
 import pw.rebux.parkourdisplay.core.widget.LastFortyFiveWidget;
 import pw.rebux.parkourdisplay.core.widget.LastInputWidget;
-import pw.rebux.parkourdisplay.core.widget.LastLadderBoxOffsetsWidget;
 import pw.rebux.parkourdisplay.core.widget.LastLandingBlockOffsetsWidget;
 import pw.rebux.parkourdisplay.core.widget.LastSidestepWidget;
 import pw.rebux.parkourdisplay.core.widget.LastTimingWidget;
@@ -73,8 +69,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
       .create();
   private final HudWidgetCategory category = new HudWidgetCategory(this, NAMESPACE);
   private final LandingBlockRegistry landingBlockRegistry = new LandingBlockRegistry(this);
-  private final LadderBoxRegistry ladderBoxRegistry = new LadderBoxRegistry(this);
-  private final OffsetReporter offsetReporter = new OffsetReporter(this);
   private final MacroRunner macroRunner = new MacroRunner(this);
   private final MacroFileManager macroFileManager = new MacroFileManager(this);
   private final RunFileManager runFileManager = new RunFileManager(this);
@@ -115,7 +109,6 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new LandingBlockListener(this));
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new ChatMovementLogListener(this));
-    this.registerListener(new LadderBoxListener(this));
     this.registerListener(new RunTickDotListener(this));
     this.registerListener(new ChatLadderLogListener(this));
     this.registerListener(new ChatLadderYLogListener(this));
@@ -150,6 +143,5 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     hudWidgetRegistry.register(new RunGroundTimeWidget(this));
     hudWidgetRegistry.register(new RunSplitsWidget(this));
     hudWidgetRegistry.register(new LastLandingBlockOffsetsWidget(this));
-    hudWidgetRegistry.register(new LastLadderBoxOffsetsWidget(this));
   }
 }
