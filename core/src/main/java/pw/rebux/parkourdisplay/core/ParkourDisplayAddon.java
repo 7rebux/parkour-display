@@ -7,8 +7,10 @@ import lombok.Getter;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
+import net.labymod.api.client.gui.screen.key.HotkeyService;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import pw.rebux.parkourdisplay.api.Permissions;
+import pw.rebux.parkourdisplay.core.activity.LandingBlocksActivity;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
@@ -85,6 +87,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListeners();
     this.registerHudWidgets();
     this.registerCommand(new BaseCommand(this));
+    this.registerHotkeys();
 
     this.labyAPI().permissionRegistry().register(Permissions.RUN_MACROS, false, true);
 
@@ -100,6 +103,19 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   @Override
   protected Class<ParkourDisplayConfiguration> configurationClass() {
     return ParkourDisplayConfiguration.class;
+  }
+
+  private void registerHotkeys() {
+    Laby.references().hotkeyService().register(
+        "landing-blocks-screen",
+        this.configuration().landingBlocksScreenKey(),
+        () -> HotkeyService.Type.HOLD,
+        pressed -> {
+          if (pressed) {
+            this.labyAPI().minecraft().minecraftWindow().displayScreen(new LandingBlocksActivity(this));
+          }
+        }
+    );
   }
 
   private void registerListeners() {

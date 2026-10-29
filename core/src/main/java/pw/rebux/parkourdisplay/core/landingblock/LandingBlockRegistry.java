@@ -23,10 +23,7 @@ public final class LandingBlockRegistry {
     var label = Laby.labyAPI().minecraft().getTranslation(
         "block.minecraft.%s".formatted(block.id().getPath()));
 
-    if (mode == LandingBlockMode.Enter && WorldUtils.isClimbable(block.defaultState())) {
-      aabb = WorldUtils.ladderIntersectionBox(aabb);
-    }
-
-    this.landingBlocks.add(new LandingBlock(label, mode, aabb));
+    var climbable = WorldUtils.isClimbable(block.defaultState());
+    this.landingBlocks.add(new LandingBlock(label, mode, aabb, climbable));
   }
 }

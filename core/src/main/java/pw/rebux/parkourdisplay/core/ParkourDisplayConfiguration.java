@@ -2,6 +2,8 @@ package pw.rebux.parkourdisplay.core;
 
 import lombok.Getter;
 import net.labymod.api.addon.AddonConfig;
+import net.labymod.api.client.gui.screen.key.Key;
+import net.labymod.api.client.gui.screen.widget.widgets.input.KeybindWidget.KeyBindSetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SliderWidget.SliderSetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.color.ColorPickerWidget.ColorPickerSetting;
@@ -50,6 +52,9 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
   private final HighlightLandingBlocksSettings highlightLandingBlocksSettings =
       new HighlightLandingBlocksSettings();
+
+  @KeyBindSetting
+  private final ConfigProperty<Key> landingBlocksScreenKey = new ConfigProperty<>(Key.NONE);
 
   @SettingSection("runSplit")
   @SwitchSetting
