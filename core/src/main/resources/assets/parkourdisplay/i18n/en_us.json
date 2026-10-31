@@ -380,6 +380,23 @@
       "blips": "Blips"
     },
     "commands": {
+      "analyze": {
+        "description": "Analyzes the ladder you are looking at",
+        "messages": {
+          "invalidBlock": "You are not looking at a ladder.",
+          "unreachable": "The top of the ladder cannot be reached from here.",
+          "title": "Ladder Analysis",
+          "info": "Ladder Y %s → %s · Start Y %s",
+          "row": "%s = %s + %s + %s · %s · %s",
+          "airtime": "Airtime",
+          "start": "Start",
+          "climb": "Climb",
+          "overshoot": "Overshoot",
+          "peak": "Peak",
+          "strategy": "Strategy",
+          "ticks": "%s t"
+        }
+      },
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {
@@ -524,10 +541,29 @@
         "grind": "§9Grind"
       },
       "ladder": {
-        "y": "%s: Y: %s (%s)%s"
+        "y": "%s: Y: %s (%s)%s",
+        "strategy": {
+          "jam": "jam",
+          "pessi": "pessi %st",
+          "maxPessi": "max pessi",
+          "release": "one-tick release between two climb ticks",
+          "earlyExit": "early exit on tick %s",
+          "plainHold": "plain hold",
+          "noClimb": "jump only"
+        }
       },
       "climb": {
-        "duration": "Climb duration: %s + %s + %s = %s"
+        "duration": "Climb duration: %s + %s + %s = %s",
+        "earlyExit": "Early exit",
+        "earlyExitMissed": "Possible early exit missed",
+        "start": "First climb tick: airtime %s · Y %s · vy %s",
+        "delay": "Delayed climb start on tick %s",
+        "delayMissed": "Possible better climb start missed: %s (tick %s instead of %s)",
+        "release": "Mid-climb release",
+        "releaseMissed": "Possible mid-climb release missed",
+        "optimal": "Optimal ladder: %s t",
+        "notOptimal": "Not optimal: %s t possible instead of %s t",
+        "optimalStrategy": " ‣ %s · peak %s"
       }
     },
     "activities": {
