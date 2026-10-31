@@ -248,6 +248,10 @@
           "name": "Outline Thickness"
         }
       },
+      "landingBlocksScreenKey": {
+        "name": "Landing Blocks Screen Hotkey",
+        "description": "Opens a screen listing all registered landing blocks."
+      },
       "highlightRunSplitsSettings": {
         "name": "Highlight Run Splits Settings",
         "highlightRegularSplits": {
@@ -533,6 +537,11 @@
     "activities": {
       "loadRunData": {
         "title": "Load Server Run Data?"
+      },
+      "landingBlocks": {
+        "title": "Landing Blocks",
+        "empty": "No landing blocks registered.",
+        "reset": "Reset"
       }
     }
   }
