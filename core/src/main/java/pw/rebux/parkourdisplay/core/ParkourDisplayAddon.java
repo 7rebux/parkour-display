@@ -3,11 +3,13 @@ package pw.rebux.parkourdisplay.core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
 import lombok.Getter;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
+import net.labymod.api.util.io.LabyExecutors;
 import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
@@ -15,6 +17,7 @@ import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMovementLogListener;
 import pw.rebux.parkourdisplay.core.clip.ParkourDisplayClipService;
 import pw.rebux.parkourdisplay.core.command.BaseCommand;
+import pw.rebux.parkourdisplay.core.ladder.LadderTracker;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockListener;
 import pw.rebux.parkourdisplay.core.landingblock.LandingBlockRegistry;
 import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
@@ -75,6 +78,9 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
   private final ParkourDisplayClipService clipService = new ParkourDisplayClipService(this);
+  /// Runs the ladder solver off the game thread. A single thread keeps results in order.
+  private final ExecutorService ladderExecutor =
+      LabyExecutors.newSingleThreadExecutor("ParkourDisplay Ladder Solver %d");
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -110,6 +116,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.registerListener(new ChatMoveTimeLogListener(this));
     this.registerListener(new ChatMovementLogListener(this));
     this.registerListener(new RunTickDotListener(this));
+    this.registerListener(new LadderTracker(this));
     this.registerListener(new ChatLadderLogListener(this));
     this.registerListener(new ChatLadderYLogListener(this));
   }
