@@ -15,8 +15,9 @@ import net.labymod.api.util.math.vector.DoubleVector3;
 public final class TickPosition {
 
   private double x, y, z;
-  private double vx, vy, vz;
   private float yaw, pitch;
+  // Velocities at the start of the tick
+  private double vx, vy, vz;
   // We could work with a constant bounding box for the player, but there are states in which
   // the size can change, e.g., when the player is crouching or swimming.
   private AxisAlignedBoundingBox playerBoundingBox;

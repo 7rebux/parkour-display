@@ -52,7 +52,6 @@ public final class RunDataPacketHandler implements PacketHandler<RunDataPacket> 
     endSplit.personalBest(packet.getPersonalBest());
 
     this.addon.runState().reset();
-    this.addon.runState().clearPreviousRun();
     this.addon.runState().splits().clear();
     this.addon.runState().startPosition(start);
     this.addon.runState().endSplit(endSplit);
