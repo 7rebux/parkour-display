@@ -56,32 +56,7 @@ public final class LadderSolver {
     paths.add(search(startY, ladderFrom, ladderTo, topY, null, plain.landingTick));
 
     for (var firstPress : firstPresses(startY, ladderFrom, ladderTo)) {
-      var natural = search(startY, ladderFrom, ladderTo, topY,
-          tick -> tick >= firstPress, MAX_TICKS);
-      if (natural == null) continue;
-      paths.add(natural);
-
-      var lastPress = natural.inputs().stream()
-          .filter(Input::pressed)
-          .mapToInt(Input::tick)
-          .max()
-          .orElse(firstPress);
-
-      for (int exit = firstPress; exit < lastPress; exit++) {
-        final var lastInput = exit;
-        paths.add(search(startY, ladderFrom, ladderTo, topY,
-            tick -> tick >= firstPress && tick <= lastInput, MAX_TICKS));
-      }
-
-      // A release lowers the rest of the climb, which can push the natural end a tick later.
-      for (int release = firstPress + 1; release < lastPress; release++) {
-        final var released = release;
-        for (int exit = release + 1; exit <= lastPress + 2; exit++) {
-          final var lastInput = exit == lastPress + 2 ? Integer.MAX_VALUE : exit;
-          paths.add(search(startY, ladderFrom, ladderTo, topY,
-              tick -> tick >= firstPress && tick != released && tick <= lastInput, MAX_TICKS));
-        }
-      }
+      paths.addAll(climbs(startY, ladderFrom, ladderTo, topY, firstPress, MAX_TICKS));
     }
 
     var fastest = new LinkedHashMap<LadderStrategy.Tricks, LadderStrategy>();
@@ -124,7 +99,7 @@ public final class LadderSolver {
   }
 
   /// @return the lowest airtime of a jump from startY that starts climbing on firstPress and plays
-  ///         any input afterwards, or null if it cannot land within maxTicks.
+  ///         any combination of tricks afterwards, or null if it cannot land within maxTicks.
   public static @Nullable Integer bestAirtime(
       double startY,
       double ladderStartY,
@@ -134,9 +109,53 @@ public final class LadderSolver {
   ) {
     var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
     var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
-    var path = search(startY, ladderFrom, ladderTo, ladderEndY,
-        tick -> tick >= firstPress, tick -> tick != firstPress, maxTicks);
-    return path == null ? null : path.landingTick();
+    return climbs(startY, ladderFrom, ladderTo, ladderEndY, firstPress, maxTicks).stream()
+        .map(Path::landingTick)
+        .min(Integer::compare)
+        .orElse(null);
+  }
+
+  /// @return the climbs starting on firstPress: held to the end, with an early exit, and with a
+  ///         one-tick release followed by an early exit or not.
+  private static List<Path> climbs(
+      double startY,
+      int ladderFrom,
+      int ladderTo,
+      double topY,
+      int firstPress,
+      int maxTicks
+  ) {
+    // Unbounded, since the tricks are built from its presses even when it is too slow itself.
+    var natural = search(startY, ladderFrom, ladderTo, topY,
+        tick -> tick >= firstPress, MAX_TICKS);
+    if (natural == null) return List.of();
+
+    var paths = new ArrayList<@Nullable Path>();
+    if (natural.landingTick() <= maxTicks) paths.add(natural);
+
+    var presses = natural.inputs().stream()
+        .filter(Input::pressed)
+        .mapToInt(Input::tick)
+        .toArray();
+    if (presses.length == 0) return paths;
+    var lastPress = presses[presses.length - 1];
+
+    for (int exit = firstPress; exit < lastPress; exit++) {
+      final var lastInput = exit;
+      paths.add(search(startY, ladderFrom, ladderTo, topY,
+          tick -> tick >= firstPress && tick <= lastInput, maxTicks));
+    }
+
+    // A release shifts the rest of the climb down by the same amount wherever it happens, so
+    // the earliest one stands for all of them. The shift can push the natural end a tick later.
+    final var released = presses[0] + 1;
+    for (int exit = released + 1; released < lastPress && exit <= lastPress + 2; exit++) {
+      final var lastInput = exit == lastPress + 2 ? Integer.MAX_VALUE : exit;
+      paths.add(search(startY, ladderFrom, ladderTo, topY,
+          tick -> tick >= firstPress && tick != released && tick <= lastInput, maxTicks));
+    }
+
+    return paths.stream().filter(Objects::nonNull).toList();
   }
 
   /// Jam on tick 1, plus every delayed start while the jump still rises faster than a climb would
