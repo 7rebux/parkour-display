@@ -20,5 +20,6 @@ public record RunTickState(
       boolean sprint,
       boolean sneak
   ) {
+
   }
 }

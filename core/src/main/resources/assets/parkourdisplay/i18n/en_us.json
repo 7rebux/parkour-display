@@ -54,6 +54,13 @@
           "description": "Whether to hide the widget if the value is zero."
         }
       },
+      "climb_time": {
+        "name": "Climb Time",
+        "incremental": {
+          "name": "Incremental",
+          "description": "Whether to update the label continuously while climbing."
+        }
+      },
       "tier": {
         "name": "Tier"
       },
@@ -217,6 +224,14 @@
         "name": "Show Grinds In Chat",
         "description": "Whether to show ceiling jump cancels in the chat."
       },
+      "showLadderYCoordinates": {
+        "name": "Show Airborne Y Coordinates In Chat",
+        "description": "Whether to log your Y coordinate and its per-tick delta for every tick while airborne, from leaving the ground until landing. Ticks spent on a climbable are flagged."
+      },
+      "showClimbCatchAndExit": {
+        "name": "Show Climb Catch & Exit In Chat",
+        "description": "A less spammy trace: logs the tick you catch a climbable (with Y velocity and airtime), then every tick after you leave it until you land."
+      },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
       },
@@ -238,6 +253,10 @@
         "highlightRegularSplits": {
           "name": "Highlight Regular Splits",
           "description": "Whether to highlight the bounding box of regular splits."
+        },
+        "highlightStart": {
+          "name": "Highlight Start",
+          "description": "Whether to render a dot at the start position."
         },
         "highlightEndSplit": {
           "name": "Highlight End Split",
@@ -268,27 +287,14 @@
       },
       "highlightRunTickStates": {
         "name": "Highlight Previous Run Tick States",
-        "description": "Whether to render all tick positions of the latest run in the world.",
-        "startFillColor": {
-          "name": "Start Fill Color"
+        "description": "Renders every tick of the latest run.",
+        "renderMode": {
+          "name": "Render Mode",
+          "description": "Whether to render the ticks as dots or as the player's hitbox."
         },
-        "startOutlineColor": {
-          "name": "Start Outline Color"
-        },
-        "regularFillColor": {
-          "name": "Regular Fill Color"
-        },
-        "regularOutlineColor": {
-          "name": "Regular Outline Color"
-        },
-        "onGroundFillColor": {
-          "name": "On Ground Fill Color"
-        },
-        "onGroundOutlineColor": {
-          "name": "On Ground Outline Color"
-        },
-        "outlineThickness": {
-          "name": "Outline Thickness"
+        "showTickInfoOnHover": {
+          "name": "Show Tick Info On Hover",
+          "description": "Whether to show the state of the tick you are looking at."
         }
       },
       "showRunFinishOffsets": {
@@ -317,6 +323,7 @@
     },
     "labels": {
       "air_time": "Airtime",
+      "climb_time": "Climb Time",
       "ground_time": "Ground Time",
       "hit_coordinates": {
         "single": "Hit XYZ",
@@ -484,6 +491,12 @@
         "messages": {
           "success": "Successfully cleared run data."
         }
+      },
+      "version": {
+        "description": "Shows the current addon version",
+        "messages": {
+          "success": "ParkourDisplay version: %s"
+        }
       }
     },
     "messages": {
@@ -504,10 +517,17 @@
       },
       "moveTime": {
         "air": "%s Airtime",
-        "ground": "%s Ground Time"
+        "ground": "%s Ground Time",
+        "climbable": "§5%s Climb Time"
       },
       "movement": {
         "grind": "§9Grind"
+      },
+      "ladder": {
+        "y": "%s: Y: %s (%s)%s"
+      },
+      "climb": {
+        "duration": "Climb duration: %s + %s + %s = %s"
       }
     },
     "activities": {

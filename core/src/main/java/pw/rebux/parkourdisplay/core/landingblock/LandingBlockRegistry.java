@@ -7,6 +7,7 @@ import net.labymod.api.Laby;
 import net.labymod.api.client.world.block.Block;
 import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
 @Data
 @RequiredArgsConstructor
@@ -21,6 +22,11 @@ public final class LandingBlockRegistry {
   public void register(Block block, AxisAlignedBoundingBox aabb, LandingBlockMode mode) {
     var label = Laby.labyAPI().minecraft().getTranslation(
         "block.minecraft.%s".formatted(block.id().getPath()));
+
+    if (mode == LandingBlockMode.Enter && WorldUtils.isClimbable(block.defaultState())) {
+      aabb = WorldUtils.ladderIntersectionBox(aabb);
+    }
+
     this.landingBlocks.add(new LandingBlock(label, mode, aabb));
   }
 }

@@ -67,6 +67,11 @@ public final class AddLandingBlockCommand extends SubCommand {
     var blockState = world.getBlockState(hitResult.location());
     var absoluteBounds = Objects.requireNonNull(blockState.bounds()).move(hitResult.location());
 
+    // Vines have no collision box
+    if (WorldUtils.isClimbable(blockState)) {
+      return Pair.of(blockState, absoluteBounds);
+    }
+
     var aabb = world.getBlockCollisions(absoluteBounds).stream()
         .min(Comparator.comparingDouble(box ->
             BoundingBoxUtils.distanceToPoint(box, hitResult.hit())))

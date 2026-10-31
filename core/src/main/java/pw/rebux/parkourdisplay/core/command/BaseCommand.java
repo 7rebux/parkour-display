@@ -36,6 +36,8 @@ public final class BaseCommand extends Command {
 
     this.addon = addon;
 
+    this.withSubCommand(new VersionCommand(addon));
+
     // Landing block commands
     this.withSubCommand(new AddLandingBlockCommand(addon));
     this.withSubCommand(new ListLandingBlocksCommand(addon));

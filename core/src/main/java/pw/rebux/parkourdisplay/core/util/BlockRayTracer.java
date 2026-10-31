@@ -3,6 +3,7 @@ package pw.rebux.parkourdisplay.core.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import net.labymod.api.util.math.AxisAlignedBoundingBox;
 import net.labymod.api.util.math.MathHelper;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import net.labymod.api.util.math.vector.IntVector3;
@@ -85,6 +86,22 @@ public final class BlockRayTracer {
       }
     }
     return null;
+  }
+
+  /// @return the distance along the ray at which it enters the box, 0 if the origin is inside it,
+  /// or NaN if it misses the box, the box lies behind the origin or is farther than maxDistance.
+  public static double intersect(
+      DoubleVector3 origin,
+      DoubleVector3 direction,
+      double maxDistance,
+      AxisAlignedBoundingBox box
+  ) {
+    var clip = new BoxClip();
+    clipBox(origin.getX(), origin.getY(), origin.getZ(),
+        direction.getX(), direction.getY(), direction.getZ(),
+        box.getMinX(), box.getMinY(), box.getMinZ(),
+        box.getMaxX(), box.getMaxY(), box.getMaxZ(), clip);
+    return clip.t <= maxDistance ? clip.t : Double.NaN;
   }
 
   /// Clips the ray against every box of one block's shape, keeping the nearest entry.

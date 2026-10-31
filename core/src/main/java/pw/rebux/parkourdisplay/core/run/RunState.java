@@ -1,7 +1,6 @@
 package pw.rebux.parkourdisplay.core.run;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +41,10 @@ public final class RunState {
   private long groundTime = 0;
 
   /// Holds information for each passed tick in the run.
-  private final LinkedList<RunTickState> tickStates = new LinkedList<>();
+  private final List<RunTickState> tickStates = new ArrayList<>();
 
   /// Used to store the run as a macro and to render the different tick positions in a run.
-  private final LinkedList<RunTickState> previousTickStates = new LinkedList<>();
+  private final List<RunTickState> previousTickStates = new ArrayList<>();
 
   /// Records the ticks of a burst start. These ticks are part of the movement
   /// (macros, rendered tick states) but are not counted by the timer, matching

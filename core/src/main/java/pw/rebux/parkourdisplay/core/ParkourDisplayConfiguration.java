@@ -30,6 +30,12 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> showGrinds = new ConfigProperty<>(false);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showLadderYCoordinates = new ConfigProperty<>(false);
+
+  @SwitchSetting
+  private final ConfigProperty<Boolean> showClimbCatchAndExit = new ConfigProperty<>(false);
+
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
   private final ConfigProperty<Integer> chatDecimalPlaces = new ConfigProperty<>(3);
@@ -77,6 +83,10 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<MacroRotationChange> rotationChange =
       new ConfigProperty<>(MacroRotationChange.Absolute);
 
+  public String decimalFormat() {
+    return "%%.%df".formatted(this.chatDecimalPlaces.get());
+  }
+
   @Getter
   public static final class HighlightLandingBlocksSettings extends Config {
 
@@ -103,11 +113,34 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   }
 
   @Getter
+  public static final class HighlightRunTickStatesSettings extends Config {
+
+    @SwitchSetting
+    @ShowSettingInParent
+    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(false);
+
+    @DropdownSetting
+    private final ConfigProperty<RunTickStateRenderMode> renderMode =
+        new ConfigProperty<>(RunTickStateRenderMode.Dots);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> showTickInfoOnHover = new ConfigProperty<>(true);
+  }
+
+  public enum RunTickStateRenderMode {
+    Dots,
+    Hitboxes
+  }
+
+  @Getter
   public static final class HighlightRunSplitsSettings extends Config {
 
     @SwitchSetting
     private final ConfigProperty<Boolean> highlightRegularSplits =
         new ConfigProperty<>(false);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> highlightStart = new ConfigProperty<>(true);
 
     @SwitchSetting
     private final ConfigProperty<Boolean> highlightEndSplit = new ConfigProperty<>(true);
@@ -127,41 +160,6 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
     @ColorPickerSetting(alpha = true, chroma = true)
     private final ConfigProperty<Color> intersectingOutlineColor =
         new ConfigProperty<>(Color.ofRGB(0, 255, 0, 100));
-
-    @SliderSetting(min = 1, max = 30)
-    private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(5);
-  }
-
-  @Getter
-  public static final class HighlightRunTickStatesSettings extends Config {
-
-    @SwitchSetting
-    @ShowSettingInParent
-    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(false);
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> startFillColor =
-        new ConfigProperty<>(Color.ofRGB(0, 255, 0, 30));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> startOutlineColor =
-        new ConfigProperty<>(Color.ofRGB(0, 255, 0, 100));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> regularFillColor =
-        new ConfigProperty<>(Color.ofRGB(255, 0, 0, 30));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> regularOutlineColor =
-        new ConfigProperty<>(Color.ofRGB(255, 0, 0, 100));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> onGroundFillColor =
-        new ConfigProperty<>(Color.ofRGB(255, 255, 0, 30));
-
-    @ColorPickerSetting(alpha = true, chroma = true)
-    private final ConfigProperty<Color> onGroundOutlineColor =
-        new ConfigProperty<>(Color.ofRGB(255, 255, 0, 100));
 
     @SliderSetting(min = 1, max = 30)
     private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(5);

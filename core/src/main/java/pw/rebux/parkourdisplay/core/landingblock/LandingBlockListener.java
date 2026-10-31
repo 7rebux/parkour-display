@@ -9,6 +9,7 @@ import net.labymod.api.event.client.lifecycle.GameTickEvent;
 import net.labymod.api.event.client.render.world.RenderWorldEvent;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.MathHelper;
@@ -26,18 +27,17 @@ public final class LandingBlockListener {
     var player = this.addon.labyAPI().minecraft().getClientPlayer();
     var state = this.addon.playerState();
 
-    if (event.phase() != Phase.POST || player == null || state.vy() >= 0) {
+    if (event.phase() != Phase.POST || player == null) {
       return;
     }
 
     for (LandingBlock landingBlock : this.addon.landingBlockRegistry().landingBlocks()) {
-      var tickPosition = landingBlock.mode() == LandingBlockMode.Land
-          ? this.addon.playerState().lastTick()
-          : this.addon.playerState().currentTick();
-
+      var tickPosition = switch (landingBlock.mode()) {
+        case Land -> state.lastTick();
+        case Hit, Enter -> state.currentTick();
+      };
       var box = landingBlock.collisionBox();
-      var isTryingToLandOn = state.currentTick().playerBoundingBox().getMinY() <= box.getMaxY()
-          && state.lastTick().playerBoundingBox().getMinY() > box.getMaxY();
+      var isTryingToLandOn = isTryingToLandOn(state, landingBlock);
       var isInRange = box.getCenter().distanceSquared(player.position().toDoubleVector3()) <= maxCheckDistance;
 
       if (!isTryingToLandOn || !isInRange) {
@@ -69,9 +69,23 @@ public final class LandingBlockListener {
     }
   }
 
+  private boolean isTryingToLandOn(PlayerState state, LandingBlock landingBlock) {
+    var box = landingBlock.collisionBox();
+    var current = state.currentTick().playerBoundingBox();
+    var last = state.lastTick().playerBoundingBox();
+
+    return switch (landingBlock.mode()) {
+      case Land, Hit -> current.getMinY() <= box.getMaxY()
+          && last.getMinY() > box.getMaxY();
+      case Enter -> current.getMinY() < box.getMaxY()
+          && current.getMinY() >= box.getMinY()
+          && current.getMinY() < last.getMinY();
+    };
+  }
+
   private void update(LandingBlock landingBlock, DoubleVector3 offset) {
     var landingBlockRegistry = this.addon.landingBlockRegistry();
-    var format = this.addon.decimalFormat();
+    var format = this.addon.configuration().decimalFormat();
 
     var distance = MathHelper.offsetDistance(offset);
     var formattedX = String.format(format, offset.getX());
@@ -91,18 +105,10 @@ public final class LandingBlockListener {
           )
           .send();
     } else if (this.addon.configuration().showLandingBlockOffsets().get()) {
+      var color = distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED;
       ChatMessage.of("messages.lb.offsets")
           .withColor(distance > 0 ? NamedTextColor.GREEN : NamedTextColor.RED)
-          .withArgs(
-              Component.text(
-                  formattedX,
-                  distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED
-              ),
-              Component.text(
-                  formattedZ,
-                  distance > 0 ? NamedTextColor.DARK_GREEN : NamedTextColor.DARK_RED
-              )
-          )
+          .withArgs(Component.text(formattedX, color), Component.text(formattedZ, color))
           .send();
     }
 
