@@ -34,6 +34,12 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
         .orElseThrow();
   }
 
+  /// @return airtime of the earliest tick a climb input can take effect on. Jumping from inside
+  ///         the ladder enters it on tick 0, but the jump overrides a climb input there.
+  public int firstClimbStartTick() {
+    return Math.max(this.enterTick(), 1);
+  }
+
   /// @return airtime of the first tick off the ladder after the climb.
   public int exitTick() {
     return IntStream.range(0, this.ticks.size())

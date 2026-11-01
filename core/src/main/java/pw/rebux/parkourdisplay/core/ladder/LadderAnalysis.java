@@ -28,7 +28,7 @@ public record LadderAnalysis(
 
     var startY = climb.y(0);
     var starts = LadderSolver.climbStarts(startY, climb.ladderBottomY(), climb.ladderTopY());
-    if (starts.isEmpty() || starts.getFirst() != climb.enterTick()) return unanalyzed;
+    if (starts.isEmpty() || starts.getFirst() != climb.firstClimbStartTick()) return unanalyzed;
 
     var optimal = optimalStrategies(climb);
     var start = climb.climbStartTick();

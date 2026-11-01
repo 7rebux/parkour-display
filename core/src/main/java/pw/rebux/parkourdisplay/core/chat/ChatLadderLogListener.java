@@ -66,7 +66,7 @@ public final class ChatLadderLogListener {
     } else if (betterClimbStart != null) {
       // Pressing before the contact tick has no effect, so starting on it is a jam.
       var timing = LadderStrategyFormatter.start(
-          betterClimbStart == enterTick ? null : betterClimbStart - 1);
+          betterClimbStart == climb.firstClimbStartTick() ? null : betterClimbStart - 1);
       ChatMessage.of("messages.climb.delayMissed")
           .withColor(NamedTextColor.RED)
           .withArgs(
