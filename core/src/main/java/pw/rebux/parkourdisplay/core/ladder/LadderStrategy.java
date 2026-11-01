@@ -6,22 +6,13 @@ import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ladder.LadderSolver.Input;
 import pw.rebux.parkourdisplay.core.ladder.LadderSolver.Path;
 
-/// startTicks, climbTicks and overshootTicks add up to ticks.
-///
-/// @param startTicks     ticks until the climb starts moving the player.
-/// @param climbTicks     ticks moving at climb speed, releases included. A climb input only moves
-///                       the player on the following tick.
-/// @param overshootTicks ticks after the climbing until landing.
-/// @param peakHeight     highest feet Y reached, relative to the top of the ladder.
-/// @param pessi          ticks between the jump and the first climb input, or null for a jam.
-/// @param releaseTicks   ticks on which the climb is released for one tick mid-climb.
-/// @param earlyExitTick  tick on which the climb is released for good before reaching the top.
+/// @param peakHeight    highest feet Y reached, relative to the top of the ladder.
+/// @param pessi         ticks between the jump and the first climb input, or null for a jam.
+/// @param releaseTicks  ticks on which the climb is released for one tick mid-climb.
+/// @param earlyExitTick tick on which the climb is released for good before reaching the top.
 public record LadderStrategy(
     int ticks,
     boolean climbNeeded,
-    int startTicks,
-    int climbTicks,
-    int overshootTicks,
     double peakHeight,
     @Nullable Integer pessi,
     List<Integer> releaseTicks,
@@ -36,9 +27,6 @@ public record LadderStrategy(
       return new LadderStrategy(
           path.landingTick(),
           false,
-          0,
-          0,
-          path.landingTick(),
           path.peakHeight(),
           null,
           List.of(),
@@ -63,9 +51,6 @@ public record LadderStrategy(
     return new LadderStrategy(
         path.landingTick(),
         true,
-        firstPress,
-        lastPress - firstPress + 1,
-        path.landingTick() - lastPress - 1,
         path.peakHeight(),
         firstPress > contactTick ? firstPress - 1 : null,
         releaseTicks,

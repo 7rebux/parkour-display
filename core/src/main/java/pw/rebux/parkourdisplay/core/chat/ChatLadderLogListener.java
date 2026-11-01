@@ -18,11 +18,15 @@ public final class ChatLadderLogListener {
 
   @Subscribe
   public void onLadderClimb(LadderClimbEvent event) {
-    if (!this.addon.configuration().showClimbCatchAndExit().get()) {
+    if (!this.addon.configuration().analyzeLadderClimbs().get()) {
       return;
     }
 
     var climb = event.climb();
+    if (!climb.isAscent()) {
+      return;
+    }
+
     this.addon.ladderExecutor().execute(() -> {
       var analysis = LadderAnalysis.of(climb);
       this.addon.labyAPI().minecraft().executeNextTick(() -> this.print(analysis));
@@ -54,6 +58,12 @@ public final class ChatLadderLogListener {
               Component.text(format.formatted(climb.y(climbStart)), NamedTextColor.AQUA),
               Component.text(format.formatted(climb.vy(climbStart)), NamedTextColor.GOLD)
           )
+          .send();
+    }
+
+    if (climb.isSneakMissed()) {
+      ChatMessage.of("messages.climb.sneakMissed")
+          .withColor(NamedTextColor.RED)
           .send();
     }
 

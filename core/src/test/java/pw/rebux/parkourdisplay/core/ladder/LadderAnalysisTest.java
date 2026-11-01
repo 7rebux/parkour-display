@@ -34,6 +34,19 @@ class LadderAnalysisTest {
     assertEquals(6, analysis.optimalStrategies().getFirst().ticks());
   }
 
+  @Test
+  void fallingOnLadderBeforeClimbingMissesSneak() {
+    var climb = climb(3, 0, 5, tick -> tick >= 8);
+
+    assertTrue(climb.vy(climb.climbStartTick()) < 0);
+    assertTrue(climb.isSneakMissed());
+  }
+
+  @Test
+  void climbingWhileRisingDoesNotMissSneak() {
+    assertFalse(climb(0, 0, 1, tick -> true).isSneakMissed());
+  }
+
   /// Simulates a jump from startY onto a ladder stack, climbing on the ticks press accepts, until
   /// it lands on the ladder top.
   private static LadderClimb climb(double startY, int ladderFrom, int topY, IntPredicate press) {

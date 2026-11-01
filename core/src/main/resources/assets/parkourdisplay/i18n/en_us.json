@@ -224,13 +224,9 @@
         "name": "Show Grinds In Chat",
         "description": "Whether to show ceiling jump cancels in the chat."
       },
-      "showLadderYCoordinates": {
-        "name": "Show Airborne Y Coordinates In Chat",
-        "description": "Whether to log your Y coordinate and its per-tick delta for every tick while airborne, from leaving the ground until landing. Ticks spent on a climbable are flagged."
-      },
-      "showClimbCatchAndExit": {
-        "name": "Show Climb Catch & Exit In Chat",
-        "description": "A less spammy trace: logs the tick you catch a climbable (with Y velocity and airtime), then every tick after you leave it until you land."
+      "analyzeLadderClimbs": {
+        "name": "Analyze Ladder Climbs In Chat",
+        "description": "Whether to analyze ladder climbs, missed tricks and optimal strategies in the chat."
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -380,23 +376,6 @@
       "blips": "Blips"
     },
     "commands": {
-      "analyze": {
-        "description": "Analyzes the ladder you are looking at",
-        "messages": {
-          "invalidBlock": "You are not looking at a ladder.",
-          "unreachable": "The top of the ladder cannot be reached from here.",
-          "title": "Ladder Analysis",
-          "info": "Ladder Y %s → %s · Start Y %s",
-          "row": "%s = %s + %s + %s · %s · %s",
-          "airtime": "Airtime",
-          "start": "Start",
-          "climb": "Climb",
-          "overshoot": "Overshoot",
-          "peak": "Peak",
-          "strategy": "Strategy",
-          "ticks": "%s t"
-        }
-      },
       "addlb": {
         "description": "Adds a new landing block",
         "messages": {
@@ -541,7 +520,6 @@
         "grind": "§9Grind"
       },
       "ladder": {
-        "y": "%s: Y: %s (%s)%s",
         "strategy": {
           "jam": "jam",
           "pessi": "pessi %st",
@@ -557,6 +535,7 @@
         "earlyExit": "Early exit",
         "earlyExitMissed": "Possible early exit missed",
         "start": "First climb tick: airtime %s · Y %s · vy %s",
+        "sneakMissed": "Sneaking missed",
         "delay": "Delayed climb start on tick %s",
         "delayMissed": "Possible better climb start missed: %s (tick %s instead of %s)",
         "release": "Mid-climb release",

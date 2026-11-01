@@ -65,6 +65,18 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
         .orElse(-1);
   }
 
+  /// Fell on the ladder before the first climb tick, which sneaking would have prevented.
+  public boolean isSneakMissed() {
+    var climbStart = this.climbStartTick();
+    return climbStart > 0
+        && this.ticks.get(climbStart - 1).onClimbable()
+        && this.vy(climbStart) < 0;
+  }
+
+  public boolean isAscent() {
+    return this.y(0) < this.y(this.airtime());
+  }
+
   public double y(int tick) {
     return this.ticks.get(tick).y();
   }
