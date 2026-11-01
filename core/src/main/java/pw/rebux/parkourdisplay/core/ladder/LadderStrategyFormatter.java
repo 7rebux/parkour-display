@@ -2,6 +2,8 @@ package pw.rebux.parkourdisplay.core.ladder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.labymod.api.client.component.Component;
@@ -36,9 +38,25 @@ public final class LadderStrategyFormatter {
     return message("pessi", pessi);
   }
 
+  /// @return the tricks joined, e.g. "sneak + early exit".
+  public static Component tricks(Set<MissedTrick> tricks) {
+    var result = Component.empty();
+    var first = true;
+    for (var trick : tricks) {
+      if (!first) result.append(Component.text(" + "));
+      result.append(translatable("trick." + trick.name().toLowerCase(Locale.ROOT)));
+      first = false;
+    }
+    return result;
+  }
+
   private static Component message(String key, Object... args) {
+    return translatable("strategy." + key, args);
+  }
+
+  private static Component translatable(String key, Object... args) {
     return Component.translatable()
-        .key("%s.messages.ladder.strategy.%s".formatted(ParkourDisplayAddon.NAMESPACE, key))
+        .key("%s.messages.ladder.%s".formatted(ParkourDisplayAddon.NAMESPACE, key))
         .arguments(Arrays.stream(args)
             .map(arg -> (Component) Component.text(arg.toString()))
             .toList())

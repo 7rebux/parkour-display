@@ -107,6 +107,16 @@ public final class ChatLadderLogListener {
           .send();
     }
 
+    var combination = climb.missedTrickCombination();
+    if (combination != null) {
+      ChatMessage.of("messages.climb.combinationMissed")
+          .withColor(NamedTextColor.RED)
+          .withArgs(
+              LadderStrategyFormatter.tricks(combination.tricks()).color(NamedTextColor.GOLD),
+              Component.text(combination.savedTicks(), NamedTextColor.WHITE))
+          .send();
+    }
+
     var optimal = analysis.optimalStrategies();
     if (!optimal.isEmpty()) {
       var optimalAirtime = optimal.getFirst().ticks();

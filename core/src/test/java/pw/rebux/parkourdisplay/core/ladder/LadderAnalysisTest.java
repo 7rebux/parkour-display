@@ -2,10 +2,12 @@ package pw.rebux.parkourdisplay.core.ladder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.function.IntPredicate;
 import org.junit.jupiter.api.Test;
 import pw.rebux.parkourdisplay.core.util.TestTickPositions;
@@ -45,6 +47,34 @@ class LadderAnalysisTest {
   @Test
   void climbingWhileRisingDoesNotMissSneak() {
     assertFalse(climb(0, 0, 1, tick -> true).isSneakMissed());
+  }
+
+  /// The fall before the climb is too short for the higher start to save a tick.
+  @Test
+  void sneakNotSavingAirtimeIsNotMissed() {
+    var climb = climb(1.5, 0, 3, tick -> tick >= 7);
+
+    assertTrue(climb.vy(climb.climbStartTick()) < 0);
+    assertFalse(climb.isSneakMissed());
+  }
+
+  /// Neither sneaking nor an early exit saves a tick on its own, but together they save two.
+  @Test
+  void combinedTricksSaveAirtime() {
+    var climb = climb(0.25, 0, 2, tick -> tick >= 7);
+
+    assertFalse(climb.isSneakMissed());
+    assertFalse(climb.isEarlyExitMissed());
+
+    var combination = climb.missedTrickCombination();
+    assertNotNull(combination);
+    assertEquals(EnumSet.of(MissedTrick.SNEAK, MissedTrick.EARLY_EXIT), combination.tricks());
+    assertEquals(2, combination.savedTicks());
+  }
+
+  @Test
+  void noCombinationWithoutMissedTricks() {
+    assertNull(climb(0, 0, 1, tick -> tick >= 2 && tick <= 3).missedTrickCombination());
   }
 
   /// Simulates a jump from startY onto a ladder stack, climbing on the ticks press accepts, until

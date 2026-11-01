@@ -528,6 +528,11 @@
           "earlyExit": "early exit on tick %s",
           "plainHold": "plain hold",
           "noClimb": "jump only"
+        },
+        "trick": {
+          "sneak": "sneak",
+          "release": "mid-climb release",
+          "early_exit": "early exit"
         }
       },
       "climb": {
@@ -540,6 +545,7 @@
         "delayMissed": "Possible better climb start missed: %s (tick %s instead of %s)",
         "release": "Mid-climb release",
         "releaseMissed": "Possible mid-climb release missed",
+        "combinationMissed": "Combined tricks missed: %s (-%s t)",
         "optimal": "Optimal ladder: %s t",
         "notOptimal": "Not optimal: %s t possible instead of %s t",
         "optimalStrategy": " ‣ %s · peak %s"

@@ -1,7 +1,11 @@
 package pw.rebux.parkourdisplay.core.ladder;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.stream.IntStream;
+import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 /// One airborne period that touched a ladder, from the last tick on the ground to the landing
@@ -20,6 +24,7 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
 
   private static final double VY_EPSILON = 1e-3;
   private static final double VELOCITY_CUTOFF = 0.005;
+  private static final double FALL_CAP = -0.15;
   private static final int MAX_LANDING_TICKS = 20;
 
   public int airtime() {
@@ -65,12 +70,42 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
         .orElse(-1);
   }
 
-  /// Fell on the ladder before the first climb tick, which sneaking would have prevented.
+  /// Fell on the ladder before the first climb tick, and holding the height by sneaking would
+  /// have landed earlier with the same climb inputs.
   public boolean isSneakMissed() {
-    var climbStart = this.climbStartTick();
-    return climbStart > 0
-        && this.ticks.get(climbStart - 1).onClimbable()
-        && this.vy(climbStart) < 0;
+    return this.fallStartTick().isPresent()
+        && this.replayLanding(EnumSet.of(MissedTrick.SNEAK))
+        < this.replayLanding(EnumSet.noneOf(MissedTrick.class));
+  }
+
+  /// @return the combination of at least two missed tricks with the lowest airtime, if it beats
+  ///         the recorded inputs and every one of its tricks on its own.
+  public @Nullable MissedTrickCombination missedTrickCombination() {
+    if (this.climbStartTick() == -1) return null;
+
+    var applicable = EnumSet.noneOf(MissedTrick.class);
+    if (this.fallStartTick().isPresent()) applicable.add(MissedTrick.SNEAK);
+    if (!this.isEarlyExit()) {
+      applicable.add(MissedTrick.EARLY_EXIT);
+      if (this.releaseTicks().isEmpty()) applicable.add(MissedTrick.RELEASE);
+    }
+
+    var baseline = this.replayLanding(EnumSet.noneOf(MissedTrick.class));
+    var bestSingle = baseline;
+    for (var trick : applicable) {
+      bestSingle = Math.min(bestSingle, this.replayLanding(EnumSet.of(trick)));
+    }
+
+    MissedTrickCombination best = null;
+    var bestAirtime = bestSingle;
+    for (var combination : combinations(applicable)) {
+      var airtime = this.replayLanding(combination);
+      if (airtime < bestAirtime) {
+        best = new MissedTrickCombination(combination, baseline - airtime);
+        bestAirtime = airtime;
+      }
+    }
+    return best;
   }
 
   public boolean isAscent() {
@@ -96,7 +131,9 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
     var crossing = this.crossingTick();
     return crossing != -1
         && this.moved(crossing, CLIMB_VY)
-        && this.y(crossing - 1) + RELEASE_VY >= this.ladderTopY;
+        && this.y(crossing - 1) + RELEASE_VY >= this.ladderTopY
+        && this.landingTicks(this.y(crossing - 1), RELEASE_VY)
+        < this.landingTicks(this.y(crossing - 1), CLIMB_VY);
   }
 
   /// @return airtimes of the 0.0368 ticks that sit between two climb ticks while on the ladder.
@@ -146,6 +183,83 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
     return Math.abs(this.vy(tick) - vy) < VY_EPSILON;
   }
 
+  /// @return airtime of the first tick that fell while on the ladder before the climb start.
+  private OptionalInt fallStartTick() {
+    var climbStart = this.climbStartTick();
+    if (climbStart < 1) return OptionalInt.empty();
+
+    return IntStream.rangeClosed(1, climbStart)
+        .filter(tick -> this.ticks.get(tick - 1).onClimbable() && this.vy(tick) < 0)
+        .findFirst();
+  }
+
+  /// Replays the recorded climb inputs from the climb start on with the given tricks added.
+  /// Inputs are unknown off the ladder, so those ticks count as released.
+  ///
+  /// @return airtime of the landing on the ladder top, or Integer.MAX_VALUE if it never lands.
+  private int replayLanding(Set<MissedTrick> tricks) {
+    var climbStart = this.climbStartTick();
+    var fallStart = this.fallStartTick();
+    var y = tricks.contains(MissedTrick.SNEAK) && fallStart.isPresent()
+        ? this.y(fallStart.getAsInt() - 1)
+        : this.y(climbStart);
+    var vy = 0.0;
+    var lastPressed = false;
+    var resume = false;
+    var stopped = false;
+
+    for (int tick = climbStart; tick < this.airtime() + MAX_LANDING_TICKS; tick++) {
+      var onLadder = y >= this.ladderBottomY && y < this.ladderTopY;
+      var press = onLadder && !stopped && (resume || tick == climbStart || this.pressed(tick));
+
+      if (resume) {
+        resume = false;
+        stopped = true;
+      } else if (press && tricks.contains(MissedTrick.RELEASE) && lastPressed
+          && y + CLIMB_VY < this.ladderTopY && y + 2 * CLIMB_VY >= this.ladderTopY) {
+        press = false;
+        resume = true;
+      } else if (press && tricks.contains(MissedTrick.EARLY_EXIT)
+          && vy > 0 && y + vy >= this.ladderTopY) {
+        press = false;
+        stopped = true;
+      }
+
+      if (press) vy = CLIMB_VY;
+      lastPressed = press;
+      if (Math.abs(vy) < VELOCITY_CUTOFF) vy = 0;
+      if (onLadder && vy < FALL_CAP) vy = FALL_CAP;
+
+      var nextY = y + vy;
+      if (vy < 0 && y >= this.ladderTopY && nextY < this.ladderTopY) return tick + 1;
+      y = nextY;
+      vy = (vy - 0.08) * 0.98;
+    }
+    return Integer.MAX_VALUE;
+  }
+
+  private static List<Set<MissedTrick>> combinations(Set<MissedTrick> tricks) {
+    var all = List.copyOf(tricks);
+    return IntStream.range(1, 1 << all.size())
+        .filter(mask -> Integer.bitCount(mask) >= 2)
+        .boxed()
+        .sorted((a, b) -> Integer.bitCount(a) - Integer.bitCount(b))
+        .<Set<MissedTrick>>map(mask -> {
+          var combination = EnumSet.noneOf(MissedTrick.class);
+          for (int i = 0; i < all.size(); i++) {
+            if ((mask & 1 << i) != 0) combination.add(all.get(i));
+          }
+          return combination;
+        })
+        .toList();
+  }
+
+  private boolean pressed(int tick) {
+    return tick < this.airtime()
+        && this.ticks.get(tick).onClimbable()
+        && this.moved(tick + 1, CLIMB_VY);
+  }
+
   /// Ticks until landing on the ladder top without climbing, or MAX_LANDING_TICKS + 1 if the top
   /// is never cleared.
   private int landingTicks(double y, double vy) {
@@ -158,4 +272,7 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
     }
     return MAX_LANDING_TICKS + 1;
   }
+
+  /// @param savedTicks airtime saved compared to the recorded climb inputs.
+  public record MissedTrickCombination(Set<MissedTrick> tricks, int savedTicks) {}
 }
