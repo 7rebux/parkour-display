@@ -224,13 +224,9 @@
         "name": "Show Grinds In Chat",
         "description": "Whether to show ceiling jump cancels in the chat."
       },
-      "showLadderYCoordinates": {
-        "name": "Show Airborne Y Coordinates In Chat",
-        "description": "Whether to log your Y coordinate and its per-tick delta for every tick while airborne, from leaving the ground until landing. Ticks spent on a climbable are flagged."
-      },
-      "showClimbCatchAndExit": {
-        "name": "Show Climb Catch & Exit In Chat",
-        "description": "A less spammy trace: logs the tick you catch a climbable (with Y velocity and airtime), then every tick after you leave it until you land."
+      "analyzeLadderClimbs": {
+        "name": "Analyze Ladder Climbs In Chat",
+        "description": "Whether to analyze ladder climbs, missed tricks and optimal strategies in the chat."
       },
       "showLandingBlockOffsets": {
         "name": "Show Landing Block Offsets In Chat"
@@ -524,10 +520,35 @@
         "grind": "§9Grind"
       },
       "ladder": {
-        "y": "%s: Y: %s (%s)%s"
+        "strategy": {
+          "jam": "jam",
+          "pessi": "pessi %st",
+          "maxPessi": "max pessi",
+          "release": "one-tick release between two climb ticks",
+          "earlyExit": "early exit on tick %s",
+          "plainHold": "plain hold",
+          "noClimb": "jump only"
+        },
+        "trick": {
+          "sneak": "sneak",
+          "release": "mid-climb release",
+          "early_exit": "early exit"
+        }
       },
       "climb": {
-        "duration": "Climb duration: %s + %s + %s = %s"
+        "duration": "Climb duration: %s + %s + %s = %s",
+        "earlyExit": "Early exit",
+        "earlyExitMissed": "Possible early exit missed",
+        "start": "First climb tick: airtime %s · Y %s · vy %s",
+        "sneakMissed": "Sneaking missed",
+        "delay": "Delayed climb start on tick %s",
+        "delayMissed": "Possible better climb start missed: %s (tick %s instead of %s)",
+        "release": "Mid-climb release",
+        "releaseMissed": "Possible mid-climb release missed",
+        "combinationMissed": "Combined tricks missed: %s (-%s t)",
+        "optimal": "Optimal ladder: %s t",
+        "notOptimal": "Not optimal: %s t possible instead of %s t",
+        "optimalStrategy": " ‣ %s · peak %s"
       }
     },
     "activities": {

@@ -189,8 +189,9 @@ slab, contact is tick 2 → W on tick 3. With the ladder at the feet, pessi 1t.
 Banked height only helps if it **crosses a block boundary** so the climb ends a
 tick earlier. Otherwise the overshoot is charged back on the way down — the
 first tick of a fall covers only **0.0423**, so clearing the top by more than
-that costs an extra landing tick. *Height is not the objective — the smallest
-overshoot that still clears is.*
+that costs an extra landing tick. *Height is not the objective — airtime is.
+Among inputs with the same airtime, the one with the biggest overshoot (highest
+peak above the top) is best: it clears with the most margin.*
 
 ### 4.2 Early exit
 

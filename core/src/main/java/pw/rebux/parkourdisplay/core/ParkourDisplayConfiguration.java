@@ -31,10 +31,7 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   private final ConfigProperty<Boolean> showGrinds = new ConfigProperty<>(false);
 
   @SwitchSetting
-  private final ConfigProperty<Boolean> showLadderYCoordinates = new ConfigProperty<>(false);
-
-  @SwitchSetting
-  private final ConfigProperty<Boolean> showClimbCatchAndExit = new ConfigProperty<>(false);
+  private final ConfigProperty<Boolean> analyzeLadderClimbs = new ConfigProperty<>(false);
 
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
