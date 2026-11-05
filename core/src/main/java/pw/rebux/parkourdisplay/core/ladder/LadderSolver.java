@@ -35,28 +35,27 @@ public final class LadderSolver {
   /// Combines a delayed start, a one-tick release and an early exit in every way, keeping the
   /// fastest variant of each combination that beats all of its simpler combinations.
   ///
+  /// @param fallsPastStart the start surface is not under the ladder column, so the jump can fall
+  ///                       below startY instead of landing back on it.
   /// @return strategies sorted by airtime, then peak height, empty if the top cannot be reached
   ///         by jumping from startY.
   public static List<LadderStrategy> strategies(
       double startY,
       double ladderStartY,
-      double ladderEndY
+      double ladderEndY,
+      boolean fallsPastStart
   ) {
-    var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
-    var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
-    var topY = ladderEndY;
+    var jump = Jump.of(startY, ladderStartY, ladderEndY, fallsPastStart);
 
-    if (topY <= startY + EPSILON) return List.of();
-
-    var plain = search(startY, ladderFrom, ladderTo, topY, tick -> true, MAX_TICKS);
+    var plain = search(jump, tick -> true, MAX_TICKS);
     if (plain == null) return List.of();
 
     var paths = new ArrayList<Path>();
     paths.add(plain);
-    paths.add(search(startY, ladderFrom, ladderTo, topY, null, plain.landingTick));
+    paths.add(search(jump, null, plain.landingTick));
 
-    for (var firstPress : firstPresses(startY, ladderFrom, ladderTo)) {
-      paths.addAll(climbs(startY, ladderFrom, ladderTo, topY, firstPress, MAX_TICKS));
+    for (var firstPress : firstPresses(jump)) {
+      paths.addAll(climbs(jump, firstPress, MAX_TICKS));
     }
 
     return fastest(paths);
@@ -67,13 +66,11 @@ public final class LadderSolver {
       double startY,
       double ladderStartY,
       double ladderEndY,
+      boolean fallsPastStart,
       int firstPress
   ) {
-    var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
-    var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
-
-    if (ladderEndY <= startY + EPSILON) return List.of();
-    return fastest(climbs(startY, ladderFrom, ladderTo, ladderEndY, firstPress, MAX_TICKS));
+    var jump = Jump.of(startY, ladderStartY, ladderEndY, fallsPastStart);
+    return fastest(climbs(jump, firstPress, MAX_TICKS));
   }
 
   private static List<LadderStrategy> fastest(List<@Nullable Path> paths) {
@@ -95,22 +92,28 @@ public final class LadderSolver {
 
   /// @return ticks of a jump from startY that end on the ladder without climbing, so the climb can
   ///         start on them. The first one is the contact tick.
-  public static List<Integer> climbStarts(double startY, double ladderStartY, double ladderEndY) {
-    var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
-    var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
+  public static List<Integer> climbStarts(
+      double startY,
+      double ladderStartY,
+      double ladderEndY,
+      boolean fallsPastStart
+  ) {
+    var jump = Jump.of(startY, ladderStartY, ladderEndY, fallsPastStart);
     var result = new ArrayList<Integer>();
 
     var y = startY;
     var v = JUMP;
+    var belowTop = jump.belowTop(y);
 
     for (int tick = 1; result.size() < MAX_CLIMB_STARTS && tick <= MAX_TICKS; tick++) {
       if (Math.abs(v) < CUTOFF) v = 0;
-      if (onLadder(y, ladderFrom, ladderTo) && v < FALL_CAP) v = FALL_CAP;
-      if (landsOn(y, v, ladderEndY) || landsOn(y, v, startY)) break;
+      if (jump.onLadder(y) && v < FALL_CAP) v = FALL_CAP;
+      if (belowTop && landsOn(y, v, jump.topY) || jump.ends(y, v)) break;
 
       y += v;
       v = drag(v);
-      if (onLadder(y, ladderFrom, ladderTo)) result.add(tick);
+      belowTop |= jump.belowTop(y);
+      if (jump.onLadder(y)) result.add(tick);
     }
 
     return result;
@@ -123,14 +126,14 @@ public final class LadderSolver {
       double startY,
       double ladderStartY,
       double ladderEndY,
+      boolean fallsPastStart,
       int firstPress,
       int maxTicks,
       boolean release,
       boolean earlyExit
   ) {
-    var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
-    var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
-    return climbs(startY, ladderFrom, ladderTo, ladderEndY, firstPress, maxTicks).stream()
+    var jump = Jump.of(startY, ladderStartY, ladderEndY, fallsPastStart);
+    return climbs(jump, firstPress, maxTicks).stream()
         .filter(path -> {
           var tricks = LadderStrategy.of(path).tricks();
           return (release || !tricks.release()) && (earlyExit || !tricks.earlyExit());
@@ -142,17 +145,9 @@ public final class LadderSolver {
 
   /// @return the climbs starting on firstPress: held to the end, with an early exit, and with a
   ///         one-tick release followed by an early exit or not.
-  private static List<Path> climbs(
-      double startY,
-      int ladderFrom,
-      int ladderTo,
-      double topY,
-      int firstPress,
-      int maxTicks
-  ) {
+  private static List<Path> climbs(Jump jump, int firstPress, int maxTicks) {
     // Unbounded, since the tricks are built from its presses even when it is too slow itself.
-    var natural = search(startY, ladderFrom, ladderTo, topY,
-        tick -> tick >= firstPress, MAX_TICKS);
+    var natural = search(jump, tick -> tick >= firstPress, MAX_TICKS);
     if (natural == null) return List.of();
 
     var paths = new ArrayList<@Nullable Path>();
@@ -167,8 +162,7 @@ public final class LadderSolver {
 
     for (int exit = firstPress; exit < lastPress; exit++) {
       final var lastInput = exit;
-      paths.add(search(startY, ladderFrom, ladderTo, topY,
-          tick -> tick >= firstPress && tick <= lastInput, maxTicks));
+      paths.add(search(jump, tick -> tick >= firstPress && tick <= lastInput, maxTicks));
     }
 
     // A release shifts the rest of the climb down by the same amount wherever it happens, so
@@ -176,7 +170,7 @@ public final class LadderSolver {
     final var released = presses[0] + 1;
     for (int exit = released + 1; released < lastPress && exit <= lastPress + 2; exit++) {
       final var lastInput = exit == lastPress + 2 ? Integer.MAX_VALUE : exit;
-      paths.add(search(startY, ladderFrom, ladderTo, topY,
+      paths.add(search(jump,
           tick -> tick >= firstPress && tick != released && tick <= lastInput, maxTicks));
     }
 
@@ -185,11 +179,11 @@ public final class LadderSolver {
 
   /// Jam on tick 1, plus every delayed start while the jump still rises faster than a climb would
   /// after touching the ladder.
-  private static List<Integer> firstPresses(double startY, int ladderFrom, int ladderTo) {
+  private static List<Integer> firstPresses(Jump jump) {
     var result = new ArrayList<Integer>();
     result.add(1);
 
-    var y = startY;
+    var y = jump.startY;
     var v = JUMP;
     var touched = false;
 
@@ -197,38 +191,32 @@ public final class LadderSolver {
       if (touched) result.add(tick);
       y += v;
       v = drag(v);
-      touched |= onLadder(y, ladderFrom, ladderTo);
+      touched |= jump.onLadder(y);
     }
 
     return result;
   }
 
   /// @param inputs whether to climb on a tick, or null to try both on every tick.
-  private static @Nullable Path search(
-      double startY,
-      int ladderFrom,
-      int ladderTo,
-      double topY,
-      @Nullable IntPredicate inputs,
-      int maxTicks
-  ) {
+  private static @Nullable Path search(Jump jump, @Nullable IntPredicate inputs, int maxTicks) {
     return inputs == null
-        ? search(startY, ladderFrom, ladderTo, topY, tick -> true, tick -> true, maxTicks)
-        : search(startY, ladderFrom, ladderTo, topY, inputs, inputs.negate(), maxTicks);
+        ? search(jump, tick -> true, tick -> true, maxTicks)
+        : search(jump, inputs, inputs.negate(), maxTicks);
   }
 
   /// @param canPress   whether climbing is tried on a tick.
   /// @param canRelease whether not climbing is tried on a tick.
   private static @Nullable Path search(
-      double startY,
-      int ladderFrom,
-      int ladderTo,
-      double topY,
+      Jump jump,
       IntPredicate canPress,
       IntPredicate canRelease,
       int maxTicks
   ) {
-    var states = List.of(new State(startY, 0, startY, true, 0, 0, null));
+    var topY = jump.topY;
+    var startBelowTop = jump.belowTop(jump.startY);
+    var startPeak = startBelowTop ? jump.startY : Double.NEGATIVE_INFINITY;
+    var states = List.of(
+        new State(jump.startY, 0, startPeak, startBelowTop, true, 0, 0, null));
 
     for (int tick = 1; tick <= maxTicks && !states.isEmpty(); tick++) {
       var next = new HashMap<StateKey, State>();
@@ -239,28 +227,27 @@ public final class LadderSolver {
         var v = Math.abs(state.v) < CUTOFF ? 0 : state.v;
 
         if (tick == 1) v = JUMP;
-        if (onLadder(y, ladderFrom, ladderTo) && v < FALL_CAP) v = FALL_CAP;
+        if (jump.onLadder(y) && v < FALL_CAP) v = FALL_CAP;
 
         var nextY = y + v;
+        var belowTop = state.belowTop || jump.belowTop(nextY);
 
-        if (v < 0) {
-          if (y + EPSILON >= topY && nextY < topY) {
-            if (landed == null || state.compareTo(landed) < 0) landed = state;
-            continue;
-          }
-          if (y + EPSILON >= startY && nextY < startY) continue;
+        if (state.belowTop && landsOn(y, v, topY)) {
+          if (landed == null || state.compareTo(landed) < 0) landed = state;
+          continue;
         }
+        if (jump.ends(y, v)) continue;
 
-        if (!onLadder(nextY, ladderFrom, ladderTo)) {
-          merge(next, state.advance(nextY, drag(v)));
+        if (!jump.onLadder(nextY)) {
+          merge(next, state.advance(nextY, drag(v), belowTop));
           continue;
         }
 
         if (canPress.test(tick)) {
-          merge(next, state.press(tick, nextY, drag(CLIMB), true));
+          merge(next, state.press(tick, nextY, drag(CLIMB), belowTop, true));
         }
         if (canRelease.test(tick)) {
-          merge(next, state.press(tick, nextY, drag(v), false));
+          merge(next, state.press(tick, nextY, drag(v), belowTop, false));
         }
       }
 
@@ -279,11 +266,6 @@ public final class LadderSolver {
     return v < 0 && y + EPSILON >= surfaceY && y + v < surfaceY;
   }
 
-  private static boolean onLadder(double y, int ladderFrom, int ladderTo) {
-    var block = Math.floor(y + EPSILON);
-    return block >= ladderFrom && block <= ladderTo;
-  }
-
   private static double drag(double v) {
     return (v - GRAVITY) * DRAG;
   }
@@ -300,7 +282,45 @@ public final class LadderSolver {
     states.merge(state.key(), state, (a, b) -> a.compareTo(b) <= 0 ? a : b);
   }
 
-  private record StateKey(long y, long v, boolean lastPressed) {
+  /// @param ladderFrom lowest ladder block.
+  /// @param ladderTo   highest ladder block.
+  private record Jump(
+      double startY,
+      int ladderFrom,
+      int ladderTo,
+      double topY,
+      boolean fallsPastStart
+  ) {
+
+    static Jump of(double startY, double ladderStartY, double ladderEndY, boolean fallsPastStart) {
+      return new Jump(
+          startY,
+          (int) Math.floor(ladderStartY + EPSILON),
+          (int) Math.ceil(ladderEndY - EPSILON) - 1,
+          ladderEndY,
+          fallsPastStart);
+    }
+
+    boolean onLadder(double y) {
+      var block = Math.floor(y + EPSILON);
+      return block >= this.ladderFrom && block <= this.ladderTo;
+    }
+
+    /// Landing on the top only counts after being below it: a jump from above the ladder falls
+    /// past the top in the ladder column first.
+    boolean belowTop(double y) {
+      return y + EPSILON < this.topY;
+    }
+
+    /// @return whether this move lands back on the start surface or falls below the ladder,
+    ///         from where the top cannot be reached anymore.
+    boolean ends(double y, double v) {
+      return !this.fallsPastStart && landsOn(y, v, this.startY)
+          || v < 0 && Math.floor(y + v + EPSILON) < this.ladderFrom;
+    }
+  }
+
+  private record StateKey(long y, long v, boolean belowTop, boolean lastPressed) {
   }
 
   /// @param history effective inputs, newest first: only ticks ending on the ladder are recorded,
@@ -309,6 +329,7 @@ public final class LadderSolver {
       double y,
       double v,
       double peakY,
+      boolean belowTop,
       boolean lastPressed,
       int transitions,
       int released,
@@ -321,23 +342,31 @@ public final class LadderSolver {
         .thenComparingInt(State::transitions)
         .thenComparingInt(State::released);
 
-    State advance(double y, double v) {
-      return new State(y, v, Math.max(peakY, y), lastPressed, transitions, released, history);
+    State advance(double y, double v, boolean belowTop) {
+      return new State(
+          y, v, this.peak(y, belowTop), belowTop, lastPressed, transitions, released, history);
     }
 
-    State press(int tick, double y, double v, boolean pressed) {
+    State press(int tick, double y, double v, boolean belowTop, boolean pressed) {
       return new State(
           y,
           v,
-          Math.max(peakY, y),
+          this.peak(y, belowTop),
+          belowTop,
           pressed,
           transitions + (pressed != lastPressed ? 1 : 0),
           released + (pressed ? 0 : 1),
           new Input(tick, pressed, history));
     }
 
+    /// Only the overshoot over the top counts, not the start of a jump from above the ladder.
+    private double peak(double y, boolean belowTop) {
+      return belowTop ? Math.max(peakY, y) : peakY;
+    }
+
     StateKey key() {
-      return new StateKey(Math.round(y / EPSILON), Math.round(v / EPSILON), lastPressed);
+      return new StateKey(
+          Math.round(y / EPSILON), Math.round(v / EPSILON), belowTop, lastPressed);
     }
 
     List<Input> inputs() {

@@ -29,7 +29,7 @@ class LadderSolverTest {
       "10, 92, 90",
   })
   void stackOneBlockUp(int ladders, int plain, int best) {
-    var strategies = LadderSolver.strategies(0, 1, 1 + ladders);
+    var strategies = LadderSolver.strategies(0, 1, 1 + ladders, false);
 
     assertEquals(best, strategies.getFirst().ticks());
     assertEquals(plain, plainHold(strategies).ticks());
@@ -37,7 +37,7 @@ class LadderSolverTest {
 
   @Test
   void singleLadderNeedsPessiAndEarlyExit() {
-    var best = LadderSolver.strategies(0, 1, 2).getFirst();
+    var best = LadderSolver.strategies(0, 1, 2, false).getFirst();
 
     assertEquals(3, best.pessi());
     assertTrue(best.releaseTicks().isEmpty());
@@ -46,7 +46,7 @@ class LadderSolverTest {
 
   @Test
   void twoLaddersOnlyNeedAPlainHold() {
-    var strategies = LadderSolver.strategies(0, 1, 3);
+    var strategies = LadderSolver.strategies(0, 1, 3, false);
 
     assertTrue(strategies.getFirst().isPlainHold());
     assertEquals(1, strategies.size());
@@ -54,7 +54,7 @@ class LadderSolverTest {
 
   @Test
   void fourLaddersNeedOnlyAnEarlyExit() {
-    var best = LadderSolver.strategies(0, 1, 5).getFirst();
+    var best = LadderSolver.strategies(0, 1, 5, false).getFirst();
 
     assertNull(best.pessi());
     assertTrue(best.releaseTicks().isEmpty());
@@ -63,7 +63,7 @@ class LadderSolverTest {
 
   @Test
   void slabNeedsAllThreeTricks() {
-    var best = LadderSolver.strategies(0.5, 1, 3).getFirst();
+    var best = LadderSolver.strategies(0.5, 1, 3, false).getFirst();
 
     assertEquals(18, best.ticks());
     assertEquals(3, best.pessi());
@@ -74,38 +74,49 @@ class LadderSolverTest {
   @ParameterizedTest
   @CsvSource({"1, 6", "2, 13", "3, 22", "4, 30", "5, 39"})
   void stackAtFeet(int ladders, int best) {
-    assertEquals(best, LadderSolver.strategies(0, 0, ladders).getFirst().ticks());
+    assertEquals(best, LadderSolver.strategies(0, 0, ladders, false).getFirst().ticks());
   }
 
   @Test
   void unreachableTopHasNoStrategies() {
-    assertTrue(LadderSolver.strategies(2, 0, 2).isEmpty());
+    assertTrue(LadderSolver.strategies(2, 0, 2, false).isEmpty());
+  }
+
+  /// Jumping from above the top falls past it into the ladder column before climbing back up.
+  @Test
+  void startAboveTopNeedsFallPastStart() {
+    assertTrue(LadderSolver.strategies(5, 0, 3, false).isEmpty());
+    assertEquals(19, LadderSolver.strategies(5, 0, 3, true).getFirst().ticks());
+    assertEquals(15, LadderSolver.climbStarts(5, 0, 3, true).getFirst());
   }
 
   @Test
   void climbStartsBeginOnContact() {
-    assertEquals(List.of(3, 4, 5, 6, 7, 8), LadderSolver.climbStarts(0, 1, 2));
+    assertEquals(List.of(3, 4, 5, 6, 7, 8), LadderSolver.climbStarts(0, 1, 2, false));
   }
 
   @Test
   void bestAirtimeFromEachStart() {
-    assertEquals(14, LadderSolver.bestAirtime(0, 1, 2, 3, Integer.MAX_VALUE, true, true));
-    assertEquals(13, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE, true, true));
+    assertEquals(14, LadderSolver.bestAirtime(0, 1, 2, false, 3, Integer.MAX_VALUE, true, true));
+    assertEquals(13, LadderSolver.bestAirtime(0, 1, 2, false, 4, Integer.MAX_VALUE, true, true));
   }
 
   /// The plain hold from this start takes longer than the limit, but its tricks don't.
   @Test
   void bestAirtimeFindsTricksBeyondASlowPlainHold() {
-    assertEquals(16, LadderSolver.bestAirtime(0, 0, 2, 7, 17, true, true));
-    assertNull(LadderSolver.bestAirtime(0, 0, 2, 7, 15, true, true));
+    assertEquals(16, LadderSolver.bestAirtime(0, 0, 2, false, 7, 17, true, true));
+    assertNull(LadderSolver.bestAirtime(0, 0, 2, false, 7, 15, true, true));
   }
 
   /// A pessi 3t only saves airtime together with an early exit.
   @Test
   void bestAirtimeWithoutTricks() {
-    assertEquals(15, LadderSolver.bestAirtime(0, 1, 2, 3, Integer.MAX_VALUE, false, false));
-    assertEquals(15, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE, false, false));
-    assertEquals(13, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE, false, true));
+    assertEquals(15, LadderSolver.bestAirtime(
+        0, 1, 2, false, 3, Integer.MAX_VALUE, false, false));
+    assertEquals(15, LadderSolver.bestAirtime(
+        0, 1, 2, false, 4, Integer.MAX_VALUE, false, false));
+    assertEquals(13, LadderSolver.bestAirtime(
+        0, 1, 2, false, 4, Integer.MAX_VALUE, false, true));
   }
 
   /// Raised starts and stacks at the feet, beyond the doc's examples.
@@ -135,7 +146,8 @@ class LadderSolverTest {
       boolean release,
       boolean earlyExit
   ) {
-    var best = LadderSolver.strategies(startY, ladderFrom, ladderFrom + ladders).getFirst();
+    var best = LadderSolver.strategies(startY, ladderFrom, ladderFrom + ladders, false)
+        .getFirst();
 
     assertEquals(ticks, best.ticks());
     assertEquals(climb, best.climbNeeded());
@@ -167,10 +179,10 @@ class LadderSolverTest {
     }
     for (var start : starts) {
       airtimes.add(LadderSolver.bestAirtime(
-          startY, ladderFrom, topY, start, Integer.MAX_VALUE, true, true));
+          startY, ladderFrom, topY, false, start, Integer.MAX_VALUE, true, true));
     }
 
-    assertEquals(starts, LadderSolver.climbStarts(startY, ladderFrom, topY));
+    assertEquals(starts, LadderSolver.climbStarts(startY, ladderFrom, topY, false));
     assertEquals(expectedAirtimes, airtimes);
   }
 

@@ -29,7 +29,8 @@ public record LadderAnalysis(
     if (climb.ticks().size() < 2 || !climb.moved(1, LadderClimb.JUMP_VY)) return unanalyzed;
 
     var startY = climb.y(0);
-    var starts = LadderSolver.climbStarts(startY, climb.ladderBottomY(), climb.ladderTopY());
+    var starts = LadderSolver.climbStarts(
+        startY, climb.ladderBottomY(), climb.ladderTopY(), climb.isFallPastStart());
     if (starts.isEmpty() || starts.getFirst() != climb.firstClimbStartTick()) return unanalyzed;
 
     var optimal = optimalStrategies(climb, keepClimbStart);
@@ -67,8 +68,10 @@ public record LadderAnalysis(
 
     var start = climb.climbStartTick();
     var strategies = keepClimbStart && start != -1
-        ? LadderSolver.strategies(climb.y(0), climb.ladderBottomY(), climb.ladderTopY(), start)
-        : LadderSolver.strategies(climb.y(0), climb.ladderBottomY(), climb.ladderTopY());
+        ? LadderSolver.strategies(climb.y(0), climb.ladderBottomY(), climb.ladderTopY(),
+            climb.isFallPastStart(), start)
+        : LadderSolver.strategies(climb.y(0), climb.ladderBottomY(), climb.ladderTopY(),
+            climb.isFallPastStart());
     if (strategies.isEmpty()) return List.of();
 
     var fastest = strategies.getFirst().ticks();
@@ -77,7 +80,8 @@ public record LadderAnalysis(
 
   private static @Nullable Integer bestAirtime(LadderClimb climb, int firstPress, int maxTicks) {
     return LadderSolver.bestAirtime(
-        climb.y(0), climb.ladderBottomY(), climb.ladderTopY(), firstPress, maxTicks,
+        climb.y(0), climb.ladderBottomY(), climb.ladderTopY(), climb.isFallPastStart(),
+        firstPress, maxTicks,
         !climb.releaseTicks().isEmpty(), climb.isEarlyExit());
   }
 }

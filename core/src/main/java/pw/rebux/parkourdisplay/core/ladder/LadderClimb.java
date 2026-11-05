@@ -80,6 +80,11 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
     return this.y(this.airtime()) > this.ladderBottomY;
   }
 
+  /// Fell below the jump's start, so the start surface is not under the ladder column.
+  public boolean isFallPastStart() {
+    return IntStream.range(1, this.ticks.size()).anyMatch(tick -> this.y(tick) < this.y(0));
+  }
+
   public double y(int tick) {
     return this.ticks.get(tick).y();
   }

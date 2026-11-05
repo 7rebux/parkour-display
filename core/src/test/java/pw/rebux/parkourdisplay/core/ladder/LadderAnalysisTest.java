@@ -76,6 +76,26 @@ class LadderAnalysisTest {
     assertFalse(climb.isSneakMissed());
   }
 
+  @Test
+  void jumpFromAboveLadderIsAnalyzed() {
+    var analysis = LadderAnalysis.of(climb(5, 0, 3, tick -> true), false);
+
+    assertTrue(analysis.climb().isClimb());
+    assertTrue(analysis.climb().isFallPastStart());
+    assertEquals(19, analysis.climb().airtime());
+    assertEquals(19, analysis.optimalStrategies().getFirst().ticks());
+  }
+
+  @Test
+  void delayedClimbAfterFallingIntoLadderIsAnalyzed() {
+    var climb = climb(4.5, 2, 4, tick -> tick >= 13);
+    var analysis = LadderAnalysis.of(climb, false);
+
+    assertTrue(climb.isFallPastStart());
+    assertEquals(13, climb.enterTick());
+    assertEquals(18, analysis.optimalStrategies().getFirst().ticks());
+  }
+
   /// Simulates a jump from startY onto a ladder stack, climbing on the ticks press accepts, until
   /// it lands on the ladder top.
   private static LadderClimb climb(double startY, int ladderFrom, int topY, IntPredicate press) {
@@ -84,17 +104,19 @@ class LadderAnalysisTest {
 
     var y = startY;
     var v = LadderClimb.JUMP_VY;
+    var belowTop = startY < topY;
 
     for (int tick = 1; tick <= 100; tick++) {
       if (Math.abs(v) < 0.005) v = 0;
       if (onLadder(y, ladderFrom, topY) && v < -0.15) v = -0.15;
 
-      if (v < 0 && y >= topY && y + v < topY) {
+      if (belowTop && v < 0 && y >= topY && y + v < topY) {
         ticks.add(TestTickPositions.of(topY, topY - y, true, false));
         return new LadderClimb(ticks, ladderFrom, topY);
       }
 
       y += v;
+      belowTop |= y < topY;
       var onLadder = onLadder(y, ladderFrom, topY);
       ticks.add(TestTickPositions.of(y, v, false, onLadder));
       v = ((onLadder && press.test(tick) ? 0.2 : v) - 0.08) * 0.9800000190734863;
