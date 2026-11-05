@@ -2,12 +2,10 @@ package pw.rebux.parkourdisplay.core.ladder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.function.IntPredicate;
 import org.junit.jupiter.api.Test;
 import pw.rebux.parkourdisplay.core.util.TestTickPositions;
@@ -18,7 +16,7 @@ class LadderAnalysisTest {
   /// Jumping from inside a one block ladder: a jam takes 9 ticks, starting on tick 2 takes 6.
   @Test
   void jamFromInsideLadderSuggestsLaterStart() {
-    var analysis = LadderAnalysis.of(climb(0, 0, 1, tick -> true));
+    var analysis = LadderAnalysis.of(climb(0, 0, 1, tick -> true), false);
 
     assertEquals(0, analysis.climb().enterTick());
     assertEquals(9, analysis.climb().airtime());
@@ -28,12 +26,32 @@ class LadderAnalysisTest {
 
   @Test
   void delayedStartFromInsideLadderIsHelpful() {
-    var analysis = LadderAnalysis.of(climb(0, 0, 1, tick -> tick >= 2 && tick <= 3));
+    var analysis = LadderAnalysis.of(climb(0, 0, 1, tick -> tick >= 2 && tick <= 3), false);
 
     assertEquals(6, analysis.climb().airtime());
     assertTrue(analysis.climbStartDelayHelpful());
     assertNull(analysis.betterClimbStartTick());
     assertEquals(6, analysis.optimalStrategies().getFirst().ticks());
+  }
+
+  /// A pessi 3t only saves airtime by enabling an early exit, which the jam did not play.
+  @Test
+  void startOnlyBetterWithUnplayedTrickIsNotMissed() {
+    var analysis = LadderAnalysis.of(climb(0, 1, 2, tick -> true), false);
+
+    assertEquals(15, analysis.climb().airtime());
+    assertNull(analysis.betterClimbStartTick());
+  }
+
+  @Test
+  void optimalKeepingClimbStartOnlyChangesLaterTricks() {
+    var jam = climb(0, 1, 2, tick -> true);
+
+    assertEquals(13, LadderAnalysis.of(jam, false).optimalStrategies().getFirst().ticks());
+
+    var kept = LadderAnalysis.of(jam, true).optimalStrategies().getFirst();
+    assertEquals(14, kept.ticks());
+    assertNull(kept.pessi());
   }
 
   @Test
@@ -56,25 +74,6 @@ class LadderAnalysisTest {
 
     assertTrue(climb.vy(climb.climbStartTick()) < 0);
     assertFalse(climb.isSneakMissed());
-  }
-
-  /// Neither sneaking nor an early exit saves a tick on its own, but together they save two.
-  @Test
-  void combinedTricksSaveAirtime() {
-    var climb = climb(0.25, 0, 2, tick -> tick >= 7);
-
-    assertFalse(climb.isSneakMissed());
-    assertFalse(climb.isEarlyExitMissed());
-
-    var combination = climb.missedTrickCombination();
-    assertNotNull(combination);
-    assertEquals(EnumSet.of(MissedTrick.SNEAK, MissedTrick.EARLY_EXIT), combination.tricks());
-    assertEquals(2, combination.savedTicks());
-  }
-
-  @Test
-  void noCombinationWithoutMissedTricks() {
-    assertNull(climb(0, 0, 1, tick -> tick >= 2 && tick <= 3).missedTrickCombination());
   }
 
   /// Simulates a jump from startY onto a ladder stack, climbing on the ticks press accepts, until

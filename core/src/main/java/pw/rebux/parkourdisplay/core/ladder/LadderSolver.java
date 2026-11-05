@@ -59,6 +59,24 @@ public final class LadderSolver {
       paths.addAll(climbs(startY, ladderFrom, ladderTo, topY, firstPress, MAX_TICKS));
     }
 
+    return fastest(paths);
+  }
+
+  /// Like strategies, but every climb starts on firstPress.
+  public static List<LadderStrategy> strategies(
+      double startY,
+      double ladderStartY,
+      double ladderEndY,
+      int firstPress
+  ) {
+    var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
+    var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
+
+    if (ladderEndY <= startY + EPSILON) return List.of();
+    return fastest(climbs(startY, ladderFrom, ladderTo, ladderEndY, firstPress, MAX_TICKS));
+  }
+
+  private static List<LadderStrategy> fastest(List<@Nullable Path> paths) {
     var fastest = new LinkedHashMap<LadderStrategy.Tricks, LadderStrategy>();
     paths.stream()
         .filter(Objects::nonNull)
@@ -99,17 +117,24 @@ public final class LadderSolver {
   }
 
   /// @return the lowest airtime of a jump from startY that starts climbing on firstPress and plays
-  ///         any combination of tricks afterwards, or null if it cannot land within maxTicks.
+  ///         any combination of the allowed tricks afterwards, or null if it cannot land within
+  ///         maxTicks.
   public static @Nullable Integer bestAirtime(
       double startY,
       double ladderStartY,
       double ladderEndY,
       int firstPress,
-      int maxTicks
+      int maxTicks,
+      boolean release,
+      boolean earlyExit
   ) {
     var ladderFrom = (int) Math.floor(ladderStartY + EPSILON);
     var ladderTo = (int) Math.ceil(ladderEndY - EPSILON) - 1;
     return climbs(startY, ladderFrom, ladderTo, ladderEndY, firstPress, maxTicks).stream()
+        .filter(path -> {
+          var tricks = LadderStrategy.of(path).tricks();
+          return (release || !tricks.release()) && (earlyExit || !tricks.earlyExit());
+        })
         .map(Path::landingTick)
         .min(Integer::compare)
         .orElse(null);

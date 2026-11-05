@@ -30,8 +30,7 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> showGrinds = new ConfigProperty<>(false);
 
-  @SwitchSetting
-  private final ConfigProperty<Boolean> analyzeLadderClimbs = new ConfigProperty<>(false);
+  private final AnalyzeLadderClimbsSettings analyzeLadderClimbs = new AnalyzeLadderClimbsSettings();
 
   @SettingSection("formatting")
   @SliderSetting(min = 0, max = 10)
@@ -101,6 +100,32 @@ public final class ParkourDisplayConfiguration extends AddonConfig {
 
     @SliderSetting(min = 1, max = 30)
     private final ConfigProperty<Integer> outlineThickness = new ConfigProperty<>(10);
+  }
+
+  @Getter
+  public static final class AnalyzeLadderClimbsSettings extends Config {
+
+    @SwitchSetting
+    @ShowSettingInParent
+    private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(false);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> checkSneaking = new ConfigProperty<>(true);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> checkClimbStart = new ConfigProperty<>(true);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> checkMidClimbReleases = new ConfigProperty<>(true);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> checkEarlyExit = new ConfigProperty<>(true);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> showOptimalStrategy = new ConfigProperty<>(true);
+
+    @SwitchSetting
+    private final ConfigProperty<Boolean> optimalIncludesClimbStart = new ConfigProperty<>(true);
   }
 
   public enum ServerDataLoadMode {

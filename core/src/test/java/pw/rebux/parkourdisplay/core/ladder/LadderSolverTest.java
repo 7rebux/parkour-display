@@ -89,15 +89,23 @@ class LadderSolverTest {
 
   @Test
   void bestAirtimeFromEachStart() {
-    assertEquals(14, LadderSolver.bestAirtime(0, 1, 2, 3, Integer.MAX_VALUE));
-    assertEquals(13, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE));
+    assertEquals(14, LadderSolver.bestAirtime(0, 1, 2, 3, Integer.MAX_VALUE, true, true));
+    assertEquals(13, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE, true, true));
   }
 
   /// The plain hold from this start takes longer than the limit, but its tricks don't.
   @Test
   void bestAirtimeFindsTricksBeyondASlowPlainHold() {
-    assertEquals(16, LadderSolver.bestAirtime(0, 0, 2, 7, 17));
-    assertNull(LadderSolver.bestAirtime(0, 0, 2, 7, 15));
+    assertEquals(16, LadderSolver.bestAirtime(0, 0, 2, 7, 17, true, true));
+    assertNull(LadderSolver.bestAirtime(0, 0, 2, 7, 15, true, true));
+  }
+
+  /// A pessi 3t only saves airtime together with an early exit.
+  @Test
+  void bestAirtimeWithoutTricks() {
+    assertEquals(15, LadderSolver.bestAirtime(0, 1, 2, 3, Integer.MAX_VALUE, false, false));
+    assertEquals(15, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE, false, false));
+    assertEquals(13, LadderSolver.bestAirtime(0, 1, 2, 4, Integer.MAX_VALUE, false, true));
   }
 
   /// Raised starts and stacks at the feet, beyond the doc's examples.
@@ -158,7 +166,8 @@ class LadderSolverTest {
       expectedAirtimes.add(Integer.parseInt(parts[1]));
     }
     for (var start : starts) {
-      airtimes.add(LadderSolver.bestAirtime(startY, ladderFrom, topY, start, Integer.MAX_VALUE));
+      airtimes.add(LadderSolver.bestAirtime(
+          startY, ladderFrom, topY, start, Integer.MAX_VALUE, true, true));
     }
 
     assertEquals(starts, LadderSolver.climbStarts(startY, ladderFrom, topY));

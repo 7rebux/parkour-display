@@ -1,11 +1,8 @@
 package pw.rebux.parkourdisplay.core.ladder;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.Set;
 import java.util.stream.IntStream;
-import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.util.TickPosition;
 
 /// One airborne period that touched a ladder, from the last tick on the ground to the landing
@@ -74,42 +71,13 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
   /// have landed earlier with the same climb inputs.
   public boolean isSneakMissed() {
     return this.fallStartTick().isPresent()
-        && this.replayLanding(EnumSet.of(MissedTrick.SNEAK))
-        < this.replayLanding(EnumSet.noneOf(MissedTrick.class));
+        && this.replayLanding(true) < this.replayLanding(false);
   }
 
-  /// @return the combination of at least two missed tricks with the lowest airtime, if it beats
-  ///         the recorded inputs and every one of its tricks on its own.
-  public @Nullable MissedTrickCombination missedTrickCombination() {
-    if (this.climbStartTick() == -1) return null;
-
-    var applicable = EnumSet.noneOf(MissedTrick.class);
-    if (this.fallStartTick().isPresent()) applicable.add(MissedTrick.SNEAK);
-    if (!this.isEarlyExit()) {
-      applicable.add(MissedTrick.EARLY_EXIT);
-      if (this.releaseTicks().isEmpty()) applicable.add(MissedTrick.RELEASE);
-    }
-
-    var baseline = this.replayLanding(EnumSet.noneOf(MissedTrick.class));
-    var bestSingle = baseline;
-    for (var trick : applicable) {
-      bestSingle = Math.min(bestSingle, this.replayLanding(EnumSet.of(trick)));
-    }
-
-    MissedTrickCombination best = null;
-    var bestAirtime = bestSingle;
-    for (var combination : combinations(applicable)) {
-      var airtime = this.replayLanding(combination);
-      if (airtime < bestAirtime) {
-        best = new MissedTrickCombination(combination, baseline - airtime);
-        bestAirtime = airtime;
-      }
-    }
-    return best;
-  }
-
-  public boolean isAscent() {
-    return this.y(0) < this.y(this.airtime());
+  /// Landed above the ladder bottom, so the ladder was climbed instead of only fallen through. The
+  /// jump may still have started above the ladder.
+  public boolean isClimb() {
+    return this.y(this.airtime()) > this.ladderBottomY;
   }
 
   public double y(int tick) {
@@ -193,40 +161,22 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
         .findFirst();
   }
 
-  /// Replays the recorded climb inputs from the climb start on with the given tricks added.
-  /// Inputs are unknown off the ladder, so those ticks count as released.
+  /// Replays the recorded climb inputs from the climb start on. Inputs are unknown off the
+  /// ladder, so those ticks count as released.
   ///
+  /// @param sneak start from the height before the fall instead of the climb start.
   /// @return airtime of the landing on the ladder top, or Integer.MAX_VALUE if it never lands.
-  private int replayLanding(Set<MissedTrick> tricks) {
+  private int replayLanding(boolean sneak) {
     var climbStart = this.climbStartTick();
     var fallStart = this.fallStartTick();
-    var y = tricks.contains(MissedTrick.SNEAK) && fallStart.isPresent()
+    var y = sneak && fallStart.isPresent()
         ? this.y(fallStart.getAsInt() - 1)
         : this.y(climbStart);
     var vy = 0.0;
-    var lastPressed = false;
-    var resume = false;
-    var stopped = false;
 
     for (int tick = climbStart; tick < this.airtime() + MAX_LANDING_TICKS; tick++) {
       var onLadder = y >= this.ladderBottomY && y < this.ladderTopY;
-      var press = onLadder && !stopped && (resume || tick == climbStart || this.pressed(tick));
-
-      if (resume) {
-        resume = false;
-        stopped = true;
-      } else if (press && tricks.contains(MissedTrick.RELEASE) && lastPressed
-          && y + CLIMB_VY < this.ladderTopY && y + 2 * CLIMB_VY >= this.ladderTopY) {
-        press = false;
-        resume = true;
-      } else if (press && tricks.contains(MissedTrick.EARLY_EXIT)
-          && vy > 0 && y + vy >= this.ladderTopY) {
-        press = false;
-        stopped = true;
-      }
-
-      if (press) vy = CLIMB_VY;
-      lastPressed = press;
+      if (onLadder && (tick == climbStart || this.pressed(tick))) vy = CLIMB_VY;
       if (Math.abs(vy) < VELOCITY_CUTOFF) vy = 0;
       if (onLadder && vy < FALL_CAP) vy = FALL_CAP;
 
@@ -236,22 +186,6 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
       vy = (vy - 0.08) * 0.98;
     }
     return Integer.MAX_VALUE;
-  }
-
-  private static List<Set<MissedTrick>> combinations(Set<MissedTrick> tricks) {
-    var all = List.copyOf(tricks);
-    return IntStream.range(1, 1 << all.size())
-        .filter(mask -> Integer.bitCount(mask) >= 2)
-        .boxed()
-        .sorted((a, b) -> Integer.bitCount(a) - Integer.bitCount(b))
-        .<Set<MissedTrick>>map(mask -> {
-          var combination = EnumSet.noneOf(MissedTrick.class);
-          for (int i = 0; i < all.size(); i++) {
-            if ((mask & 1 << i) != 0) combination.add(all.get(i));
-          }
-          return combination;
-        })
-        .toList();
   }
 
   private boolean pressed(int tick) {
@@ -272,7 +206,4 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
     }
     return MAX_LANDING_TICKS + 1;
   }
-
-  /// @param savedTicks airtime saved compared to the recorded climb inputs.
-  public record MissedTrickCombination(Set<MissedTrick> tricks, int savedTicks) {}
 }
