@@ -21,6 +21,7 @@ import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
+import pw.rebux.parkourdisplay.core.protocol.ParkourProtocolClient;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
@@ -75,6 +76,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
   private final ParkourDisplayClipService clipService = new ParkourDisplayClipService(this);
+  private final ParkourProtocolClient protocolClient = new ParkourProtocolClient(this);
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -93,6 +95,10 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
         ParkourDisplayIntegration.class, ParkourDisplayIntegration::new);
     integration.parkourDisplayProtocol().registerHandler(
         RunDataPacket.class, new RunDataPacketHandler(this));
+
+    // Register parkour protocol
+    this.protocolClient.initialize();
+    this.registerListener(this.protocolClient);
 
     this.clipService.initialize();
   }
