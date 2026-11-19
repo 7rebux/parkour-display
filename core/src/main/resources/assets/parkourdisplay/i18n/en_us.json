@@ -557,7 +557,7 @@
         "delay": "Delayed climb start on tick %s (vy %s)",
         "delayMissed": "Possible better climb start missed: %s (tick %s instead of %s, vy %s)",
         "release": "Mid-climb release",
-        "releaseMissed": "Possible mid-climb release missed",
+        "releaseMissed": "Possible mid-climb release + early exit missed",
         "optimal": "Optimal ladder: %s t",
         "notOptimal": "Not optimal: %st possible (%s)"
       }

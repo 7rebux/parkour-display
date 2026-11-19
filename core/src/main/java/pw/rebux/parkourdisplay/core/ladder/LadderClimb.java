@@ -133,9 +133,10 @@ public record LadderClimb(List<TickPosition> ticks, double ladderBottomY, double
         > this.landingTicks(fromY, RELEASE_VY);
   }
 
-  /// Releasing on the second to last climb tick needs a climb tick before and after it, and the
-  /// lowered position must still be on the ladder to resume climbing. From there the last climb
-  /// tick is followed by an early exit instead of another climb tick.
+  /// A release alone never pays: it only lowers the climb so that an early exit becomes possible
+  /// where it was not before. Releasing on the second to last climb tick needs a climb tick before
+  /// and after it, and the lowered position must still be on the ladder to resume climbing. From
+  /// there the last climb tick is followed by an early exit instead of another climb tick.
   public boolean isReleaseMissed() {
     var crossing = this.crossingTick();
     if (crossing < 3 || !this.releaseTicks().isEmpty() || this.isEarlyExit()
