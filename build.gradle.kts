@@ -32,6 +32,18 @@ labyMod {
     }
 }
 
+allprojects {
+    repositories {
+        // Every project resolving :core's classpath (incl. the labygradle game-runner) needs this.
+        // TODO: Replace with https://minecraft-parkour.github.io/parkour-protocol/ once parkour-protocol 1.0.0 is released.
+        mavenLocal {
+            content {
+                includeGroup("com.mcpk.protocol")
+            }
+        }
+    }
+}
+
 subprojects {
     plugins.apply("net.labymod.labygradle")
     plugins.apply("net.labymod.labygradle.addon")

@@ -1,12 +1,13 @@
 package pw.rebux.parkourdisplay.core.macro;
 
+import com.mcpk.protocol.core.model.CommonPermissions;
 import java.util.ArrayDeque;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.format.NamedTextColor;
-import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
+import pw.rebux.parkourdisplay.core.Permissions;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 
 @RequiredArgsConstructor
@@ -33,8 +34,8 @@ public final class MacroRunner {
   }
 
   private boolean isAllowed() {
-    return this.addon.labyAPI()
-        .permissionRegistry()
-        .isPermissionEnabled(Permissions.RUN_MACROS);
+    // Servers can allow macros via the parkour protocol, or via the LabyMod permission system.
+    return this.addon.protocolClient().hasPermission(CommonPermissions.EXECUTE_MACROS)
+        || this.addon.labyAPI().permissionRegistry().isPermissionEnabled(Permissions.RUN_MACROS);
   }
 }

@@ -4,11 +4,6 @@ plugins {
     id("io.freefair.lombok") version "9.2.0"
 }
 
-repositories {
-    // TODO: Replace with https://minecraft-parkour.github.io/parkour-protocol/ once parkour-protocol 1.0.0 is released.
-    mavenLocal()
-}
-
 // Dependencies bundled into the addon jar. labygradle refuses addonMavenDependency from mavenLocal,
 // since the LabyMod loader downloads those at runtime. Once parkour-protocol is published to a remote
 // repository, this can be replaced with addonMavenDependency.
@@ -22,8 +17,7 @@ configurations.implementation {
 
 dependencies {
     labyProcessor()
-    implementation(project(":integration"))
-    api(project(":api"))
+    labyApi("api")
 
     bundled("com.mcpk.protocol:client-common:1.0.0-SNAPSHOT")
 

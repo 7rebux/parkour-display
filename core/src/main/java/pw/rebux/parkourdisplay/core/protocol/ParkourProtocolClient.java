@@ -4,11 +4,16 @@ import com.mcpk.protocol.client.common.AbstractClientParkourProtocolService;
 import com.mcpk.protocol.core.Packet;
 import com.mcpk.protocol.core.ParkourProtocol;
 import com.mcpk.protocol.core.packet.ClientLoginPacket;
+import com.mcpk.protocol.core.packet.GrantPermissionPacket;
+import com.mcpk.protocol.core.packet.RevokePermissionPacket;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
 import net.labymod.api.client.resources.ResourceLocation;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.network.server.NetworkPayloadEvent;
+import net.labymod.api.event.client.network.server.ServerDisconnectEvent;
 import net.labymod.api.event.client.network.server.ServerJoinEvent;
 import net.labymod.api.event.client.network.server.SubServerSwitchEvent;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
@@ -26,10 +31,23 @@ public final class ParkourProtocolClient extends AbstractClientParkourProtocolSe
 
   private final ParkourDisplayAddon addon;
 
+  /// Permissions granted by the current server. Reset whenever the server changes.
+  private final Set<String> permissions = new HashSet<>();
+
   /// Registers the plugin channel, so it is announced to servers via `minecraft:register`.
   /// Servers (e.g. Bukkit) only send plugin messages on channels the client registered.
   public void initialize() {
     Laby.references().payloadRegistry().registerPayloadChannel(CHANNEL);
+
+    this.registerHandler(GrantPermissionPacket.class,
+        packet -> this.permissions.add(packet.getPermission()));
+    this.registerHandler(RevokePermissionPacket.class,
+        packet -> this.permissions.remove(packet.getPermission()));
+  }
+
+  /// @return whether the current server granted the given permission
+  public boolean hasPermission(String permission) {
+    return this.permissions.contains(permission);
   }
 
   /// Serializes the given packet and sends it to the current server.
@@ -60,6 +78,11 @@ public final class ParkourProtocolClient extends AbstractClientParkourProtocolSe
   }
 
   @Subscribe
+  public void onServerDisconnect(ServerDisconnectEvent event) {
+    this.permissions.clear();
+  }
+
+  @Subscribe
   public void onPayload(NetworkPayloadEvent event) {
     if (event.side() != NetworkPayloadEvent.Side.RECEIVE || !isChannel(event.identifier())) {
       return;
@@ -85,6 +108,7 @@ public final class ParkourProtocolClient extends AbstractClientParkourProtocolSe
   }
 
   private void login() {
+    this.permissions.clear();
     this.sendPacket(new ClientLoginPacket(ParkourProtocol.VERSION));
   }
 
