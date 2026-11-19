@@ -10,7 +10,7 @@ import net.labymod.api.util.math.vector.DoubleVector3;
 
 /// An immutable snapshot of a player's position and rotation at a specific tick.
 @Getter
-@Builder(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TickPosition {
 
