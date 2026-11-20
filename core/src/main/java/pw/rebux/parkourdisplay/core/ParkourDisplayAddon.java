@@ -2,7 +2,6 @@ package pw.rebux.parkourdisplay.core;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mcpk.protocol.core.packet.ParkourJoinPacket;
 import java.io.File;
 import lombok.Getter;
 import net.labymod.api.addon.LabyAddon;
@@ -20,8 +19,7 @@ import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
-import pw.rebux.parkourdisplay.core.protocol.ParkourJoinPacketHandler;
-import pw.rebux.parkourdisplay.core.protocol.ParkourProtocolClient;
+import pw.rebux.parkourdisplay.core.protocol.ParkourProtocolService;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
@@ -73,7 +71,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
   private final ParkourDisplayClipService clipService = new ParkourDisplayClipService(this);
-  private final ParkourProtocolClient protocolClient = new ParkourProtocolClient(this);
+  private final ParkourProtocolService protocolService = new ParkourProtocolService(this);
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -88,9 +86,8 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
     this.labyAPI().permissionRegistry().register(Permissions.RUN_MACROS, false, true);
 
     // Register parkour protocol
-    this.protocolClient.initialize();
-    this.registerListener(this.protocolClient);
-    this.protocolClient.registerHandler(ParkourJoinPacket.class, new ParkourJoinPacketHandler(this));
+    this.protocolService.initialize();
+    this.registerListener(this.protocolService);
 
     this.clipService.initialize();
   }

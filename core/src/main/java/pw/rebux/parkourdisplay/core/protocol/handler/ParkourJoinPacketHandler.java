@@ -1,8 +1,8 @@
-package pw.rebux.parkourdisplay.core.protocol;
+package pw.rebux.parkourdisplay.core.protocol.handler;
 
 import com.mcpk.protocol.client.common.PacketHandler;
 import com.mcpk.protocol.core.model.DoubleVec3;
-import com.mcpk.protocol.core.packet.ParkourJoinPacket;
+import com.mcpk.protocol.core.packet.clientbound.ParkourJoinPacket;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
@@ -47,7 +47,7 @@ public final class ParkourJoinPacketHandler implements PacketHandler<ParkourJoin
             finish.getMin().getX(), finish.getMin().getY(), finish.getMin().getZ(),
             finish.getMax().getX(), finish.getMax().getY(), finish.getMax().getZ()
         ),
-        SplitBoxTriggerMode.valueOf(packet.getFinishTriggerMode().name())
+        SplitBoxTriggerMode.valueOf(packet.getIntersectionType().name())
     );
     endSplit.personalBest(packet.getPersonalBest());
 

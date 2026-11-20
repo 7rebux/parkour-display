@@ -35,7 +35,7 @@ public final class MacroRunner {
 
   private boolean isAllowed() {
     // Servers can allow macros via the parkour protocol, or via the LabyMod permission system.
-    return this.addon.protocolClient().hasPermission(CommonPermissions.EXECUTE_MACROS)
+    return this.addon.protocolService().hasPermission(CommonPermissions.EXECUTE_MACROS)
         || this.addon.labyAPI().permissionRegistry().isPermissionEnabled(Permissions.RUN_MACROS);
   }
 }
