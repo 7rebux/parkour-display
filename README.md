@@ -35,8 +35,8 @@ enhance gameplay with parkour-related features.
 
 ### Server Integration
 
-- Integration with the LabyMod Server API: servers can send run data
-  (start, end, splits) directly to players
+- Integration with the [Parkour Protocol](https://github.com/minecraft-parkour/parkour-protocol):
+  servers can send run data directly to players (work in progress)
 - Configurable load behavior for server-sent run data (always / confirm /
   never)
 

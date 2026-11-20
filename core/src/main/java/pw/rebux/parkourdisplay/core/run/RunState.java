@@ -8,7 +8,6 @@ import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.util.math.vector.DoubleVector3;
 import org.jspecify.annotations.Nullable;
-import pw.rebux.parkourdisplay.api.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.util.BoundingBoxUtils;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;

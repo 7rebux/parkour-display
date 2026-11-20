@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.api;
+package pw.rebux.parkourdisplay.core;
 
 public final class Permissions {
 

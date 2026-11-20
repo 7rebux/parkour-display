@@ -1,4 +1,4 @@
-package pw.rebux.parkourdisplay.api;
+package pw.rebux.parkourdisplay.core.run;
 
 public enum SplitBoxTriggerMode {
 

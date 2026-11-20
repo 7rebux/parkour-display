@@ -3,9 +3,9 @@ package pw.rebux.parkourdisplay.core.command.run;
 import net.labymod.api.client.chat.command.SubCommand;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.world.block.BlockState;
-import pw.rebux.parkourdisplay.api.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 import pw.rebux.parkourdisplay.core.run.RunSplit;
+import pw.rebux.parkourdisplay.core.run.SplitBoxTriggerMode;
 import pw.rebux.parkourdisplay.core.util.ChatMessage;
 import pw.rebux.parkourdisplay.core.util.WorldUtils;
 
