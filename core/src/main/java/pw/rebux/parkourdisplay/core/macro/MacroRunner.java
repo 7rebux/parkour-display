@@ -1,6 +1,6 @@
 package pw.rebux.parkourdisplay.core.macro;
 
-import com.mcpk.protocol.core.model.CommonPermissions;
+import org.mcpk.protocol.core.model.CommonPermissions;
 import java.util.ArrayDeque;
 import java.util.List;
 import lombok.Getter;

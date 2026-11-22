@@ -19,7 +19,7 @@ dependencies {
     labyProcessor()
     labyApi("api")
 
-    bundled("com.mcpk.protocol:client-common:1.0.0-SNAPSHOT")
+    bundled("org.mcpk.protocol:client-common:0.0.1")
 
     api("org.jspecify:jspecify:1.0.0")
 }

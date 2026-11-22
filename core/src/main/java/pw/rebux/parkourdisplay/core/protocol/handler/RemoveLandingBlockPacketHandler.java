@@ -1,7 +1,7 @@
 package pw.rebux.parkourdisplay.core.protocol.handler;
 
-import com.mcpk.protocol.client.common.PacketHandler;
-import com.mcpk.protocol.core.packet.clientbound.RemoveLandingBlockPacket;
+import org.mcpk.protocol.client.common.PacketHandler;
+import org.mcpk.protocol.core.packet.clientbound.RemoveLandingBlockPacket;
 import lombok.RequiredArgsConstructor;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
 

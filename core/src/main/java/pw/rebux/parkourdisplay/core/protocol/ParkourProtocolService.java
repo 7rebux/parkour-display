@@ -1,13 +1,13 @@
 package pw.rebux.parkourdisplay.core.protocol;
 
-import com.mcpk.protocol.client.common.AbstractClientParkourProtocolService;
-import com.mcpk.protocol.client.common.ClientSession;
-import com.mcpk.protocol.core.ParkourProtocol;
-import com.mcpk.protocol.core.ProtocolLogger;
-import com.mcpk.protocol.core.packet.WirePacket;
-import com.mcpk.protocol.core.packet.clientbound.AddLandingBlockPacket;
-import com.mcpk.protocol.core.packet.clientbound.ParkourJoinPacket;
-import com.mcpk.protocol.core.packet.clientbound.RemoveLandingBlockPacket;
+import org.mcpk.protocol.client.common.AbstractClientParkourProtocolService;
+import org.mcpk.protocol.client.common.ClientSession;
+import org.mcpk.protocol.core.ParkourProtocol;
+import org.mcpk.protocol.core.ProtocolLogger;
+import org.mcpk.protocol.core.packet.WirePacket;
+import org.mcpk.protocol.core.packet.clientbound.AddLandingBlockPacket;
+import org.mcpk.protocol.core.packet.clientbound.ParkourJoinPacket;
+import org.mcpk.protocol.core.packet.clientbound.RemoveLandingBlockPacket;
 import lombok.RequiredArgsConstructor;
 import net.labymod.api.Laby;
 import net.labymod.api.client.resources.ResourceLocation;

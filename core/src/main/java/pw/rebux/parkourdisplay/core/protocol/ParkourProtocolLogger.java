@@ -1,6 +1,6 @@
 package pw.rebux.parkourdisplay.core.protocol;
 
-import com.mcpk.protocol.core.ProtocolLogger;
+import org.mcpk.protocol.core.ProtocolLogger;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import pw.rebux.parkourdisplay.core.ParkourDisplayAddon;
