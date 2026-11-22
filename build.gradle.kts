@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     id("net.labymod.labygradle")
     id("net.labymod.labygradle.addon")
@@ -29,6 +31,29 @@ labyMod {
         description = "Shows different information about parkour related game mechanics."
         minecraftVersion = "*"
         version = rootProject.version.toString()
+    }
+}
+
+allprojects {
+    repositories {
+        // Every project resolving :core's classpath (incl. the labygradle game-runner) needs this.
+        // TEMP: unpublished Central Portal deployment, for end-to-end testing parkour-protocol 0.0.1.
+        // Needs centralUsername/centralPassword (a Portal user token) in ~/.gradle/gradle.properties.
+        maven("https://central.sonatype.com/api/v1/publisher/deployments/download/") {
+            name = "centralDeployment"
+            val user = providers.gradleProperty("centralUsername").orNull
+            val pass = providers.gradleProperty("centralPassword").orNull
+            credentials(HttpHeaderCredentials::class) {
+                name = "Authorization"
+                value = "Bearer " + Base64.getEncoder().encodeToString("$user:$pass".toByteArray())
+            }
+            authentication {
+                create<HttpHeaderAuthentication>("header")
+            }
+            content {
+                includeGroup("org.mcpk.protocol")
+            }
+        }
     }
 }
 

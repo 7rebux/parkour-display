@@ -4,11 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import lombok.Getter;
-import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.client.gui.hud.binding.category.HudWidgetCategory;
 import net.labymod.api.models.addon.annotation.AddonMain;
-import pw.rebux.parkourdisplay.api.Permissions;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatLadderYLogListener;
 import pw.rebux.parkourdisplay.core.chat.ChatMoveTimeLogListener;
@@ -21,11 +19,11 @@ import pw.rebux.parkourdisplay.core.macro.MacroFileManager;
 import pw.rebux.parkourdisplay.core.macro.MacroListener;
 import pw.rebux.parkourdisplay.core.macro.MacroRunner;
 import pw.rebux.parkourdisplay.core.macro.MacroTickState;
+import pw.rebux.parkourdisplay.core.protocol.ParkourProtocolService;
 import pw.rebux.parkourdisplay.core.run.RunFileManager;
 import pw.rebux.parkourdisplay.core.run.RunListener;
 import pw.rebux.parkourdisplay.core.run.RunState;
 import pw.rebux.parkourdisplay.core.run.RunTickDotListener;
-import pw.rebux.parkourdisplay.core.server.RunDataPacketHandler;
 import pw.rebux.parkourdisplay.core.state.PlayerState;
 import pw.rebux.parkourdisplay.core.state.PlayerStateListener;
 import pw.rebux.parkourdisplay.core.util.MinecraftInputUtil;
@@ -53,8 +51,6 @@ import pw.rebux.parkourdisplay.core.widget.SpeedVectorWidget;
 import pw.rebux.parkourdisplay.core.widget.TierWidget;
 import pw.rebux.parkourdisplay.core.widget.TurnAnglesWidget;
 import pw.rebux.parkourdisplay.core.widget.VelocityWidget;
-import pw.rebux.parkourdisplay.integration.ParkourDisplayIntegration;
-import pw.rebux.parkourdisplay.integration.packets.RunDataPacket;
 
 @AddonMain
 @Getter
@@ -75,6 +71,7 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
   private final PlayerState playerState = new PlayerState();
   private final RunState runState = new RunState(this);
   private final ParkourDisplayClipService clipService = new ParkourDisplayClipService(this);
+  private final ParkourProtocolService protocolService = new ParkourProtocolService(this);
 
   private MinecraftInputUtil minecraftInputUtil;
 
@@ -88,11 +85,9 @@ public final class ParkourDisplayAddon extends LabyAddon<ParkourDisplayConfigura
 
     this.labyAPI().permissionRegistry().register(Permissions.RUN_MACROS, false, true);
 
-    // Register parkour-display protocol
-    var integration = Laby.references().labyModProtocolService().getOrRegisterIntegration(
-        ParkourDisplayIntegration.class, ParkourDisplayIntegration::new);
-    integration.parkourDisplayProtocol().registerHandler(
-        RunDataPacket.class, new RunDataPacketHandler(this));
+    // Register parkour protocol
+    this.protocolService.initialize();
+    this.registerListener(this.protocolService);
 
     this.clipService.initialize();
   }
